@@ -3,3 +3,4 @@ data/real.json
 .env
 .DS_Store
 design/
+data/avatar.*
