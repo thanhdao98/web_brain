@@ -1,0 +1,26 @@
+name: Deploy Pages
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.d.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Chặn file nhạy cảm
+        run: |
+          if git ls-files | grep -E '(^|/)(real\.json|\.env)'; then echo "Có file nhạy cảm trong repo"; exit 1; fi
+          if grep -rEn '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}|BEGIN PRIVATE KEY|sk-[A-Za-z0-9]{20,}' --include='*.json' --include='*.html' --include='*.md' . ; then echo "Có thông tin nhạy cảm"; exit 1; fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: d
+        uses: actions/deploy-pages@v4

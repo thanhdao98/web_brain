@@ -1,0 +1,27 @@
+{
+  "label": "Dữ liệu mẫu",
+  "urgent": ["Đổi chuyến bay", "Kết quả đăng ký"],
+  "tasks": [
+    {"id":"a","c":"train","t":"Tin nhắn TikTok","d":"5 phút","scope":"private"},
+    {"id":"b","c":"train","t":"Đọc 1 bài hệ thống","d":"10 phút","scope":"private"},
+    {"id":"c","c":"night","t":"Buổi Claude Code","d":"30 phút","scope":"private"},
+    {"id":"d","c":"night","t":"Nhập đơn vào Sheet","d":"15 phút","scope":"private"},
+    {"id":"e","c":"all","t":"Xem Daily brief","d":"7:00","scope":"private"},
+    {"id":"f","c":"all","t":"Đặt lịch khám","d":"hạn 19/11","scope":"family"}
+  ],
+  "deadlines": [
+    {"t":"Hạn A","in":3,"scope":"private"},
+    {"t":"Hạn B","in":6,"scope":"family"},
+    {"t":"Hạn C","in":12,"scope":"family"}
+  ],
+  "work": {"main":{"p":70,"n":"Kiểm thử tool"},"biz":{"p":60,"n":"Đối soát cuối tháng"}},
+  "timeline": [
+    {"when":"Tháng 12","what":"Mốc gia đình A","now":true,"scope":"family"},
+    {"when":"Tháng 4","what":"Mốc gia đình B","scope":"family"},
+    {"when":"Năm sau","what":"Mốc công việc","scope":"private"}
+  ],
+  "goals": [
+    {"g":"Mục tiêu 1","p":35},{"g":"Mục tiêu 2","p":15},{"g":"Mục tiêu 3","p":20}
+  ],
+  "week":[100,100,60,100,0,0,0]
+}
