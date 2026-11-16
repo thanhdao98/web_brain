@@ -1,5 +1,45 @@
 {
   "label": "Dữ liệu mẫu",
+  "company": {
+    "name": "Công ty Một Bộ Não",
+    "slogan": "Một bộ não. Nhiều chiếc mũ.",
+    "staff": [
+      {"r": "Thư ký", "m": "Nhắc trước khi mày kịp quên."},
+      {"r": "Giáo viên", "m": "10 phút trên tàu, khôn thêm một chút."},
+      {"r": "Kế toán", "m": "Tiền do công thức tính. Cảm xúc ra ngoài."},
+      {"r": "Giám sát", "m": "Soi lỗi trước khi lỗi soi mày."},
+      {"r": "Kỹ sư", "m": "Cái gì cũng hỏi trước. Rồi mới làm."}
+    ],
+    "rules": [
+      "Hỏi trước, làm sau.",
+      "Không biết thì hỏi, không đoán.",
+      "Dữ liệu riêng tư ở lại máy này.",
+      "Một việc một phiên, xong thì chốt.",
+      "Khuya quá thì đi ngủ."
+    ]
+  },
+  "workweek": [
+    {"d": "T2", "w": "Ở nhà", "n": ""},
+    {"d": "T3", "w": "Văn phòng", "n": "Sự kiện mẫu"},
+    {"d": "T4", "w": "Chưa quyết", "n": ""},
+    {"d": "T5", "w": "Chưa quyết", "n": ""},
+    {"d": "T6", "w": "Văn phòng", "n": ""},
+    {"d": "T7", "w": "Nghỉ", "n": "Việc riêng"},
+    {"d": "CN", "w": "Nghỉ", "n": "Đi chơi"}
+  ],
+  "workdl": [],
+  "docs": [
+    {"t": "Giấy tờ A (mẫu)", "when": "3/2028", "scope": "family"},
+    {"t": "Giấy tờ B (mẫu)", "when": "chưa rõ", "scope": "family"}
+  ],
+  "learn": {
+    "week": [
+      {"t": "Buổi 1 (mẫu)", "d": "30 phút"},
+      {"t": "Buổi 2 (mẫu)", "d": "30 phút"},
+      {"t": "Buổi 3 (mẫu)", "d": "30 phút"}
+    ],
+    "next": "Tuần sau: ôn tập (mẫu)"
+  },
   "urgent": [
     "Đổi chuyến bay",
     "Kết quả đăng ký"
