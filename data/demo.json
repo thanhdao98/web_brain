@@ -123,5 +123,10 @@
       "Học",
       "Sống"
     ]
+  },
+  "music": {
+    "url": "https://www.youtube.com/watch?v=FN7ALfpGxiI",
+    "auto": true,
+    "start": 0
   }
 }
