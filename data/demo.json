@@ -1,7 +1,7 @@
 {
   "label": "Dữ liệu mẫu",
   "company": {
-    "name": "Công ty Một Bộ Não",
+    "name": "AI Family",
     "slogan": "Một bộ não. Nhiều chiếc mũ.",
     "staff": [
       {"r": "Thư ký", "m": "Nhắc trước khi mày kịp quên."},
@@ -49,6 +49,7 @@
       "id": "a",
       "c": "train",
       "t": "Tin nhắn TikTok",
+      "a": "biz",
       "d": "5 phút",
       "scope": "private"
     },
@@ -56,6 +57,7 @@
       "id": "b",
       "c": "train",
       "t": "Đọc 1 bài hệ thống",
+      "a": "learn",
       "d": "10 phút",
       "scope": "private"
     },
@@ -63,6 +65,7 @@
       "id": "c",
       "c": "night",
       "t": "Buổi Claude Code",
+      "a": "learn",
       "d": "30 phút",
       "scope": "private"
     },
@@ -70,6 +73,7 @@
       "id": "d",
       "c": "night",
       "t": "Nhập đơn vào Sheet",
+      "a": "biz",
       "d": "15 phút",
       "scope": "private"
     },
@@ -84,27 +88,59 @@
       "id": "f",
       "c": "all",
       "t": "Đặt lịch khám",
+      "a": "home",
       "d": "hạn 19/11",
       "scope": "family"
+    },
+    {
+      "id": "h1",
+      "c": "morning",
+      "t": "Giãn cổ vai gáy (mẫu)",
+      "a": "fit",
+      "d": "3 phút",
+      "scope": "private"
+    },
+    {
+      "id": "h2",
+      "c": "train",
+      "t": "Đi bộ khi đổi tàu (mẫu)",
+      "a": "fit",
+      "d": "10 phút",
+      "scope": "private"
     }
   ],
   "deadlines": [
     {
       "t": "Hạn A",
+      "a": "work",
       "in": 3,
       "scope": "private"
     },
     {
       "t": "Hạn B",
+      "a": "home",
       "in": 6,
       "scope": "family"
     },
     {
       "t": "Hạn C",
+      "a": "home",
       "in": 12,
       "scope": "family"
     }
   ],
+  "health": {
+    "sit": 45,
+    "goal": "Giữ sức khoẻ, vận động đều (mẫu)",
+    "note": "",
+    "week": [
+      {"d": "T7", "t": "Vận động cuối tuần (mẫu)"}
+    ],
+    "tips": [
+      "Ngồi 45 phút thì đứng dậy 1–2 phút (mẫu).",
+      "Màn hình ngang tầm mắt, lưng tựa ghế (mẫu)."
+    ]
+  },
   "work": {
     "main": {
       "p": 70,
