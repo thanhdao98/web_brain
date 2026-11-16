@@ -151,7 +151,7 @@ function lset(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 function vis(x){return !FAM||x.scope==="family"}
 function load(){
   return fetch("data/real.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw 0;return r.json()}).catch(function(){
-    return fetch("data/demo.json").then(function(r){return r.json()})});
+    return fetch("data/demo.json",{cache:"no-cache"}).then(function(r){return r.json()})});
 }
 function today(){var d=new Date(),n=["CN","T2","T3","T4","T5","T6","T7"],m=d.getDate()+"."+(d.getMonth()+1);return n[d.getDay()]+" · "+m}
 function head(l){return '<div class="top mono"><span class="lab">'+l+'</span><b>BRAIN</b></div>'}
