@@ -204,5 +204,275 @@
     "url": "https://www.youtube.com/watch?v=FN7ALfpGxiI",
     "auto": true,
     "start": 0
+  },
+  "i18n": {
+      "10 phút": [
+          "10 min",
+          "10分"
+      ],
+      "3 phút": [
+          "3 min",
+          "3分"
+      ],
+      "30 phút": [
+          "30 min",
+          "30分"
+      ],
+      "5 phút": [
+          "5 min",
+          "5分"
+      ],
+      "15 phút": [
+          "15 min",
+          "15分"
+      ],
+      "10 phút trên tàu, khôn thêm một chút.": [
+          "10 minutes on the train, a little smarter.",
+          "電車で10分、ちょっと賢くなる。"
+      ],
+      "Chưa quyết": [
+          "Undecided",
+          "未定"
+      ],
+      "Cái gì cũng hỏi trước. Rồi mới làm.": [
+          "Ask first. Then do.",
+          "まず聞く。それから作る。"
+      ],
+      "Dữ liệu riêng tư ở lại máy này.": [
+          "Private data stays on this machine.",
+          "個人データはこのPCの外に出さない。"
+      ],
+      "Giám sát": [
+          "Supervisor",
+          "監督"
+      ],
+      "Giáo viên": [
+          "Teacher",
+          "先生"
+      ],
+      "Hỏi trước, làm sau.": [
+          "Ask first, act later.",
+          "先に聞く、あとで動く。"
+      ],
+      "Khuya quá thì đi ngủ.": [
+          "Too late? Go to sleep.",
+          "夜更かしは寝よう。"
+      ],
+      "Không biết thì hỏi, không đoán.": [
+          "Don't know? Ask, don't guess.",
+          "わからなければ聞く。推測しない。"
+      ],
+      "Kế toán": [
+          "Accountant",
+          "経理"
+      ],
+      "Kỹ sư": [
+          "Engineer",
+          "エンジニア"
+      ],
+      "Một bộ não. Nhiều chiếc mũ.": [
+          "One brain. Many hats.",
+          "ひとつの頭脳。たくさんの帽子。"
+      ],
+      "Một việc một phiên, xong thì chốt.": [
+          "One task per session, wrap up when done.",
+          "1セッション1タスク、終わったら締める。"
+      ],
+      "Nghỉ": [
+          "Off",
+          "休み"
+      ],
+      "Nhắc trước khi mày kịp quên.": [
+          "Reminds you before you forget.",
+          "忘れる前に知らせる。"
+      ],
+      "Soi lỗi trước khi lỗi soi mày.": [
+          "Spots bugs before they spot you.",
+          "バグに見つかる前に見つける。"
+      ],
+      "Tháng 12": [
+          "December",
+          "12月"
+      ],
+      "Tháng 4": [
+          "April",
+          "4月"
+      ],
+      "Thư ký": [
+          "Secretary",
+          "秘書"
+      ],
+      "Tiền do công thức tính. Cảm xúc ra ngoài.": [
+          "Formulas do the math. Feelings stay out.",
+          "お金は数式で計算。感情は持ち込まない。"
+      ],
+      "chưa rõ": [
+          "unclear",
+          "未定"
+      ],
+      "Buổi 1 (mẫu)": [
+          "Session 1 (sample)",
+          "第1回（サンプル）"
+      ],
+      "Buổi 2 (mẫu)": [
+          "Session 2 (sample)",
+          "第2回（サンプル）"
+      ],
+      "Buổi 3 (mẫu)": [
+          "Session 3 (sample)",
+          "第3回（サンプル）"
+      ],
+      "Buổi Claude Code": [
+          "Claude Code session",
+          "Claude Codeの時間"
+      ],
+      "Dashboard cá nhân (dữ liệu mẫu)": [
+          "Personal dashboard (sample data)",
+          "個人ダッシュボード（サンプルデータ）"
+      ],
+      "Giãn cổ vai gáy (mẫu)": [
+          "Stretch neck & shoulders (sample)",
+          "首と肩のストレッチ（サンプル）"
+      ],
+      "Giấy tờ A (mẫu)": [
+          "Document A (sample)",
+          "書類A（サンプル）"
+      ],
+      "Giấy tờ B (mẫu)": [
+          "Document B (sample)",
+          "書類B（サンプル）"
+      ],
+      "Giữ sức khoẻ, vận động đều (mẫu)": [
+          "Stay healthy, exercise regularly (sample)",
+          "健康維持・定期的な運動（サンプル）"
+      ],
+      "Hạn A": [
+          "Deadline A",
+          "期限A"
+      ],
+      "Hạn B": [
+          "Deadline B",
+          "期限B"
+      ],
+      "Hạn C": [
+          "Deadline C",
+          "期限C"
+      ],
+      "Kiểm thử tool": [
+          "Tool testing",
+          "ツールのテスト"
+      ],
+      "Kết quả đăng ký": [
+          "Application result",
+          "申込の結果"
+      ],
+      "Màn hình ngang tầm mắt, lưng tựa ghế (mẫu).": [
+          "Screen at eye level, back against the chair (sample).",
+          "画面は目の高さ、背もたれに背中（サンプル）。"
+      ],
+      "Mốc công việc": [
+          "Work milestone",
+          "仕事のマイルストーン"
+      ],
+      "Mốc gia đình A": [
+          "Family milestone A",
+          "家族のマイルストーンA"
+      ],
+      "Mốc gia đình B": [
+          "Family milestone B",
+          "家族のマイルストーンB"
+      ],
+      "Mục tiêu 1": [
+          "Goal 1",
+          "目標1"
+      ],
+      "Mục tiêu 2": [
+          "Goal 2",
+          "目標2"
+      ],
+      "Mục tiêu 3": [
+          "Goal 3",
+          "目標3"
+      ],
+      "Ngồi 45 phút thì đứng dậy 1–2 phút (mẫu).": [
+          "Stand up for 1–2 minutes after 45 minutes of sitting (sample).",
+          "45分座ったら1〜2分立ち上がる（サンプル）。"
+      ],
+      "Nhập đơn vào Sheet": [
+          "Enter orders into the Sheet",
+          "注文をシートに入力"
+      ],
+      "Năm sau": [
+          "Next year",
+          "来年"
+      ],
+      "Sống": [
+          "Life",
+          "生活"
+      ],
+      "Việc": [
+          "Work",
+          "仕事"
+      ],
+      "Sự kiện mẫu": [
+          "Sample event",
+          "サンプルイベント"
+      ],
+      "Tin nhắn TikTok": [
+          "TikTok messages",
+          "TikTokメッセージ"
+      ],
+      "Tuần sau: ôn tập (mẫu)": [
+          "Next week: review (sample)",
+          "来週：復習（サンプル）"
+      ],
+      "Việc riêng": [
+          "Personal",
+          "私用"
+      ],
+      "Văn phòng": [
+          "Office",
+          "オフィス"
+      ],
+      "Vận động cuối tuần (mẫu)": [
+          "Weekend exercise (sample)",
+          "週末の運動（サンプル）"
+      ],
+      "Xem Daily brief": [
+          "Read the daily brief",
+          "デイリーブリーフを見る"
+      ],
+      "hạn 19/11": [
+          "due 19/11",
+          "期限 19/11"
+      ],
+      "Đi bộ khi đổi tàu (mẫu)": [
+          "Walk when changing trains (sample)",
+          "乗り換え時に歩く（サンプル）"
+      ],
+      "Đi chơi": [
+          "Day out",
+          "お出かけ"
+      ],
+      "Đặt lịch khám": [
+          "Book a checkup",
+          "診察を予約"
+      ],
+      "Đọc 1 bài hệ thống": [
+          "Read one systems article",
+          "システムの記事を1本読む"
+      ],
+      "Đối soát cuối tháng": [
+          "Month-end reconciliation",
+          "月末の突き合わせ"
+      ],
+      "Đổi chuyến bay": [
+          "Change the flight",
+          "フライト変更"
+      ],
+      "Ở nhà": [
+          "At home",
+          "在宅"
+      ]
   }
 }

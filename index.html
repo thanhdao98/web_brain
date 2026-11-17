@@ -155,6 +155,23 @@ nav button{padding:4px 5px}
 .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:middle;transform:translateY(-1px)}
 .seg.ar{flex-wrap:wrap;margin-top:8px}.seg.ar button{font-size:11px;padding:5px 10px}
 @media (max-width:899px){nav button{font-size:10px;letter-spacing:.03em;padding:4px 3px}}
+.top .rt{display:flex;align-items:center;gap:12px}
+.lg{display:inline-flex;gap:1px}.lg button{font:inherit;font-size:11px;letter-spacing:.06em;border:0;background:none;color:var(--mute);padding:3px 7px;border-radius:999px;cursor:pointer;transition:background .15s,color .15s}
+.lg button:hover{color:var(--fg)}.lg button.on{background:var(--fg);color:var(--bg)}
+/* tổng thể: vào trang nhẹ, phản hồi khi chạm, khoảng thở, tiêu điểm bàn phím — tất cả tắt khi máy đặt "giảm chuyển động" */
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.g>div>*{animation:up .45s cubic-bezier(.2,.7,.2,1) both}
+.g>div>*:nth-child(2){animation-delay:.04s}.g>div>*:nth-child(3){animation-delay:.08s}.g>div>*:nth-child(4){animation-delay:.12s}.g>div>*:nth-child(5){animation-delay:.16s}.g>div>*:nth-child(n+6){animation-delay:.2s}
+section.on:not(#home){animation:fade .28s ease}
+.sit{margin-bottom:14px}
+.seg.ar button:not(.on){border-color:transparent;background:rgba(127,127,127,.09)}
+.seg button,.row,.dl,nav button,.more{transition:background .15s,color .15s,border-color .15s,transform .12s}
+.seg button:active,.more:active{transform:scale(.96)}.row:active .c{transform:scale(.88)}
+.row .c{transition:background .15s,transform .12s}
+@media (hover:hover){.row:hover{background:rgba(127,127,127,.06)}.seg button:not(.on):hover{color:var(--fg)}}
+button:focus-visible,a:focus-visible{outline:2px solid var(--fg);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 /* khoẻ: dải ngồi + mức đau */
 .sit{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:18px;padding:12px 14px;border:1px solid var(--line);border-radius:14px}
 .sit.hot{border:1.5px solid var(--acc)}.sit.hot .sm{color:var(--acc);font-weight:700}
@@ -171,12 +188,45 @@ nav button{padding:4px 5px}
 .wxg div.wet{color:var(--acc)}
 .wxg svg{display:block;margin:0 auto 5px;width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .wxg .p{display:block;height:12px;margin-top:3px;font-size:10px}
+/* chuyển động tiết chế: chỉ hôm nay + ngày mưa ≥60%, chậm và nhỏ; tắt khi máy đặt "giảm chuyển động" */
+.wxg .today .rays{transform-origin:12px 12px;animation:wxspin 16s linear infinite}
+.wxg .today .cl,.wxg .wet .cl{animation:wxdrift 4s ease-in-out infinite alternate}
+.wxg .today .dr,.wxg .wet .dr{animation:wxfall 1.5s linear infinite}
+.wxg .dr2{animation-delay:.5s!important}.wxg .dr3{animation-delay:1s!important}
+.wxg .today .bolt,.wxg .wet .bolt{animation:wxflash 2.6s steps(1) infinite}
+@keyframes wxspin{to{transform:rotate(360deg)}}
+@keyframes wxdrift{from{transform:translateX(-1px)}to{transform:translateX(1px)}}
+@keyframes wxfall{0%{transform:translateY(-1.5px);opacity:0}30%{opacity:1}100%{transform:translateY(2px);opacity:0}}
+@keyframes wxflash{0%,70%,100%{opacity:1}78%{opacity:.15}86%{opacity:1}92%{opacity:.2}}
+@media (prefers-reduced-motion:reduce){.wxg *{animation:none!important}}
 .wxn{font-size:13px;padding:9px 0;border-bottom:1px solid var(--line)}
-/* mail cần xem: chỉ có khi real.json có "mail" (local) */
-.ml{margin-top:18px}.ml h2{margin:0 0 4px}
-.ml a{display:block;padding:10px 0;border-bottom:1px solid var(--line);color:inherit;text-decoration:none}
-.ml .mg{display:block;font-size:11px;color:var(--mute)}.ml .ms{font-weight:600;line-height:1.25}
-.ml a.nw .ms:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--acc);margin-right:8px;transform:translateY(-1px)}
+/* Gmail quan trọng: thẻ riêng (chỉ có khi real.json có "mail") */
+.ml{margin:14px 0 0;padding:14px 16px 6px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,rgba(127,127,127,.06),rgba(127,127,127,0) 55%)}
+.ml .mh{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.ml .mic{width:16px;height:16px;stroke:var(--fg);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.ml .mh b{margin-left:auto;font-size:12px;color:var(--mute);font-weight:400}
+.ml .mrf{background:none;border:0;color:var(--mute);font-size:16px;line-height:1;cursor:pointer;padding:2px 2px 2px 6px;transition:color .15s}
+.ml .mrf:hover{color:var(--fg)}.ml .mrf.spin{animation:rot .8s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.ml .mi{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--line);max-height:110px;overflow:hidden;animation:up .38s cubic-bezier(.2,.7,.2,1) both;transition:opacity .2s,transform .22s,max-height .26s .06s,padding .26s .06s,border-color .26s .06s}
+.ml .mi.out{opacity:0;transform:translateX(18px);max-height:0;padding-top:0;padding-bottom:0;border-color:transparent}
+.ml .md{width:9px;height:9px;border-radius:50%;box-shadow:0 0 0 3px rgba(127,127,127,.12)}
+.ml .mt{color:inherit;text-decoration:none;min-width:0}
+.ml .mg{display:block;font-size:11px;color:var(--mute)}
+.ml .ms{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-weight:600;line-height:1.25}
+.ml .mi.nw .ms:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--acc);margin-right:7px;transform:translateY(-1px)}
+.ml .act{display:flex;align-items:center;gap:8px;flex:none}
+.ml .go{font-size:12px;color:var(--mute);text-decoration:none;transition:color .15s}.ml .go:hover,.ml .mt:hover+.act .go{color:var(--fg)}
+.ml .mx{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:none;color:var(--mute);font-size:15px;line-height:1;cursor:pointer;padding:0;transition:color .15s,border-color .15s,background .15s}
+.ml .mx:hover{color:var(--bg);background:var(--fg);border-color:var(--fg)}
+@media (hover:hover){.ml .mx{opacity:.35}.ml .mi:hover .mx{opacity:1}}
+.ml .nt{margin:0;padding:8px 0 12px;display:flex;align-items:center;gap:8px}
+.ml .nt svg{width:15px;height:15px;stroke:var(--mute);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ml .mht{display:block;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);color:var(--mute);font-size:12px;padding:10px 0;cursor:pointer}
+.ml .mht:hover{color:var(--fg)}
+.ml .mi.hid{opacity:.55}.ml .mi.hid .ms{font-weight:400}
+.ml .mrs{background:none;border:1px solid var(--line);border-radius:999px;color:var(--mute);font-size:11px;padding:5px 10px;cursor:pointer;transition:color .15s,border-color .15s}
+.ml .mrs:hover{color:var(--fg);border-color:var(--fg)}
 .nt{font-size:12px;color:var(--mute);margin-top:8px}
 /* một màn hình, không cuộn (máy tính rộng) */
 @media (min-width:1180px){
@@ -247,7 +297,7 @@ function load(){
     return fetch("data/demo.json",{cache:"no-cache"}).then(function(r){return r.json()})});
 }
 function today(){var d=new Date(),n=["CN","T2","T3","T4","T5","T6","T7"],m=d.getDate()+"."+(d.getMonth()+1);return n[d.getDay()]+" · "+m}
-function head(l){var u=DATA&&DATA.updated?new Date(DATA.updated):null;return '<div class="top mono"><span class="lab">'+l+'</span><b>'+(u?'cập nhật '+u.getDate()+'.'+(u.getMonth()+1):'BRAIN')+'</b></div>'}
+function head(l){var u=DATA&&DATA.updated?new Date(DATA.updated):null;return '<div class="top mono"><span class="lab">'+l+'</span><span class="rt"><b>'+(u?'cập nhật '+u.getDate()+'.'+(u.getMonth()+1):'BRAIN')+'</b>'+lgHtml()+'</span></div>'}
 function days(x){if(x.in!=null)return x.in;var p=String(x.date).split("-"),a=new Date(+p[0],+p[1]-1,+p[2]),n=new Date(),b=new Date(n.getFullYear(),n.getMonth(),n.getDate());return Math.round((a-b)/864e5)}
 
 function slotNow(){var d=new Date(),m=d.getHours()*60+d.getMinutes();return m>=300&&m<690?"morning":(m>=690&&m<1260?"train":"night")}
@@ -267,7 +317,7 @@ function renderHome(){
   var tl=(DATA.timeline||[]).filter(vis).slice(0,2);
   if(tl.length)p1+='<div class="wide mo"><h2 class="lab mono">Mốc sắp tới</h2>'+tl.map(function(x){return'<div class="mr"><span>'+esc(x.what)+'</span><b class="mono">'+esc(x.when)+'</b></div>'}).join("")+'</div>';
   p1+='<div class="wx" id="wx"></div>';
-  p2+=ug+'<div class="next"><span class="lab mono">Làm gì giờ?</span><div class="t" id="nx"></div><div class="s mono" id="ns"></div>'+dayStrip()+'</div>'+(FAM?"":sitHtml())+(FAM||!(DATA.mail&&DATA.mail.url)?"":'<div class="ml" id="ml"></div>');
+  p2+=ug+(FAM||!(DATA.mail&&DATA.mail.url)?"":'<div class="ml" id="ml"></div>')+'<div class="next"><span class="lab mono">Làm gì giờ?</span><div class="t" id="nx"></div><div class="s mono" id="ns"></div>'+dayStrip()+'</div>'+(FAM?"":sitHtml());
   p2b+=segHtml()+arHtml()+'<div id="tasks"></div>';
   if(!FAM)p1+='<div class="wide"><h2 class="lab mono">Thả ý tưởng</h2><input id="qn" class="qn mono" placeholder="Gõ ý tưởng, Enter là xong" autocomplete="off"><div id="qnl"></div></div>';
   if(!FAM&&DATA.week)p3+='<h2 class="lab mono">Tuần</h2><div class="week" id="week"></div>';
@@ -323,16 +373,16 @@ function renderCompany(){
 }
 /* thời tiết: Open-Meteo (không cần khoá). Vị trí chỉ lưu trên trình duyệt (wb_loc), làm tròn ~10 km, không ghi vào repo. */
 var WXD=["CN","T2","T3","T4","T5","T6","T7"];
-var WXC='<path d="M7 15h10a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.1 6.6 4.2 4.2 0 0 0 7 15z"/>';
+var WXC='<path class="cl" d="M7 15h10a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.1 6.6 4.2 4.2 0 0 0 7 15z"/>';
 function wxKind(c){return c<=1?"sun":c<=3?"cloud":(c===45||c===48)?"fog":(c>=71&&c<=77)||c===85||c===86?"snow":c>=95?"storm":"rain"}
 function wxName(c){return{sun:"Nắng",cloud:"Mây",fog:"Sương mù",snow:"Tuyết",storm:"Dông",rain:"Mưa"}[wxKind(c)]}
 function wxIc(c){var k=wxKind(c),b="";
-  if(k==="sun")b='<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
-  else if(k==="cloud")b='<path d="M7 18h10a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.1 9.6 4.2 4.2 0 0 0 7 18z"/>';
-  else if(k==="fog")b='<path d="M4 8h16M6 12h12M4 16h16"/>';
-  else if(k==="snow")b=WXC+'<path d="M8 18h.01M12 19h.01M16 18h.01M10 21h.01M14 21h.01"/>';
-  else if(k==="storm")b=WXC+'<path d="M12 15l-2 3h3l-2 3"/>';
-  else b=WXC+'<path d="M8 18l-1 2M12 18l-1 2M16 18l-1 2"/>';
+  if(k==="sun")b='<circle cx="12" cy="12" r="4"/><path class="rays" d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+  else if(k==="cloud")b='<path class="cl" d="M7 18h10a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.1 9.6 4.2 4.2 0 0 0 7 18z"/>';
+  else if(k==="fog")b='<path class="cl" d="M4 8h16M6 12h12M4 16h16"/>';
+  else if(k==="snow")b=WXC+'<path class="dr dr1" d="M8 18h.01M16 18h.01M10 21h.01"/><path class="dr dr2" d="M12 19h.01M14 21h.01"/>';
+  else if(k==="storm")b=WXC+'<path class="bolt" d="M12 15l-2 3h3l-2 3"/>';
+  else b=WXC+'<path class="dr dr1" d="M8 18l-1 2"/><path class="dr dr2" d="M12 18l-1 2"/><path class="dr dr3" d="M16 18l-1 2"/>';
   return '<svg viewBox="0 0 24 24" aria-hidden="true">'+b+'</svg>'}
 function wxAsk(el,msg){
   el.innerHTML='<h2 class="lab mono">Thời tiết 7 ngày</h2><button class="more mono" id="wxb">Cho phép vị trí</button>'+(msg?'<div class="nt">'+msg+'</div>':'');
@@ -342,22 +392,23 @@ function wxAsk(el,msg){
 }
 function wxInit(){
   var el=document.getElementById("wx");if(!el)return;
-  var loc=ls("wb_loc",null);if(!loc){wxAsk(el,"");return}
+  var loc=(DATA.loc&&DATA.loc.la!=null)?DATA.loc:ls("wb_loc",null);if(!loc){wxAsk(el,"");return}
   var c=ls("wb_wx",null);
   if(c&&c.la===loc.la&&c.lo===loc.lo&&Date.now()-c.t<108e5){wxDraw(c.d);return}
   fetch("https://api.open-meteo.com/v1/forecast?latitude="+loc.la+"&longitude="+loc.lo+"&daily=weather_code,precipitation_probability_max&timezone=auto&forecast_days=7")
     .then(function(r){if(!r.ok)throw 0;return r.json()})
     .then(function(j){var d={time:j.daily.time,c:j.daily.weather_code,p:j.daily.precipitation_probability_max};lset("wb_wx",{t:Date.now(),la:loc.la,lo:loc.lo,d:d});wxDraw(d)})
-    .catch(function(){if(c&&c.d)wxDraw(c.d);else el.innerHTML=""});
+    .catch(function(){if(c&&c.d)wxDraw(c.d);else{el.innerHTML='<h2 class="lab mono">Thời tiết 7 ngày</h2><div class="nt">Chưa lấy được dự báo.</div><button class="more mono" id="wxr">Thử lại</button>';document.getElementById("wxr").onclick=function(){wxInit()}}});
 }
 function wxSug(d){
   var L=[],wet=function(k){return k>=0&&k<d.time.length&&(d.p[k]||0)>=60},dn=function(k){return WXD[new Date(d.time[k]+"T00:00:00").getDay()]};
   (DATA.deadlines||[]).filter(vis).forEach(function(x){var k=days(x);if(!wet(k)||k>6)return;
     if(/đá bóng/i.test(x.t))L.push(dn(k)+" đá bóng, mưa "+d.p[k]+"%: tính phương án B.");
-    else if(x.scope==="family")L.push(esc(x.t)+" ("+dn(k)+"), mưa "+d.p[k]+"%: xem lại kế hoạch.")});
-  if(wet(0)||wet(1))L.push("Mưa "+(wet(0)?"hôm nay":"ngày mai")+": đổi đi bộ thành giãn cơ trong nhà.");
+    else if(x.scope==="family"&&!x.hide&&(x.out||/ngắm|lá đỏ|đi chơi|dã ngoại|picnic|công viên|đạp xe|đi dạo|biển/i.test(x.t)))L.push(esc(x.t)+" ("+dn(k)+"), mưa "+d.p[k]+"%: xem lại kế hoạch.")});
+  var late=new Date().getHours()>=20;
+  if((!late&&wet(0))||wet(1))L.push("Mưa "+((!late&&wet(0))?"hôm nay":"ngày mai")+": đổi đi bộ thành giãn cơ trong nhà.");
   if(!FAM&&DATA.workweek){var di=(new Date().getDay()+6)%7;
-    for(var k=0;k<=6-di&&k<d.time.length;k++){var w=DATA.workweek.filter(function(x){return x.d===dn(k)})[0];if(w&&/khách/i.test(w.w)&&wet(k))L.push(dn(k)+" đi khách hàng, mưa "+d.p[k]+"%: nhớ mang ô.")}}
+    for(var k=(new Date().getHours()>=18?1:0);k<=6-di&&k<d.time.length;k++){var w=DATA.workweek.filter(function(x){return x.d===dn(k)})[0];if(w&&/khách/i.test(w.w)&&wet(k))L.push(dn(k)+" đi khách hàng, mưa "+d.p[k]+"%: nhớ mang ô.")}}
   return L.slice(0,3);
 }
 function wxDraw(d){
@@ -367,21 +418,48 @@ function wxDraw(d){
   el.innerHTML='<h2 class="lab mono">Thời tiết 7 ngày</h2><div class="wxg">'+g+'</div>'+wxSug(d).map(function(s){return'<div class="wxn">'+s+'</div>'}).join("");
 }
 /* mail cần xem: gọi Apps Script mail_digest (chỉ người gửi/tiêu đề, tối đa 3). url + key chỉ nằm trong real.json (gitignore). */
-function mailDraw(d,stale){
-  var el=document.getElementById("ml");if(!el||!d)return;
-  var L=(d.items||[]).map(function(x){var t=String(x.t||"").split(/[-T:]/);
-    return'<a class="'+(x.u?'nw':'')+'" href="https://mail.google.com/mail/u/0/#inbox/'+encodeURIComponent(x.id)+'" target="_blank" rel="noopener"><span class="mg mono">'+esc(x.g)+' · '+(+t[2])+'.'+(+t[1])+' '+t[3]+':'+t[4]+'</span><span class="ms">'+esc(x.s)+'</span></a>'}).join("");
-  var more=d.n>(d.items||[]).length?'<div class="nt">+'+(d.n-d.items.length)+' mail khác trong Gmail</div>':"";
-  el.innerHTML='<h2 class="lab mono">Mail cần xem'+(stale?' (cũ)':'')+'</h2>'+(L||'<div class="nt">Không có mail quan trọng mới.</div>')+more;
+var MHUE={"Con · thành phố":140,"Phòng khám con":140,"Máy bay":210,"Bảo mật tài khoản":350,"Tiền điện":30,"Thẻ JCB":30,"SIM":30,"Tiền vào":30,"Gắn sao":48};
+var MD=null,MS=false,MHO=false;
+function mhLoad(){var o=ls("wb_mhide",{}),n=Date.now(),ch=false;
+  Object.keys(o).forEach(function(k){if(n-o[k].t>8*864e5){delete o[k];ch=true}else if(o[k].x&&n-o[k].t>864e5){o[k].x=null;ch=true}});
+  if(ch)lset("wb_mhide",o);return o}
+function mailRel(s){var p=String(s||"").split(/[-T:]/);if(p.length<5)return"";var d=new Date(+p[0],+p[1]-1,+p[2],+p[3],+p[4]),m=Math.round((Date.now()-d)/6e4);
+  if(m<1)return"vừa xong";if(m<60)return m+" phút trước";var hh=Math.floor(m/60);if(hh<24)return hh+" giờ trước";var dd=Math.floor(hh/24);return dd===1?"hôm qua":dd+" ngày trước"}
+function mailHead(n,note,spin){return '<div class="mh"><svg class="mic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span class="lab mono">Gmail · quan trọng</span><b class="mono">'+(n==null?"":n+'/3')+(note?' · '+note:'')+'</b><button class="mrf'+(spin?' spin':'')+'" id="mrf" title="Làm mới" aria-label="Làm mới">↻</button></div>'}
+function mailRow(x,i,anim,hid,base){
+  var hu=MHUE[x.g],dot='<span class="md" style="background:'+(hu==null?'var(--mute)':'hsl('+hu+',70%,55%)')+'"></span>',lk=base+'#all/'+encodeURIComponent(x.id),id=esc(x.id);
+  var g='<span class="mg mono">'+esc(x.g)+' · '+mailRel(x.t)+(x.st?' · ★':'')+'</span><span class="ms">'+esc(x.s)+'</span>',st=anim?' style="animation-delay:'+(i*70)+'ms"':' style="animation:none"';
+  if(hid)return'<div class="mi hid" data-id="'+id+'" style="animation:none">'+dot+'<div class="mt">'+g+'</div><div class="act"><button class="mrs mono" data-id="'+id+'">Hiện lại</button></div></div>';
+  return'<div class="mi'+(x.u?' nw':'')+'" data-id="'+id+'"'+st+'>'+dot+'<a class="mt" href="'+lk+'" target="_blank" rel="noopener">'+g+'</a><div class="act"><a class="go mono" href="'+lk+'" target="_blank" rel="noopener">Mở ↗</a><button class="mx" data-id="'+id+'" title="Ẩn" aria-label="Ẩn mail này">×</button></div></div>'}
+function mailDraw(d,stale,anim){
+  var el=document.getElementById("ml");if(!el||!d)return;MD=d;MS=!!stale;
+  var H=mhLoad(),m=DATA.mail||{},base='https://mail.google.com/mail/'+(m.user?'?authuser='+encodeURIComponent(m.user):'u/0/');
+  var all=d.items||[],vis=all.filter(function(x){return !H[x.id]}).slice(0,3),hidIn=all.filter(function(x){return H[x.id]}).length;
+  var hids=Object.keys(H).filter(function(k){return H[k].x}).sort(function(a,b){return H[b].t-H[a].t}).map(function(k){return H[k].x});
+  var more=d.n-vis.length-hidIn;
+  var ck='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  el.innerHTML=mailHead(vis.length,stale?'cũ':'')
+    +(vis.length?vis.map(function(x,i){return mailRow(x,i,anim,false,base)}).join(''):'<div class="nt">'+ck+'Không có mail quan trọng cần xem.</div>')
+    +(more>0?'<div class="nt">+'+more+' mail khác trong Gmail</div>':'')
+    +(hids.length?'<button class="mht mono" id="mht">Đã ẩn ('+hids.length+') '+(MHO?'▴':'▾')+'</button>'+(MHO?hids.map(function(x,i){return mailRow(x,i,false,true,base)}).join(''):''):'');
 }
-function mailInit(){
+function mailHide(id){var it=((MD&&MD.items)||[]).filter(function(x){return x.id===id})[0];if(!it)return;var H=mhLoad();H[id]={t:Date.now(),x:it};lset("wb_mhide",H);mailDraw(MD,MS,false)}
+function mailRestore(id){var H=mhLoad();delete H[id];lset("wb_mhide",H);mailDraw(MD,MS,false)}
+function mailInit(fresh){
   var el=document.getElementById("ml"),m=DATA.mail;if(!el||!m||!m.url)return;
+  if(!el.onclick)el.onclick=function(e){
+    var t;
+    if(e.target.closest("#mrf")){try{localStorage.removeItem("wb_mail")}catch(x){}mailInit(true);return}
+    if(e.target.closest("#mht")){MHO=!MHO;mailDraw(MD,MS,false);return}
+    if((t=e.target.closest(".mrs"))){mailRestore(t.dataset.id);return}
+    if((t=e.target.closest(".mx"))){var row=t.closest(".mi"),id=t.dataset.id;row.classList.add("out");setTimeout(function(){mailHide(id)},270)}};
   var c=ls("wb_mail",null);
-  if(c&&Date.now()-c.t<18e5){mailDraw(c.d);return}
-  fetch(m.url+(m.url.indexOf("?")<0?"?":"&")+"k="+encodeURIComponent(m.key||""))
+  if(!fresh&&c&&Date.now()-c.t<3e5){mailDraw(c.d,false,true);return}
+  el.innerHTML=mailHead(null,'',true)+'<div class="nt">Đang tải…</div>';
+  fetch(m.url+(m.url.indexOf("?")<0?"?":"&")+"k="+encodeURIComponent(m.key||"")+(fresh?"&fresh=1":""))
     .then(function(r){if(!r.ok)throw 0;return r.json()})
-    .then(function(j){if(j.error||!j.items)throw 0;lset("wb_mail",{t:Date.now(),d:j});mailDraw(j)})
-    .catch(function(){if(c&&c.d)mailDraw(c.d,true);else el.innerHTML='<h2 class="lab mono">Mail cần xem</h2><div class="nt">Chưa lấy được mail (kiểm tra mạng hoặc link trong real.json).</div>'});
+    .then(function(j){if(j.error||!j.items)throw 0;lset("wb_mail",{t:Date.now(),d:j});mailDraw(j,false,true)})
+    .catch(function(){if(c&&c.d)mailDraw(c.d,true,true);else el.innerHTML=mailHead(null,'')+'<div class="nt">Chưa lấy được mail (kiểm tra mạng hoặc link trong real.json).</div>'});
 }
 /* khoẻ: dải nhắc ngồi lâu (chỉ chạy khi đang mở web) */
 function sitHtml(){return '<div class="sit" id="sit"><div><span class="lab mono">Cơ thể</span><div id="sv"></div></div><button id="sb" class="mono">Vừa đứng dậy</button></div>'}
@@ -493,7 +571,7 @@ function frame(){
       cx.fillStyle=gg;cx.beginPath();cx.arc(x,y,20,0,7);cx.fill();
       if(h&&fr){cx.strokeStyle=acc;cx.globalAlpha=.6*(1-(t%1.6)/1.6);cx.beginPath();cx.arc(x,y,8+16*((t%1.6)/1.6),0,7);cx.stroke()}
       cx.globalAlpha=fr?1:.3;cx.fillStyle=h?acc:"hsl("+n.h+",90%,70%)";cx.beginPath();cx.arc(x,y,h?6.5:5,0,7);cx.fill();
-      cx.font="12px ui-monospace,Menlo,monospace";cx.textAlign="center";cx.fillStyle="#f4f4f5";cx.fillText(n.l,x,y-15);cx.globalAlpha=1});
+      if(fr){cx.font="12px ui-monospace,Menlo,monospace";cx.textAlign="center";cx.lineJoin="round";cx.lineWidth=3.5;cx.strokeStyle="rgba(11,11,12,.9)";cx.strokeText(LT(n.l),x,y-15);cx.fillStyle="#f4f4f5";cx.fillText(LT(n.l),x,y-15);cx.lineWidth=1.1}cx.globalAlpha=1});
     if(!drag&&!reduce)ang+=.004;
   }
   requestAnimationFrame(frame);
@@ -506,14 +584,96 @@ cv.addEventListener("pointerup",function(e){var tap=moved<6;drag=null;if(!tap)re
 window.addEventListener("resize",fit);
 function place(){var d=matchMedia("(min-width:900px)").matches,sl=document.getElementById("slot"),br=document.getElementById("brain");if(d&&sl)sl.appendChild(cv);else br.insertBefore(cv,br.querySelector(".hint"));fit()}
 
+/* ===== Đa ngôn ngữ VI · EN · JA =====
+   Dịch văn bản đã dựng trên trang (text node + title/aria-label/placeholder). Tiếng Việt là bản gốc; EN/JA tra từ điển.
+   TR: giao diện (ở đây) + nội dung riêng của Thành (data.i18n trong real.json, không lên GitHub). */
+var LANG=(function(){var m=/[?&]lang=(vi|en|ja)/.exec(location.search),l=m?m[1]:ls("wb_lang","vi");if(m)lset("wb_lang",l);return /^(vi|en|ja)$/.test(l)?l:"vi"})();
+var TR={
+"Hôm nay":["Today","今日"],"Kiếm cơm":["Earn","稼ぎ"],"Tổ ấm":["Home","わが家"],"Rèn":["Grow","自分磨き"],
+"HÔM NAY":["TODAY","今日"],"KIẾM CƠM":["EARN","稼ぎ"],"TỔ ẤM":["HOME","わが家"],"RÈN":["GROW","自分磨き"],
+"Việc chính":["Main job","本業"],"Tay trái":["Side hustle","副業"],"Học":["Study","学習"],"Khoẻ":["Health","健康"],"Brain":["Brain","Brain"],
+"T2":["Mon","月"],"T3":["Tue","火"],"T4":["Wed","水"],"T5":["Thu","木"],"T6":["Fri","金"],"T7":["Sat","土"],"CN":["Sun","日"],
+"Cháy rồi":["On fire","緊急"],"Làm gì giờ?":["What now?","今なにする？"],"Cơ thể":["Body","からだ"],"Vừa đứng dậy":["Just stood up","立ったよ"],
+"Mốc sắp tới":["Milestones","マイルストーン"],"Thả ý tưởng":["Drop an idea","アイデアメモ"],"Gõ ý tưởng, Enter là xong":["Type an idea, press Enter","アイデアを入力してEnter"],
+"Sắp tới hạn":["Due soon","もうすぐ期限"],"Tuần này":["This week","今週"],"Sau đó":["Later","その後"],"Hôm nay · ngày mai":["Today · tomorrow","今日・明日"],
+"Thu gọn":["Collapse","閉じる"],"Tuần":["Week","週"],"Cần cập nhật":["Needs update","要更新"],"Yên bình. Đáng ngờ.":["All quiet. Suspicious.","静か。怪しい。"],
+"Sáng":["Morning","朝"],"Tàu":["Train","電車"],"Khuya":["Late night","深夜"],"Tất cả":["All","すべて"],"Chưa có việc":["Nothing yet","タスクなし"],
+"Xong hết. Uống nước đi.":["All done. Drink some water.","全部完了。水を飲もう。"],"Nghỉ đi.":["Take a break.","休もう。"],
+"hôm nay":["today","今日"],"ngày mai":["tomorrow","明日"],"hôm qua":["yesterday","昨日"],"vừa xong":["just now","たった今"],
+"Gmail · quan trọng":["Gmail · important","Gmail · 重要"],"Mở ↗":["Open ↗","開く ↗"],"Hiện lại":["Restore","元に戻す"],"Đang tải…":["Loading…","読み込み中…"],
+"Không có mail quan trọng cần xem.":["No important mail to review.","確認が必要な重要メールはありません。"],
+"Chưa lấy được mail (kiểm tra mạng hoặc link trong real.json).":["Couldn't fetch mail (check network or the link in real.json).","メールを取得できません（ネットワークまたはreal.jsonのリンクを確認）。"],
+"cũ":["stale","古い"],"Làm mới":["Refresh","更新"],"Ẩn":["Hide","非表示"],"Ẩn mail này":["Hide this mail","このメールを非表示"],
+"Con · thành phố":["Kids · city","子ども・市役所"],"Phòng khám con":["Kids' clinic","子どもの診療所"],"Máy bay":["Flights","航空券"],"Bảo mật tài khoản":["Account security","アカウント保安"],
+"Tiền điện":["Electricity","電気代"],"Thẻ JCB":["JCB card","JCBカード"],"Tiền vào":["Incoming money","入金"],"Gắn sao":["Starred","スター付き"],
+"Thời tiết 7 ngày":["7-day weather","7日間の天気"],"Cho phép vị trí":["Allow location","位置情報を許可"],"Chưa lấy được dự báo.":["Couldn't load the forecast.","天気を取得できません。"],
+"Thử lại":["Retry","再試行"],"Không lấy được vị trí. Bấm thử lại.":["Couldn't get your location. Tap to retry.","位置情報を取得できません。もう一度押してください。"],
+"Trình duyệt không hỗ trợ định vị.":["Your browser doesn't support geolocation.","このブラウザは位置情報に対応していません。"],
+"Nắng":["Sunny","晴れ"],"Mây":["Cloudy","曇り"],"Mưa":["Rain","雨"],"Dông":["Thunderstorm","雷雨"],"Tuyết":["Snow","雪"],"Sương mù":["Fog","霧"],
+"Khoẻ · mục tiêu":["Health · goal","健康 · 目標"],"mục tiêu":["goal","目標"],"Mức đau hôm nay (0–10)":["Pain today (0–10)","今日の痛み (0–10)"],"chưa ghi":["not set","未記録"],
+"Việc cơ thể hôm nay":["Body tasks today","今日のからだの習慣"],"Vận động tuần này":["Exercise this week","今週の運動"],"Nhắc bản thân":["Reminders to self","自分へのリマインド"],
+"Gợi ý chung, không thay bác sĩ.":["General tips, not medical advice.","一般的な目安です。医師の判断に代わるものではありません。"],"Mục tiêu 6 tháng":["6-month goals","6か月の目標"],
+"tuần này ở đâu?":["where this week?","今週どこで？"],"hạn":["deadlines","期限"],"bán hàng hôm nay":["sales today","今日の販売"],
+"Tuần này của nhà":["Home this week","今週のわが家"],"Giấy tờ":["Documents","書類"],"Đường dài":["Long road","長期の予定"],"Nhân viên":["Staff","スタッフ"],"Nội quy":["House rules","ルール"],
+"Tuần này yên ắng. Tận hưởng đi.":["Quiet week. Enjoy it.","今週は静か。楽しもう。"],"Chưa khai deadline nào. Đáng ngờ.":["No deadlines listed. Suspicious.","期限は未登録。怪しい。"],
+"Cuối tháng: file hàng, tính tiền":["Month-end: stock file & accounts","月末：在庫ファイルと精算"],
+"AI tháng":["AI this month","今月のAI"],"đã dùng":["used","使用済み"],"Kéo để cập nhật (nhập tay mỗi tuần)":["Drag to update (enter weekly)","スライドで更新（毎週手入力）"],
+"Vượt tiến độ":["Over pace","ペース超過"],"Trong tiến độ":["On pace","ペース内"],"vượt":["over","超過"],"Kéo để xoay · chạm một điểm":["Drag to rotate · tap a point","ドラッグで回転・点をタップ"],
+"Chạm để vào ♪":["Tap to enter ♪","タップして入る ♪"],"Vào không nhạc":["Enter without music","音楽なしで入る"],"DỮ LIỆU MẪU":["SAMPLE DATA","サンプルデータ"],"BẢN GIA ĐÌNH":["FAMILY VIEW","家族版"],
+"Lỗi tải dữ liệu":["Failed to load data","データの読み込みに失敗"],"Hãy chạy ./serve.sh rồi mở http://localhost:8080":["Run ./serve.sh, then open http://localhost:8080","./serve.sh を実行して http://localhost:8080 を開いてください"]
+};
+var PT=[
+[/^Ngồi (\d+) phút rồi\. Đứng dậy, giãn cổ vai gáy 1 phút\.$/,"Sitting $1 min. Stand up and stretch your neck and shoulders for a minute.","$1分座っています。立ち上がって首と肩を1分ほぐしましょう。"],
+[/^Ngồi (\d+) phút$/,"Sitting $1 min","$1分座っている"],[/^còn (\d+) phút$/,"$1 min left","あと$1分"],
+[/^Đau hôm nay: (.+)$/,"Pain today: ¶1","今日の痛み: ¶1"],[/^(\d+) ngày$/,"$1 d","$1日"],
+[/^(\d+) phút trước$/,"$1 min ago","$1分前"],[/^(\d+) giờ trước$/,"$1 h ago","$1時間前"],[/^(\d+) ngày trước$/,"$1 d ago","$1日前"],
+[/^\+(\d+) mail khác trong Gmail$/,"+$1 more in Gmail","Gmailにさらに$1件"],[/^Đã ẩn \((\d+)\) (▾|▴)$/,"Hidden ($1) $2","非表示 ($1) $2"],
+[/^Xem thêm \+(\d+)$/,"Show +$1","さらに+$1"],[/^cập nhật (.+)$/,"updated $1","更新 $1"],[/^(\d+) gấp$/,"$1 urgent","緊急$1件"],
+[/^Học · tuần này · (\d+)\/(\d+) buổi$/,"Study · this week · $1/$2 sessions","学習 · 今週 · $1/$2回"],
+[/^Vạch = nên ở (\d+)% hôm nay$/,"Mark = should be at $1% today","目安：今日は$1%"],
+[/^(\d+) ngày rồi chưa kể tao nghe lịch\. Tao sắp quên mày\.$/,"$1 days since you told me your schedule. I'm about to forget you.","$1日間スケジュールを聞いていません。忘れちゃいそう。"],
+[/^(T[2-7]|CN) đá bóng, mưa (\d+)%: tính phương án B\.$/,"§1 football, rain $2%: plan B.","§1 サッカー、降水$2%：プランBを。"],
+[/^(.+) \((T[2-7]|CN)\), mưa (\d+)%: xem lại kế hoạch\.$/,"¶1 (§2), rain $3%: rethink the plan.","¶1（§2）降水$3%：計画を見直そう。"],
+[/^Mưa (hôm nay|ngày mai): đổi đi bộ thành giãn cơ trong nhà\.$/,"Rain ¶1: swap the walk for indoor stretching.","雨（¶1）：散歩を室内ストレッチに。"],
+[/^(T[2-7]|CN) đi khách hàng, mưa (\d+)%: nhớ mang ô\.$/,"§1 client visit, rain $2%: bring an umbrella.","§1 客先訪問、降水$2%：傘を忘れずに。"],
+[/^mưa (\d+)%$/,"rain $1%","降水$1%"],[/^(.+), mưa (\d+)%$/,"¶1, rain $2%","¶1、降水$2%"]
+];
+function trOne(s){var i=LANG==="en"?0:1,e=TR[s];if(e)return e[i];
+  for(var k=0;k<PT.length;k++){var m=PT[k][0].exec(s);if(m)return PT[k][i+1].replace(/([$§¶])(\d)/g,function(_,c,n){var v=m[+n]||"";return c==="$"?v:c==="§"?trText(v):trText(v)})}
+  return s}
+function trText(s){if(LANG==="vi"||!s)return s;var r=trOne(s);if(r!==s)return r;
+  if(s.indexOf(" · ")>0){var any=false,o=s.split(" · ").map(function(p){var t=trOne(p);if(t!==p)any=true;return t});return any?o.join(" · "):s}
+  return s}
+function LT(s){return trText(s)}
+function lgHtml(){return '<span class="lg mono">'+["vi","en","ja"].map(function(l){return'<button data-l="'+l+'"'+(l===LANG?' class="on"':'')+'>'+l.toUpperCase()+'</button>'}).join("")+'</span>'}
+var LBUSY=false,LPEND=false,LOBS=null,LUSED=LANG!=="vi";
+function langApply(){
+  if(LANG==="vi"&&!LUSED)return;
+  LBUSY=true;document.documentElement.lang=LANG;
+  var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null),n,L=[];
+  while((n=w.nextNode())){var pn=n.parentNode&&n.parentNode.nodeName;if(pn==="SCRIPT"||pn==="STYLE"||pn==="CANVAS"||pn==="TEXTAREA")continue;L.push(n)}
+  L.forEach(function(n){var cur=n.nodeValue,src=(n.__t!==undefined&&cur===n.__t)?n.__vi:cur;n.__vi=src;
+    var core=src.trim();if(!core){n.__t=cur;return}
+    var out=src.replace(core,trText(core));n.__t=out;if(out!==cur)n.nodeValue=out});
+  [].forEach.call(document.querySelectorAll("[title],[aria-label],[placeholder]"),function(el){el.__a=el.__a||{};
+    ["title","aria-label","placeholder"].forEach(function(a){var cur=el.getAttribute(a);if(cur===null)return;
+      var o=el.__a[a],src=(o&&o.t===cur)?o.v:cur,out=trText(src);el.__a[a]={v:src,t:out};if(out!==cur)el.setAttribute(a,out)})});
+  [].forEach.call(document.querySelectorAll(".lg button"),function(b){b.classList.toggle("on",b.dataset.l===LANG)});
+  if(LOBS)LOBS.takeRecords();LBUSY=false}
+function langInit(){
+  langApply();
+  LOBS=new MutationObserver(function(){if(LBUSY)return;langApply()});
+  LOBS.observe(document.body,{childList:true,subtree:true,characterData:true});
+  document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest(".lg button");if(!b)return;
+    LANG=b.dataset.l;lset("wb_lang",LANG);LUSED=true;langApply()})}
 load().then(function(d){
-  DATA=d;st=ls("wb_st",{});used=+ls("wb_ai",40);f=slotNow();if(FAM)document.body.classList.add("fam");
+  DATA=d;if(d.i18n)Object.keys(d.i18n).forEach(function(k){TR[k]=d.i18n[k]});st=ls("wb_st",{});used=+ls("wb_ai",40);f=slotNow();if(FAM)document.body.classList.add("fam");
   hot.home=!FAM&&(d.urgent||[]).length>0;
   TABS=FAM?[["home","Hôm nay"],["brain","Brain"],["life","Tổ ấm"]]:[["home","Hôm nay"],["brain","AI Family"],["work","Kiếm cơm"],["life","Tổ ấm"],["learn","Rèn"]];
   document.getElementById("nav").innerHTML=TABS.map(function(t,i){return'<button'+(i===0?' class="on"':'')+' data-t="'+t[0]+'">'+t[1]+'</button>'}).join("");
   document.getElementById("nav").onclick=function(e){var b=e.target.closest("button");if(b)go(b.dataset.t)};
   document.getElementById("foot").textContent=(d.label||"").toUpperCase()+(FAM?" · BẢN GIA ĐÌNH":"");
-  renderHome();draw();renderOthers();aiDraw();place();frame();splash();var mq=matchMedia("(min-width:900px)");if(mq.addEventListener)mq.addEventListener("change",place);else mq.addListener(place);
+  renderHome();draw();renderOthers();aiDraw();place();frame();splash();langInit();var mq=matchMedia("(min-width:900px)");if(mq.addEventListener)mq.addEventListener("change",place);else mq.addListener(place);
 }).catch(function(e){document.getElementById("home").innerHTML='<div class="top mono"><span class="lab">Lỗi tải dữ liệu</span></div><p class="mono">Hãy chạy ./serve.sh rồi mở http://localhost:8080</p>'});
 </script>
 </body>

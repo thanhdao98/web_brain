@@ -7,3 +7,4 @@ Dashboard cá nhân tối giản (HTML/CSS/JS thuần, không build). Dữ liệ
 - Không bao giờ commit `data/real.json`, `data/avatar.*`, `.env`; repo này sẽ Public khi deploy → chỉ chứa dữ liệu mẫu.
 - Deploy chỉ khi chủ dự án yêu cầu rõ; workflow Pages có bước quét bí mật.
 - Trình bày cách làm, chờ duyệt rồi mới sửa/chạy.
+- Đa ngôn ngữ VI·EN·JA: từ điển giao diện trong index.html (TR/PT); nội dung riêng dịch trong `i18n` của real.json; `?lang=en|ja`. Thêm chuỗi UI mới thì thêm vào TR/PT.
