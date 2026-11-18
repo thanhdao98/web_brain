@@ -169,6 +169,30 @@ nav button{padding:4px 5px}
 .ka{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
 .kbtn{font:inherit;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:none;color:var(--fg);cursor:pointer}
 .kbtn.kp{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+/* điện thoại: một cột theo thứ tự ưu tiên (việc gấp và việc hôm nay trước; thời tiết, ý tưởng, mốc, hạn sau) */
+@media (max-width:899px){
+ #home .g{display:flex;flex-direction:column}
+ #home .c1,#home .c2,#home .c3{display:contents}
+ #home .c1>*{order:9}#home .c2>*{order:5}#home .c3>*{order:13}
+ #home .c1>.prof{order:0}#home .c1>.stale{order:0}
+ #home .c2>.urg{order:1}#home .c2>.ml{order:2}#home .c2>.next{order:3}#home .c2>.sit{order:4}
+ #home .c2>.seg{order:5}#home .c2>#tasks{order:6}#home .c2>#syn{order:7}
+ #home .c1>.wx{order:8}
+ #home .c1>#ideas{order:9;display:block}
+ #home .c1>.wide.mo{order:10;display:block}
+ #home .mo .mr{flex-direction:column;align-items:flex-start;gap:3px}
+ #home .mr b{white-space:normal}
+}
+/* hàng đầu trang gọn trên màn nhỏ: không tràn ngang */
+@media (max-width:560px){
+ .top{flex-wrap:wrap;align-items:center;gap:8px 10px;margin-bottom:22px}
+ .top .rt{flex-wrap:wrap;justify-content:flex-end;gap:6px 10px;margin-left:auto}
+ .top b{white-space:nowrap;font-size:12px}
+ .kb,.lg button{white-space:nowrap}
+ main{padding-left:16px;padding-right:16px}
+ #home .prof{margin-top:6px}
+ .wxg div{padding:8px 0}
+}
 /* trạng thái đồng bộ */
 .sd{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;background:var(--mute);vertical-align:middle;transform:translateY(-1px)}
 .sd.ok{background:#3ecf6e}.sd.sy{background:#f5a623;animation:blink 1s ease-in-out infinite}.sd.er{background:var(--acc)}
@@ -320,6 +344,10 @@ function mergeApi(b,j){var d=JSON.parse(JSON.stringify(b));
   ["deadlines","tasks","urgent","timeline","docs","workweek","goals","notes","pain"].forEach(function(k){if(j[k]!==undefined)d[k]=j[k]});
   d.learn=d.learn||{};if(j.learn&&j.learn.week)d.learn.week=j.learn.week;
   if(j.updated)d.updated=String(j.updated).replace(" ","T");
+  var c=j.config||{};["profile","company","health","loc","music","workdl"].forEach(function(k){if(c[k]!==undefined)d[k]=c[k]});
+  if(c.i18n)d.i18n=c.i18n;if(c.learn_next!==undefined){d.learn=d.learn||{};d.learn.next=c.learn_next}
+  delete d.week;delete d.work;   // biểu đồ tuần và mục 'work' là dữ liệu mẫu, không có trong Sheet
+  if(j.role==="family"){delete d.health;delete d.company}
   if(j.avatar){d.profile=d.profile||{};d.profile.avatar=j.avatar}
   if(j.ticks)d.__ticks=j.ticks;
   if(j.ideas)d.__ideas=j.ideas;
@@ -405,13 +433,13 @@ function renderHome(){
     ug=u.length?'<div class="urg"><div class="n mono">'+u.length+'</div><div><span class="lab mono">Cháy rồi</span><ul>'+u.map(function(x){return'<li>'+esc(x.t||x)+(x.when?'<span class="w mono">'+esc(x.when)+'</span>':'')+'</li>'}).join("")+'</ul></div></div>'
       :'<div class="urg"><div class="n mono" style="color:var(--mute)">0</div><div><span class="lab mono">Cháy rồi</span><ul><li>Yên bình. Đáng ngờ.</li></ul></div></div>';
   }
-  if(!FAM&&DATA.updated){var ag=Math.floor((new Date()-new Date(DATA.updated))/864e5);if(ag>=2)p1+='<div><h2 class="lab mono">Cần cập nhật</h2><div class="mr"><span>'+ag+' ngày rồi chưa kể tao nghe lịch. Tao sắp quên mày.</span></div></div>'}
+  if(!FAM&&DATA.updated){var ag=Math.floor((new Date()-new Date(DATA.updated))/864e5);if(ag>=2)p1+='<div class="stale"><h2 class="lab mono">Cần cập nhật</h2><div class="mr"><span>'+ag+' ngày rồi chưa kể tao nghe lịch. Tao sắp quên mày.</span></div></div>'}
   var tl=(DATA.timeline||[]).filter(vis).slice(0,2);
   if(tl.length)p1+='<div class="wide mo"><h2 class="lab mono">Mốc sắp tới</h2>'+tl.map(function(x){return'<div class="mr"><span>'+esc(x.what)+'</span><b class="mono">'+esc(x.when)+'</b></div>'}).join("")+'</div>';
   p1+='<div class="wx" id="wx"></div>';
   p2+=ug+(FAM||!(DATA.mail&&DATA.mail.url)?"":'<div class="ml" id="ml"></div>')+'<div class="next"><span class="lab mono">Làm gì giờ?</span><div class="t" id="nx"></div><div class="s mono" id="ns"></div>'+dayStrip()+'</div>'+(FAM?"":sitHtml());
   p2b+=segHtml()+arHtml()+'<div id="tasks"></div><div class="nt" id="syn">Tick tự reset lúc 0:00</div>';
-  if(!FAM)p1+='<div class="wide"><h2 class="lab mono">Thả ý tưởng</h2><input id="qn" class="qn mono" placeholder="Gõ ý tưởng, Enter là xong" autocomplete="off"><div id="qnl"></div></div>';
+  if(!FAM)p1+='<div class="wide" id="ideas"><h2 class="lab mono">Thả ý tưởng</h2><input id="qn" class="qn mono" placeholder="Gõ ý tưởng, Enter là xong" autocomplete="off"><div id="qnl"></div></div>';
   if(!FAM&&DATA.week)p3+='<h2 class="lab mono">Tuần</h2><div class="week" id="week"></div>';
   var dl=(DATA.deadlines||[]).filter(vis).filter(function(x){return !x.hide}).map(function(x){return{t:x.t,n:days(x),a:x.a}}).filter(function(x){return x.n>=0}).sort(function(a,b){return a.n-b.n});
   if(dl.length){var gh=function(n){return n<=1?"Hôm nay · ngày mai":(n<=7?"Tuần này":"Sau đó")},lg="",k=0,hh="";
