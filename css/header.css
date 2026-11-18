@@ -1,0 +1,3 @@
+/* header.css — Hàng đầu trang (ngày, nút) và thanh điều hướng trên điện thoại. */
+@media (max-width:899px){nav button{font-size:10px;letter-spacing:.03em;padding:4px 3px}}
+.top .rt{display:flex;align-items:center;gap:12px}

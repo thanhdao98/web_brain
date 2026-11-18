@@ -1,0 +1,20 @@
+/* layout-mobile.css — Điện thoại: một cột, thứ tự ưu tiên; hàng đầu trang gọn. */
+/* điện thoại: một cột theo thứ tự ưu tiên (việc gấp và việc hôm nay trước; thời tiết, ý tưởng, mốc, hạn sau) */
+@media (max-width:899px){
+ #home .g{display:flex;flex-direction:column}
+ #home .c1,#home .c2,#home .c3{display:contents}
+ #home .c1>*,#home .c2>*,#home .c3>*{order:20}
+ #home .prof,#home .stale{order:0}#home .urg{order:1}#home .wx{order:2}#home #dlc{order:3}#home .next{order:4}#home .sit{order:5}#home .seg{order:6}#home #tasks{order:7}#home #syn{order:8}#home .cl{order:9}#home .ml:not(.cl){order:10}#home .nc{order:11}#home #moc{order:12;display:block}#home #ideas{order:13;display:block}
+ #home .mo .mr{flex-direction:column;align-items:flex-start;gap:3px}
+ #home .mr b{white-space:normal}
+}
+/* hàng đầu trang gọn trên màn nhỏ: không tràn ngang */
+@media (max-width:560px){
+ .top{flex-wrap:wrap;align-items:center;gap:8px 10px;margin-bottom:22px}
+ .top .rt{flex-wrap:wrap;justify-content:flex-end;gap:6px 10px;margin-left:auto}
+ .top b{white-space:nowrap;font-size:12px}
+ .kb,.lg button{white-space:nowrap}
+ main{padding-left:16px;padding-right:16px}
+ #home .prof{margin-top:6px}
+ .wxg div{padding:8px 0}
+}

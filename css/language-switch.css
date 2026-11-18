@@ -1,0 +1,3 @@
+/* language-switch.css — Nút chuyển ngôn ngữ VI · EN · JA. */
+.lg{display:inline-flex;gap:1px}.lg button{font:inherit;font-size:11px;letter-spacing:.06em;border:0;background:none;color:var(--mute);padding:3px 7px;border-radius:999px;cursor:pointer;transition:background .15s,color .15s}
+.lg button:hover{color:var(--fg)}.lg button.on{background:var(--fg);color:var(--bg)}

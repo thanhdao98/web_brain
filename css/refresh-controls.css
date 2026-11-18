@@ -1,0 +1,4 @@
+/* refresh-controls.css — Nút cập nhật ngay (↻) và công tắc Tự động ở đầu trang. */
+.rfb,.aub{font:inherit;font-size:11px;letter-spacing:.06em;border:0;background:none;color:var(--mute);cursor:pointer;padding:3px 7px;border-radius:999px;transition:color .15s,background .15s}.rfb:hover,.aub:hover{color:var(--fg)}
+.rfb{font-size:14px;line-height:1;padding:3px 5px}.rfb.spin{animation:rot .8s linear infinite;color:var(--fg)}
+.aub .sd{margin-right:5px;background:var(--mute)}.aub.on .sd{background:#3ecf6e}.aub.on.pz .sd{background:#f5a623}.aub.on{color:var(--fg)}

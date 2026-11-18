@@ -1,0 +1,10 @@
+/* base.css — Nền tảng: màu (sáng/tối), chữ, khoảng cách chung. */
+:root{--bg:#fff;--fg:#0b0b0c;--mute:#6e6e73;--line:#e7e7e9;--acc:#ff4b2b}
+@media (prefers-color-scheme:dark){:root{--bg:#0b0b0c;--fg:#f4f4f5;--mute:#9a9aa0;--line:#232326}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.35 "Helvetica Neue",Helvetica,Arial,"Hiragino Sans","Segoe UI",sans-serif;text-rendering:optimizeLegibility;padding-bottom:78px}
+main{max-width:480px;margin:0 auto;padding:22px 22px}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;letter-spacing:.02em}
+.lab{font-size:12px;text-transform:uppercase;color:var(--mute)}
+.top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:34px}
+.top b{font-size:13px}

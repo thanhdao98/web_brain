@@ -1,0 +1,57 @@
+/* i18n-dictionary.js — Từ điển dịch giao diện VI → EN/JA (TR) và mẫu câu có số (PT). */
+/* ===== Đa ngôn ngữ VI · EN · JA =====
+   Dịch văn bản đã dựng trên trang (text node + title/aria-label/placeholder). Tiếng Việt là bản gốc; EN/JA tra từ điển.
+   TR: giao diện (ở đây) + nội dung riêng của Thành (data.i18n trong real.json, không lên GitHub). */
+var LANG=(function(){var m=/[?&]lang=(vi|en|ja)/.exec(location.search),l=m?m[1]:ls("wb_lang","vi");if(m)lset("wb_lang",l);return /^(vi|en|ja)$/.test(l)?l:"vi"})();
+var TR={
+"Hôm nay":["Today","今日"],"Kiếm cơm":["Earn","稼ぎ"],"Tổ ấm":["Home","わが家"],"Rèn":["Grow","自分磨き"],
+"HÔM NAY":["TODAY","今日"],"KIẾM CƠM":["EARN","稼ぎ"],"TỔ ẤM":["HOME","わが家"],"RÈN":["GROW","自分磨き"],
+"Việc chính":["Main job","本業"],"Tay trái":["Side hustle","副業"],"Học":["Study","学習"],"Khoẻ":["Health","健康"],"Brain":["Brain","Brain"],
+"T2":["Mon","月"],"T3":["Tue","火"],"T4":["Wed","水"],"T5":["Thu","木"],"T6":["Fri","金"],"T7":["Sat","土"],"CN":["Sun","日"],
+"Cháy rồi":["On fire","緊急"],"Làm gì giờ?":["What now?","今なにする？"],"Cơ thể":["Body","からだ"],"Vừa đứng dậy":["Just stood up","立ったよ"],
+"Mốc sắp tới":["Milestones","マイルストーン"],"Thả ý tưởng":["Drop an idea","アイデアメモ"],"Gõ ý tưởng, Enter là xong":["Type an idea, press Enter","アイデアを入力してEnter"],
+"Sắp tới hạn":["Due soon","もうすぐ期限"],"Tuần này":["This week","今週"],"Sau đó":["Later","その後"],"Hôm nay · ngày mai":["Today · tomorrow","今日・明日"],"Nhập mã":["Enter code","コード入力"],"Cập nhật ngay":["Refresh now","今すぐ更新"],"Mở/đóng tất cả":["Expand/collapse all","すべて開閉"],"Tự động":["Auto","自動"],"Tự động cập nhật 30 giây":["Auto-refresh every 30 s","30秒ごとに自動更新"],"Tạm dừng vì không thao tác. Chạm để tiếp tục.":["Paused (idle). Tap to resume.","操作がないため一時停止中。タップで再開。"],"Lịch":["Calendar","予定"],"Ngày mai":["Tomorrow","明日"],"Cả ngày":["All day","終日"],"Hôm nay không có lịch.":["Nothing on the calendar today.","今日の予定はありません。"],"Mở Calendar ↗":["Open Calendar ↗","カレンダーを開く ↗"],"Chưa lấy được lịch.":["Couldn't load the calendar.","予定を取得できません。"],"(dữ liệu cũ)":["(stale data)","(古いデータ)"],"đang lưu…":["saving…","保存中…"],"Thêm":["Add","追加"],"Nhà mình cần gấp":["Home: urgent","家の急ぎ"],"Nhà mình yên ổn.":["All calm at home.","家は平穏です。"],"Ghi chú chung":["Shared notes","共有メモ"],"Thêm ghi chú…":["Add a note…","メモを追加…"],"Vợ":["Wife","妻"],"Chồng":["Husband","夫"],"Xoá":["Delete","削除"],"Đang đồng bộ…":["Syncing…","同期中…"],"Đang lưu…":["Saving…","保存中…"],"Chưa lưu được":["Not saved","保存できません"],"sẽ thử lại":["will retry","再試行します"],"Có dữ liệu mới ↻":["New data ↻","新しいデータ ↻"],"Đồng bộ ngay":["Sync now","今すぐ同期"],"Nhập mã truy cập":["Enter access code","アクセスコードを入力"],"Mở":["Open","開く"],"Huỷ":["Cancel","キャンセル"],"Thoát":["Sign out","終了"],"Mã không đúng":["Wrong code","コードが違います"],"Đang kiểm tra…":["Checking…","確認中…"],"Không kết nối được":["Couldn't connect","接続できません"],"Dán mã do Thành gửi":["Paste the code you were given","受け取ったコードを貼り付け"],"Dữ liệu thật ✓":["Live data ✓","実データ ✓"],"Gia đình ✓":["Family ✓","家族 ✓"],"Thoát chế độ dữ liệu thật?":["Leave live-data mode?","実データモードを終了しますか？"],"DỮ LIỆU THẬT":["LIVE DATA","実データ"],"Tick tự reset lúc 0:00":["Ticks reset at 0:00","チェックは0時にリセット"],
+"Thu gọn":["Collapse","閉じる"],"Tuần":["Week","週"],"Cần cập nhật":["Needs update","要更新"],"Yên bình. Đáng ngờ.":["All quiet. Suspicious.","静か。怪しい。"],
+"Sáng":["Morning","朝"],"Tàu":["Train","電車"],"Khuya":["Late night","深夜"],"Tất cả":["All","すべて"],"Chưa có việc":["Nothing yet","タスクなし"],
+"Xong hết. Uống nước đi.":["All done. Drink some water.","全部完了。水を飲もう。"],"Nghỉ đi.":["Take a break.","休もう。"],
+"hôm nay":["today","今日"],"ngày mai":["tomorrow","明日"],"hôm qua":["yesterday","昨日"],"vừa xong":["just now","たった今"],
+"Gmail · quan trọng":["Gmail · important","Gmail · 重要"],"Mở ↗":["Open ↗","開く ↗"],"Hiện lại":["Restore","元に戻す"],"Đang tải…":["Loading…","読み込み中…"],
+"Không có mail quan trọng cần xem.":["No important mail to review.","確認が必要な重要メールはありません。"],
+"Chưa lấy được mail (kiểm tra mạng hoặc link trong real.json).":["Couldn't fetch mail (check network or the link in real.json).","メールを取得できません（ネットワークまたはreal.jsonのリンクを確認）。"],
+"cũ":["stale","古い"],"Làm mới":["Refresh","更新"],"Ẩn":["Hide","非表示"],"Ẩn mail này":["Hide this mail","このメールを非表示"],
+"Con · thành phố":["Kids · city","子ども・市役所"],"Phòng khám con":["Kids' clinic","子どもの診療所"],"Máy bay":["Flights","航空券"],"Bảo mật tài khoản":["Account security","アカウント保安"],
+"Tiền điện":["Electricity","電気代"],"Thẻ JCB":["JCB card","JCBカード"],"Tiền vào":["Incoming money","入金"],"Gắn sao":["Starred","スター付き"],
+"Thời tiết 7 ngày":["7-day weather","7日間の天気"],"Cho phép vị trí":["Allow location","位置情報を許可"],"Chưa lấy được dự báo.":["Couldn't load the forecast.","天気を取得できません。"],
+"Thử lại":["Retry","再試行"],"Không lấy được vị trí. Bấm thử lại.":["Couldn't get your location. Tap to retry.","位置情報を取得できません。もう一度押してください。"],
+"Trình duyệt không hỗ trợ định vị.":["Your browser doesn't support geolocation.","このブラウザは位置情報に対応していません。"],
+"Nắng":["Sunny","晴れ"],"Mây":["Cloudy","曇り"],"Mưa":["Rain","雨"],"Dông":["Thunderstorm","雷雨"],"Tuyết":["Snow","雪"],"Sương mù":["Fog","霧"],
+"Khoẻ · mục tiêu":["Health · goal","健康 · 目標"],"mục tiêu":["goal","目標"],"Mức đau hôm nay (0–10)":["Pain today (0–10)","今日の痛み (0–10)"],"chưa ghi":["not set","未記録"],
+"Việc cơ thể hôm nay":["Body tasks today","今日のからだの習慣"],"Vận động tuần này":["Exercise this week","今週の運動"],"Nhắc bản thân":["Reminders to self","自分へのリマインド"],
+"Gợi ý chung, không thay bác sĩ.":["General tips, not medical advice.","一般的な目安です。医師の判断に代わるものではありません。"],"Mục tiêu 6 tháng":["6-month goals","6か月の目標"],
+"tuần này ở đâu?":["where this week?","今週どこで？"],"hạn":["deadlines","期限"],"bán hàng hôm nay":["sales today","今日の販売"],
+"Tuần này của nhà":["Home this week","今週のわが家"],"Giấy tờ":["Documents","書類"],"Đường dài":["Long road","長期の予定"],"Nhân viên":["Staff","スタッフ"],"Nội quy":["House rules","ルール"],
+"Tuần này yên ắng. Tận hưởng đi.":["Quiet week. Enjoy it.","今週は静か。楽しもう。"],"Chưa khai deadline nào. Đáng ngờ.":["No deadlines listed. Suspicious.","期限は未登録。怪しい。"],
+"Cuối tháng: file hàng, tính tiền":["Month-end: stock file & accounts","月末：在庫ファイルと精算"],
+"AI tháng":["AI this month","今月のAI"],"đã dùng":["used","使用済み"],"Kéo để cập nhật (nhập tay mỗi tuần)":["Drag to update (enter weekly)","スライドで更新（毎週手入力）"],
+"Vượt tiến độ":["Over pace","ペース超過"],"Trong tiến độ":["On pace","ペース内"],"vượt":["over","超過"],"Kéo để xoay · chạm một điểm":["Drag to rotate · tap a point","ドラッグで回転・点をタップ"],
+"Chạm để vào ♪":["Tap to enter ♪","タップして入る ♪"],"Vào không nhạc":["Enter without music","音楽なしで入る"],"DỮ LIỆU MẪU":["SAMPLE DATA","サンプルデータ"],"BẢN GIA ĐÌNH":["FAMILY VIEW","家族版"],
+"Lỗi tải dữ liệu":["Failed to load data","データの読み込みに失敗"],"Hãy chạy ./serve.sh rồi mở http://localhost:8080":["Run ./serve.sh, then open http://localhost:8080","./serve.sh を実行して http://localhost:8080 を開いてください"]
+};
+var PT=[
+[/^\+(\d+) sự kiện nữa$/,"+$1 more events","他$1件"],
+[/^Đã đồng bộ (.+)$/,"Synced $1","同期済み $1"],
+[/^Ngồi (\d+) phút rồi\. Đứng dậy, giãn cổ vai gáy 1 phút\.$/,"Sitting $1 min. Stand up and stretch your neck and shoulders for a minute.","$1分座っています。立ち上がって首と肩を1分ほぐしましょう。"],
+[/^Ngồi (\d+) phút$/,"Sitting $1 min","$1分座っている"],[/^còn (\d+) phút$/,"$1 min left","あと$1分"],
+[/^Đau hôm nay: (.+)$/,"Pain today: ¶1","今日の痛み: ¶1"],[/^(\d+) ngày$/,"$1 d","$1日"],
+[/^(\d+) phút trước$/,"$1 min ago","$1分前"],[/^(\d+) giờ trước$/,"$1 h ago","$1時間前"],[/^(\d+) ngày trước$/,"$1 d ago","$1日前"],
+[/^\+(\d+) mail khác trong Gmail$/,"+$1 more in Gmail","Gmailにさらに$1件"],[/^Đã ẩn \((\d+)\) (▾|▴)$/,"Hidden ($1) $2","非表示 ($1) $2"],
+[/^Xem thêm \+(\d+)$/,"Show +$1","さらに+$1"],[/^cập nhật (.+)$/,"updated $1","更新 $1"],[/^(\d+) gấp$/,"$1 urgent","緊急$1件"],
+[/^Học · tuần này · (\d+)\/(\d+) buổi$/,"Study · this week · $1/$2 sessions","学習 · 今週 · $1/$2回"],
+[/^Vạch = nên ở (\d+)% hôm nay$/,"Mark = should be at $1% today","目安：今日は$1%"],
+[/^(\d+) ngày rồi chưa kể tao nghe lịch\. Tao sắp quên mày\.$/,"$1 days since you told me your schedule. I'm about to forget you.","$1日間スケジュールを聞いていません。忘れちゃいそう。"],
+[/^(T[2-7]|CN) đá bóng, mưa (\d+)%: tính phương án B\.$/,"§1 football, rain $2%: plan B.","§1 サッカー、降水$2%：プランBを。"],
+[/^(.+) \((T[2-7]|CN)\), mưa (\d+)%: xem lại kế hoạch\.$/,"¶1 (§2), rain $3%: rethink the plan.","¶1（§2）降水$3%：計画を見直そう。"],
+[/^Mưa (hôm nay|ngày mai): đổi đi bộ thành giãn cơ trong nhà\.$/,"Rain ¶1: swap the walk for indoor stretching.","雨（¶1）：散歩を室内ストレッチに。"],
+[/^(T[2-7]|CN) đi khách hàng, mưa (\d+)%: nhớ mang ô\.$/,"§1 client visit, rain $2%: bring an umbrella.","§1 客先訪問、降水$2%：傘を忘れずに。"],
+[/^mưa (\d+)%$/,"rain $1%","降水$1%"],[/^(.+), mưa (\d+)%$/,"¶1, rain $2%","¶1、降水$2%"]
+];

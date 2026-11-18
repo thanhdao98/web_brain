@@ -1,0 +1,41 @@
+/* home-today.css — Tab Hôm nay: việc gấp, 'Làm gì giờ?', bộ chọn, dải ngày, danh sách việc, tuần. */
+/* gấp */
+.urg{display:flex;gap:16px;align-items:flex-start;padding:18px 18px 8px;border:1.5px solid var(--acc);border-radius:18px;margin-bottom:6px}
+.urg .n{font-size:64px;line-height:.9;font-weight:700;color:var(--acc);letter-spacing:-.04em}
+.urg ul{list-style:none;margin:6px 0 0;padding:0;font-size:17px;font-weight:600}
+.urg li{margin-bottom:12px;line-height:1.2}
+.urg li .w{display:block;margin-top:3px;font-size:12px;font-weight:400;color:var(--mute)}
+/* tiếp theo */
+.next{padding:26px 0;border-bottom:1px solid var(--line)}
+.next .t{font-size:32px;font-weight:700;letter-spacing:-.02em;margin-top:8px;line-height:1.1}
+.next .t i{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--acc);margin-right:10px;vertical-align:middle;transform:translateY(-3px)}
+.next .s{color:var(--mute);margin-top:6px}
+/* bộ chọn */
+.seg{display:flex;gap:6px;margin:22px 0 6px}
+.seg button{font:inherit;font-size:13px;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line);background:none;color:var(--mute);padding:7px 12px;border-radius:999px;white-space:nowrap}
+.seg button.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.seg button em{font-style:normal;opacity:.6;margin-left:6px}
+.seg button.now:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--acc);margin-right:6px;vertical-align:middle;transform:translateY(-1px)}
+/* dải ngày */
+.day{display:flex;gap:3px;position:relative;height:5px;margin:22px 0 0}
+.day span{display:block;border-radius:3px;background:var(--line)}
+.day span.on{background:var(--fg)}
+.day i{position:absolute;top:-5px;width:3px;height:15px;margin-left:-1.5px;border-radius:2px;background:var(--acc)}
+.dayl{display:flex;gap:3px;margin-top:10px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+/* danh sách */
+.row{display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+.row .c{width:24px;height:24px;border:1.5px solid var(--fg);border-radius:50%;flex:none;display:grid;place-items:center;font-size:13px;background:none;color:var(--bg);padding:0}
+.row .t{flex:1;font-weight:600}.row .d{font-size:13px;color:var(--mute)}
+.row.done .c{background:var(--fg)}.row.done .t{color:var(--mute);text-decoration:line-through;font-weight:400}
+/* tuần */
+.week{display:flex;justify-content:space-between;align-items:flex-end;height:70px;margin:8px 0 4px}
+.week div{width:30px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;color:var(--mute)}
+.week i{display:block;width:100%;background:var(--fg);border-radius:2px}
+.week .today{color:var(--fg);font-weight:700}
+h2{margin:34px 0 8px}
+.dl{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.dl b{font-size:15px;white-space:nowrap}.dl.hot b{color:var(--acc)}
+.dl.hot span{font-weight:700}.dl.wk b{font-weight:700}.dl.far span,.dl.far b{color:var(--mute)}
+.dlw .x{display:none}.dlw.open .x{display:flex}.dlw.open h2.x{display:block}
+.dg{margin:20px 0 2px}
+.more{margin-top:12px;background:none;border:1px solid var(--line);border-radius:999px;color:var(--mute);font:inherit;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:7px 14px;cursor:pointer}

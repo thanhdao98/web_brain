@@ -1,0 +1,7 @@
+/* home-compact-mobile.css — Tab Hôm nay trên điện thoại: thu nhỏ ảnh, thẻ Cháy rồi, Làm gì giờ?. */
+@media (max-width:899px){
+ #home .prof{margin:2px 0 14px}#home .ban{height:72px}#home .tg{margin-top:8px;font-size:15px}#home .tags{display:none}
+ #home .urg{padding:12px 14px 4px}#home .urg .n{font-size:40px}#home .urg ul{font-size:15px;margin-top:2px}#home .urg li{margin-bottom:8px}
+ #home .nc,#home .ml{margin-top:8px;padding:10px 14px 4px}#home .ml .mi{padding:8px 0}
+ #home .next{padding:14px 0}#home .next .t{font-size:24px}
+}

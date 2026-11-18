@@ -1,0 +1,8 @@
+/* card-collapse.css — Thẻ gấp được (▾) khi có hơn 3 mục, nút mở/đóng tất cả, nút 'Đã qua hôm nay' của Lịch. */
+.cd>.mh,.cd>.nh{cursor:pointer;-webkit-user-select:none;user-select:none}
+.cd>.mh::after,.cd>.nh::after{content:"\25BE";margin-left:8px;color:var(--mute);font-size:11px;transition:transform .2s}
+.cd.c>.mh::after,.cd.c>.nh::after{transform:rotate(-90deg)}
+.cd.c .xx{display:none}
+@media (min-width:900px){#home #slot{max-width:210px;margin:0 auto 22px}}
+.cl:not(.sp) .ce.pst{display:none}.cl .mht{display:block;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);color:var(--mute);font-size:12px;padding:8px 0;cursor:pointer}.cl .mht:hover{color:var(--fg)}
+.xab{font:inherit;font-size:14px;line-height:1;border:0;background:none;color:var(--mute);cursor:pointer;padding:3px 5px;border-radius:999px}.xab:hover{color:var(--fg)}

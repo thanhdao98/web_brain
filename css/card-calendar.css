@@ -1,0 +1,8 @@
+/* card-calendar.css — Thẻ Lịch Google Calendar. */
+/* lịch Google Calendar (chỉ bạn) */
+.cl .dh{font-size:11px;color:var(--mute);margin:12px 0 2px;text-transform:uppercase;letter-spacing:.06em}
+.cl .ce{display:flex;gap:12px;padding:9px 0;border-top:1px solid var(--line);align-items:baseline}
+.cl .ct{flex:none;width:56px;font-size:12px;color:var(--mute)}
+.cl .cn{font-weight:600;line-height:1.25}.cl .cd{display:block;font-size:11px;color:var(--mute);margin-top:2px}
+.cl .ce.pst{opacity:.45}.cl .ce.now .ct{color:var(--acc);font-weight:700}
+.cl .go{font-size:12px;color:var(--mute);text-decoration:none;margin-left:8px}.cl .go:hover{color:var(--fg)}

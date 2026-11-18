@@ -1,0 +1,4 @@
+/* domains.css — Lĩnh vực: chấm màu và hàng lọc thứ hai. */
+/* lĩnh vực: chấm màu + hàng lọc thứ hai */
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:middle;transform:translateY(-1px)}
+.seg.ar{flex-wrap:wrap;margin-top:8px}.seg.ar button{font-size:11px;padding:5px 10px}

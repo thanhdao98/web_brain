@@ -1,0 +1,24 @@
+/* layout-desktop.css — Máy tính (≥900px): 3 cột, vừa một màn hình. */
+/* một màn hình, không cuộn (máy tính rộng) */
+@media (min-width:1180px){
+ nav{padding:12px 0}
+ main{max-width:1600px;padding:12px 40px 18px}
+ .top{margin-bottom:14px}
+ .g{grid-template-columns:minmax(240px,.85fr) minmax(0,1.6fr) minmax(250px,.95fr);gap:36px}
+ .c1,.c2,.c3,.c4{grid-column:auto;grid-row:1}
+ .ban{height:clamp(110px,17vh,170px)}
+ #cv{margin:0 auto}
+ .tg{margin-top:12px;font-size:17px}
+ h2{margin:20px 0 6px}
+ .seg{margin:0 0 4px}
+ .urg{padding:16px 16px 6px}
+ .next{padding:18px 0}
+ .next .t{font-size:30px}
+ .row{padding:12px 0}
+ .dl{padding:9px 0}
+ .mr{padding:10px 0}
+ .wide.stats{margin-top:18px;padding:16px 0}
+ .stats b{font-size:32px}
+ #mubox{left:24px;right:auto;bottom:20px}
+ #mubox iframe{width:200px;height:112px}
+}

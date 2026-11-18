@@ -1,0 +1,12 @@
+/* access-key.css — Hộp nhập mã truy cập (KEY) và nút 'Dữ liệu thật'. */
+/* mã truy cập (KEY) */
+.kb{font:inherit;font-size:11px;letter-spacing:.04em;border:1px solid var(--line);background:none;color:var(--mute);padding:3px 9px;border-radius:999px;cursor:pointer;transition:color .15s,border-color .15s}
+.kb:hover{color:var(--fg);border-color:var(--fg)}.kb.on{color:var(--fg);border-color:var(--fg)}
+#kd{position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:20px;animation:fade .2s}
+.kc{background:var(--bg);color:var(--fg);border-radius:16px;padding:22px;max-width:380px;width:100%}
+.kt{font-weight:700;font-size:18px;margin-bottom:12px}
+#kin{width:100%;font:inherit;padding:12px;border:1.5px solid var(--fg);border-radius:10px;background:none;color:var(--fg)}
+.kmsg{min-height:20px;margin-top:8px;font-size:13px;color:var(--acc)}
+.ka{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
+.kbtn{font:inherit;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:none;color:var(--fg);cursor:pointer}
+.kbtn.kp{background:var(--fg);color:var(--bg);border-color:var(--fg)}
