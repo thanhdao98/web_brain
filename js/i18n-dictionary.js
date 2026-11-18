@@ -2,7 +2,7 @@
 /* ===== Đa ngôn ngữ VI · EN · JA =====
    Dịch văn bản đã dựng trên trang (text node + title/aria-label/placeholder). Tiếng Việt là bản gốc; EN/JA tra từ điển.
    TR: giao diện (ở đây) + nội dung riêng của Thành (data.i18n trong real.json, không lên GitHub). */
-var LANG=(function(){var m=/[?&]lang=(vi|en|ja)/.exec(location.search),l=m?m[1]:ls("wb_lang","vi");if(m)lset("wb_lang",l);return /^(vi|en|ja)$/.test(l)?l:"vi"})();
+var LANG=(function(){var m=/[?&]lang=(vi|en|ja)/.exec(location.search),l=m?m[1]:readStorage("wb_lang","vi");if(m)writeStorage("wb_lang",l);return /^(vi|en|ja)$/.test(l)?l:"vi"})();
 var TR={
 "Hôm nay":["Today","今日"],"Kiếm cơm":["Earn","稼ぎ"],"Tổ ấm":["Home","わが家"],"Rèn":["Grow","自分磨き"],
 "HÔM NAY":["TODAY","今日"],"KIẾM CƠM":["EARN","稼ぎ"],"TỔ ẤM":["HOME","わが家"],"RÈN":["GROW","自分磨き"],
