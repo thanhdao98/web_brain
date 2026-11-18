@@ -162,11 +162,12 @@ nav button{padding:4px 5px}
  #home .nc,#home .ml{margin-top:8px;padding:10px 14px 4px}#home .ml .mi{padding:8px 0}
  #home .next{padding:14px 0}#home .next .t{font-size:24px}
 }
-@media (min-width:900px){#home .urg{margin-bottom:26px}#home .urg>div:last-child{flex:1}#home .urg ul{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:2px 32px}#home .urg li{margin-bottom:6px}#home #slot{margin:24px 0 0}#home .c3>.wx{margin:0 0 20px}}
 .cd>.mh,.cd>.nh{cursor:pointer;-webkit-user-select:none;user-select:none}
 .cd>.mh::after,.cd>.nh::after{content:"\25BE";margin-left:8px;color:var(--mute);font-size:11px;transition:transform .2s}
 .cd.c>.mh::after,.cd.c>.nh::after{transform:rotate(-90deg)}
 .cd.c .xx{display:none}
+@media (min-width:900px){#home #slot{max-width:210px;margin:0 auto 22px}}
+.cl:not(.sp) .ce.pst{display:none}.cl .mht{display:block;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);color:var(--mute);font-size:12px;padding:8px 0;cursor:pointer}.cl .mht:hover{color:var(--fg)}
 .xab{font:inherit;font-size:14px;line-height:1;border:0;background:none;color:var(--mute);cursor:pointer;padding:3px 5px;border-radius:999px}.xab:hover{color:var(--fg)}
 .rfb,.aub{font:inherit;font-size:11px;letter-spacing:.06em;border:0;background:none;color:var(--mute);cursor:pointer;padding:3px 7px;border-radius:999px;transition:color .15s,background .15s}.rfb:hover,.aub:hover{color:var(--fg)}
 .rfb{font-size:14px;line-height:1;padding:3px 5px}.rfb.spin{animation:rot .8s linear infinite;color:var(--fg)}
@@ -189,8 +190,7 @@ nav button{padding:4px 5px}
  #home .g{display:flex;flex-direction:column}
  #home .c1,#home .c2,#home .c3{display:contents}
  #home .c1>*,#home .c2>*,#home .c3>*{order:20}
- #home .stale{order:1}#home #dlc{order:2}#home .next{order:3}#home .sit{order:4}#home .seg{order:5}#home #tasks{order:7}#home #syn{order:8}
- #home .wx{order:9}#home .cl{order:10}#home .ml:not(.cl){order:11}#home .nc{order:12}#home #moc{order:13;display:block}#home #ideas{order:14;display:block}#home .prof{order:15}
+ #home .prof,#home .stale{order:0}#home .urg{order:1}#home .wx{order:2}#home #dlc{order:3}#home .next{order:4}#home .sit{order:5}#home .seg{order:6}#home #tasks{order:7}#home #syn{order:8}#home .cl{order:9}#home .ml:not(.cl){order:10}#home .nc{order:11}#home #moc{order:12;display:block}#home #ideas{order:13;display:block}
  #home .mo .mr{flex-direction:column;align-items:flex-start;gap:3px}
  #home .mr b{white-space:normal}
 }
@@ -514,7 +514,7 @@ function renderHome(){
   if(dl.length){var gh=function(n){return n<=1?"Hôm nay · ngày mai":(n<=7?"Tuần này":"Sau đó")},lg="",k=0,hh="";
     dl.forEach(function(x){var g=gh(x.n),xc=k>=4?" x":"";if(g!==lg){hh+='<h2 class="lab mono dg'+xc+'">'+g+'</h2>';lg=g}hh+='<div class="dl'+(x.n<=1?' hot':(x.n<=7?' wk':' far'))+xc+'"><span>'+dotH(x.a)+esc(x.t)+'</span><b class="mono">'+(x.n===0?"hôm nay":(x.n===1?"ngày mai":x.n+" ngày"))+'</b></div>';k++});
     pd+='<div id="dlc"><h2 class="lab mono">Sắp tới hạn</h2><div class="dlw" id="dlw">'+hh+(dl.length>4?'<button class="more mono" id="more" data-n="'+(dl.length-4)+'">Xem thêm +'+(dl.length-4)+'</button>':'')+'</div></div>'}
-  document.getElementById("home").innerHTML=hd+ug+'<div class="g"><div class="c1">'+pst+pd+pmo+pid+pf+'</div><div class="c2">'+p2+p2b+'</div><div class="c3">'+pwx+(FAM||!calSrc()?"":'<div class="ml cl" id="cl"></div><div class="ml" id="ml"></div>')+pnc+p3+'<div id="slot"></div></div></div>';
+  document.getElementById("home").innerHTML=hd+'<div class="g"><div class="c1">'+pwx+pst+pf+pmo+pnc+pid+'</div><div class="c2">'+ug+p2+p2b+'</div><div class="c3"><div id="slot"></div>'+pd+(FAM||!calSrc()?"":'<div class="ml cl" id="cl"></div><div class="ml" id="ml"></div>')+p3+'</div></div>';
   colInit();
   var tb=document.querySelector("#home .top b");if(tb&&!FAM){tb.textContent+=" · AI "+used+"%";tb.style.cursor="pointer";tb.onclick=function(){go("ai")}}
   var mo=document.getElementById("more");if(mo)mo.onclick=function(){var w=document.getElementById("dlw");w.classList.toggle("open");this.textContent=w.classList.contains("open")?"Thu gọn":"Xem thêm +"+this.dataset.n};
@@ -660,11 +660,12 @@ function calDraw(d,stale){
     html+='<div class="dh mono">'+lab+'</div>'+list.map(function(x){if(k!==td)rows++;
       var past=k===td&&!x.all&&x.e.slice(0,16)<nowT,cur=k===td&&!x.all&&x.s.slice(0,16)<=nowT&&x.e.slice(0,16)>nowT;
       return'<div class="ce'+(past?' pst':'')+(cur?' now':'')+'"><span class="ct mono">'+(x.all?"Cả ngày":x.s.slice(11,16))+'</span><div><span class="cn">'+esc(x.t)+'</span>'+(x.loc?'<span class="cd mono">'+esc(x.loc)+'</span>':'')+'</div></div>'}).join("")});
-  el.innerHTML=calHead(nToday)+(nToday?"":'<div class="nt">Hôm nay không có lịch.</div>')+html+(more?'<div class="nt">+'+more+' sự kiện nữa</div>':"")+(stale?'<div class="nt">(dữ liệu cũ)</div>':"");
+  var np=ev.filter(function(x){return x.s.slice(0,10)===td&&!x.all&&x.e.slice(0,16)<nowT}).length;
+  el.innerHTML=calHead(nToday)+(np?'<button class="mht mono" id="clp">Đã qua hôm nay ('+np+') '+(el.classList.contains("sp")?'▴':'▾')+'</button>':'')+(nToday?"":'<div class="nt">Hôm nay không có lịch.</div>')+html+(more?'<div class="nt">+'+more+' sự kiện nữa</div>':"")+(stale?'<div class="nt">(dữ liệu cũ)</div>':"");
   colFit("cl")}
 function calInit(fresh){
   var el=document.getElementById("cl"),s=calSrc();if(!el||!s)return;
-  if(!el.onclick)el.onclick=function(e){if(e.target.closest("#clr")){try{localStorage.removeItem("wb_cal")}catch(x){}calInit(true)}};
+  if(!el.onclick)el.onclick=function(e){if(e.target.closest("#clp")){el.classList.toggle("sp");calDraw(ls("wb_cal",{}).d);return}if(e.target.closest("#clr")){try{localStorage.removeItem("wb_cal")}catch(x){}calInit(true)}};
   var c=ls("wb_cal",null);if(!fresh&&c&&Date.now()-c.t<3e5){calDraw(c.d);return}
   el.innerHTML=calHead(null)+'<div class="nt">Đang tải…</div>';
   getJ(s.url+(s.url.indexOf("?")<0?"?":"&")+"k="+encodeURIComponent(s.key)+"&a=cal"+(fresh?"&fresh=1":""),12000)
