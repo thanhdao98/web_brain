@@ -156,6 +156,9 @@ nav button{padding:4px 5px}
 .seg.ar{flex-wrap:wrap;margin-top:8px}.seg.ar button{font-size:11px;padding:5px 10px}
 @media (max-width:899px){nav button{font-size:10px;letter-spacing:.03em;padding:4px 3px}}
 .top .rt{display:flex;align-items:center;gap:12px}
+.rfb,.aub{font:inherit;font-size:11px;letter-spacing:.06em;border:0;background:none;color:var(--mute);cursor:pointer;padding:3px 7px;border-radius:999px;transition:color .15s,background .15s}.rfb:hover,.aub:hover{color:var(--fg)}
+.rfb{font-size:14px;line-height:1;padding:3px 5px}.rfb.spin{animation:rot .8s linear infinite;color:var(--fg)}
+.aub .sd{margin-right:5px;background:var(--mute)}.aub.on .sd{background:#3ecf6e}.aub.on.pz .sd{background:#f5a623}.aub.on{color:var(--fg)}
 .lg{display:inline-flex;gap:1px}.lg button{font:inherit;font-size:11px;letter-spacing:.06em;border:0;background:none;color:var(--mute);padding:3px 7px;border-radius:999px;cursor:pointer;transition:background .15s,color .15s}
 .lg button:hover{color:var(--fg)}.lg button.on{background:var(--fg);color:var(--bg)}
 /* mã truy cập (KEY) */
@@ -352,7 +355,7 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;
 function ls(k,d){try{var v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}}
 function lset(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 function vis(x){return !FAM||x.scope==="family"}
-var APIURL="",APIKEY="",LASTTOG=0,LASTIDEA=0,TPULL=0,DCHK=0,SIG="",FLASH=[],SYN="",QS=[];
+var BASE=null,SSIG="",AUTO=(function(){try{return localStorage.getItem("wb_auto")!=="off"}catch(e){return true}})(),PAUSED=false,LASTACT=Date.now(),FULLING=false,APIURL="",APIKEY="",LASTTOG=0,LASTIDEA=0,TPULL=0,DCHK=0,SIG="",FLASH=[],SYN="",QS=[];
 function getJ(u,ms){var c=new AbortController(),t=setTimeout(function(){c.abort()},ms||9000);
   return fetch(u,{cache:"no-store",signal:c.signal}).then(function(r){clearTimeout(t);if(!r.ok)throw 0;return r.json()},function(e){clearTimeout(t);throw e})}
 /* trộn dữ liệu cuộc sống từ Brain API lên bản nền (real.json trên máy, hoặc demo.json trên bản công khai) */
@@ -368,14 +371,14 @@ function mergeApi(b,j){var d=JSON.parse(JSON.stringify(b));
   if(j.avatar){d.profile=d.profile||{};d.profile.avatar=j.avatar}
   if(j.ticks)d.__ticks=j.ticks;
   if(j.ideas)d.__ideas=j.ideas;
-  d.__sig=dataSig(j);
+  d.__sig=dataSig(j);d.__ssig=j.sig||"";
   d.label="Dữ liệu thật";d.__role=j.role;d.__live=true;return d}
 function load(){
   var base=null,key=ls("wb_key","");
   return getJ("data/real.json").then(function(r){base=r},function(){}).then(function(){return base?0:getJ("data/demo.json").then(function(r){base=r})})
     .then(function(){return getJ("data/config.json").catch(function(){return{}})})
     .then(function(cfg){
-      var ba=base.brain_api||{};APIURL=ba.url||cfg.api||"";key=key||ba.key||"";APIKEY=key;
+      BASE=base;var ba=base.brain_api||{};APIURL=ba.url||cfg.api||"";key=key||ba.key||"";APIKEY=key;
       if(!APIURL||!key)return base;
       return getJ(APIURL+"?k="+encodeURIComponent(key),12000).then(function(j){
         if(j.error){if(ls("wb_key","")){lset("wb_key","");lset("wb_api",null)}throw 0}
@@ -401,6 +404,7 @@ function syncPull(force){
   var n=Date.now();if(!force&&n-TPULL<12000)return;TPULL=n;synSet("sy");
   getJ(APIURL+"?k="+encodeURIComponent(APIKEY)+"&a=sync",9000).then(function(j){
     if(!j||!j.ticks){synSet("ok");return}
+    if(j.sig&&SSIG&&j.sig!==SSIG)fetchFull();
     var late=Date.now()-LASTTOG>=8000;
     if(late){dayRoll();if(!sameTicks(st,j.ticks)){var old=Object.keys(st).filter(function(k){return st[k]}),ns={};j.ticks.forEach(function(id){ns[id]=true});
       FLASH=j.ticks.filter(function(id){return old.indexOf(id)<0}).concat(old.filter(function(id){return !ns[id]}));
@@ -410,18 +414,40 @@ function syncPull(force){
       var nq=j.ideas.map(function(x){return{id:x.id,t:x.text}});if(JSON.stringify(nq)!==JSON.stringify(QS)){QS=nq;lset("wb_qn",QS);qr()}}
     if(j.pain&&j.pain.length){var pm=ls("wb_pain",{}),ch=false;j.pain.forEach(function(x){var kk=String(x.date).replace(/-0(\d)/g,"-$1");if(x.p!==""&&x.p!=null&&pm[kk]!==+x.p){pm[kk]=+x.p;ch=true}});if(ch){lset("wb_pain",pm);renderOthers();sitTick()}}
     synSet("ok")}).catch(function(){synSet("err")})}
-/* mỗi 5 phút (và khi quay lại tab) kiểm tra dữ liệu chính có đổi không; có thì hiện nút "Có dữ liệu mới" */
-function dataCheck(force){
-  if(!(DATA&&DATA.__live&&APIKEY)||document.getElementById("upd"))return;
-  var n=Date.now();if(!force&&n-DCHK<3e5)return;DCHK=n;
-  getJ(APIURL+"?k="+encodeURIComponent(APIKEY),12000).then(function(j){
-    if(!j||j.error||!SIG||dataSig(j)===SIG)return;
-    var b=document.createElement("button");b.id="upd";b.textContent="Có dữ liệu mới ↻";b.onclick=function(){location.reload()};document.body.appendChild(b)}).catch(function(){})}
+/* tự động cập nhật: bật/tắt bằng nút ở đầu trang; 30 giây/lần, tạm dừng sau 10 phút không thao tác */
+function auHtml(){var c=AUTO?(PAUSED?" on pz":" on"):"";return '<button class="rfb" title="Cập nhật ngay" aria-label="Cập nhật ngay">↻</button><button class="aub'+c+'" title="'+(PAUSED&&AUTO?"Tạm dừng vì không thao tác. Chạm để tiếp tục.":"Tự động cập nhật 30 giây")+'" aria-pressed="'+AUTO+'"><i class="sd"></i>Tự động</button>'}
+function auPaint(){[].forEach.call(document.querySelectorAll(".aub"),function(b){b.classList.toggle("on",AUTO);b.classList.toggle("pz",AUTO&&PAUSED);b.setAttribute("aria-pressed",AUTO);b.title=trText(AUTO&&PAUSED?"Tạm dừng vì không thao tác. Chạm để tiếp tục.":"Tự động cập nhật 30 giây")})}
+function auSet(on){AUTO=on;PAUSED=false;LASTACT=Date.now();try{localStorage.setItem("wb_auto",on?"on":"off")}catch(e){}auPaint();if(on)syncAll(false)}
+function rfSpin(on){[].forEach.call(document.querySelectorAll(".rfb"),function(b){b.classList.toggle("spin",on)})}
+function softRender(){if(!BASE||!DATA)return;var y=window.scrollY;renderHome();draw();renderOthers();aiDraw();window.scrollTo(0,y);synSet()}
+function fetchFull(manual){
+  if(!(DATA&&DATA.__live&&APIKEY)||FULLING)return Promise.resolve();FULLING=true;
+  return getJ(APIURL+"?k="+encodeURIComponent(APIKEY),12000).then(function(j){
+    if(!j||j.error)return;lset("wb_api",{t:Date.now(),d:j});
+    if(SSIG&&j.sig===SSIG&&!manual)return;
+    if(j.sig===SSIG)return;
+    var nd=mergeApi(BASE,j);if(nd.i18n)Object.keys(nd.i18n).forEach(function(k){TR[k]=nd.i18n[k]});
+    nd.__live=true;DATA=nd;SIG=nd.__sig;SSIG=nd.__ssig;hot.home=!FAM&&(nd.urgent||[]).length>0;softRender()
+  }).catch(function(){}).then(function(){FULLING=false})}
+function syncAll(manual){
+  if(!(DATA&&DATA.__live&&APIKEY))return;
+  if(manual){rfSpin(true);lset("wb_wx",null);try{wxInit()}catch(e){}mailInit(true);calInit(true)}
+  syncPull(true);
+  fetchFull(manual).then(function(){if(manual)setTimeout(function(){rfSpin(false)},600)})}
+function auTick(){
+  if(!AUTO||document.hidden)return;
+  if(!PAUSED&&Date.now()-LASTACT>6e5){PAUSED=true;auPaint();return}
+  if(PAUSED)return;syncPull(true)}
+function auWake(){LASTACT=Date.now();if(PAUSED){PAUSED=false;auPaint();if(AUTO)syncAll(false)}}
+var RESUMED=false;
 function startSync(){
-  document.addEventListener("visibilitychange",function(){if(!document.hidden){syncPull();dataCheck();calInit()}});
-  document.addEventListener("click",function(e){if(e.target.closest&&e.target.closest("#synb"))syncPull(true)});
-  setInterval(function(){if(!document.hidden)syncPull()},30000);
-  setInterval(function(){if(!document.hidden)dataCheck()},60000);setInterval(function(){if(!document.hidden)calInit()},300000)}
+  document.addEventListener("visibilitychange",function(){if(!document.hidden){auWake();if(AUTO)syncAll(false)}});
+  window.addEventListener("pointerdown",function(e){RESUMED=!!(PAUSED&&e.target.closest&&e.target.closest(".aub"))},true);
+  ["pointerdown","keydown","touchstart","scroll"].forEach(function(ev){window.addEventListener(ev,auWake,{passive:true})});
+  document.addEventListener("click",function(e){var t=e.target.closest?e.target:null;if(!t)return;
+    if(t.closest("#synb")||t.closest(".rfb"))syncAll(true);else if(t.closest(".aub")){if(RESUMED){RESUMED=false;return}auSet(!AUTO)}});
+  setInterval(auTick,30000);
+  setInterval(function(){if(AUTO&&!PAUSED&&!document.hidden){calInit();mailInit()}},300000)}
 function kbHtml(){if(!APIURL)return"";return DATA&&DATA.__live?'<button class="kb on" id="kb" title="Thoát">'+(DATA.__role==="family"?"Gia đình ✓":"Dữ liệu thật ✓")+'</button>':'<button class="kb" id="kb">Nhập mã</button>'}
 function keyDlg(live){
   var o=document.createElement("div");o.id="kd";
@@ -436,7 +462,7 @@ function keyDlg(live){
 document.addEventListener("click",function(e){if(e.target.closest&&e.target.closest("#kb"))keyDlg(!!(DATA&&DATA.__live))});
 (function(){var m=/[#&]k=([0-9a-fA-F]{20,})/.exec(location.hash);if(m){lset("wb_key",m[1]);try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}}})();
 function today(){var d=new Date(),n=["CN","T2","T3","T4","T5","T6","T7"],m=d.getDate()+"."+(d.getMonth()+1);return n[d.getDay()]+" · "+m}
-function head(l){var u=DATA&&DATA.updated?new Date(DATA.updated):null;return '<div class="top mono"><span class="lab">'+l+'</span><span class="rt"><b>'+(u?'cập nhật '+u.getDate()+'.'+(u.getMonth()+1):'BRAIN')+'</b>'+kbHtml()+lgHtml()+'</span></div>'}
+function head(l){var u=DATA&&DATA.updated?new Date(DATA.updated):null;return '<div class="top mono"><span class="lab">'+l+'</span><span class="rt"><b>'+(u?'cập nhật '+u.getDate()+'.'+(u.getMonth()+1):'BRAIN')+'</b>'+kbHtml()+auHtml()+lgHtml()+'</span></div>'}
 function days(x){if(x.in!=null)return x.in;var p=String(x.date).split("-"),a=new Date(+p[0],+p[1]-1,+p[2]),n=new Date(),b=new Date(n.getFullYear(),n.getMonth(),n.getDate());return Math.round((a-b)/864e5)}
 
 function slotNow(){var d=new Date(),m=d.getHours()*60+d.getMinutes();return m>=300&&m<690?"morning":(m>=690&&m<1260?"train":"night")}
@@ -492,7 +518,7 @@ window.mPlay=mOn;
   document.getElementById("tasks").onclick=function(e){var r=e.target.closest(".row");if(!r)return;dayRoll();st[r.dataset.id]=!st[r.dataset.id];lset("wb_st",st);tickSync(r.dataset.id);draw()};
   wxInit();mailInit();calInit();
   var sitEl=document.getElementById("sit");
-  if(sitEl){sitEl.onclick=function(e){if(e.target.closest("#sb")){lset("wb_sit",Date.now());sitTick()}else if(e.target.id==="sp")go("learn")};sitTick();setInterval(sitTick,30000)}
+  if(sitEl){sitEl.onclick=function(e){if(e.target.closest("#sb")){lset("wb_sit",Date.now());sitTick()}else if(e.target.id==="sp")go("learn")};sitTick();if(!window.__sit){window.__sit=1;setInterval(sitTick,30000)}}
   var ar=document.getElementById("aiRow");if(ar)ar.onclick=function(){go("ai")};
 }
 function dayRoll(){if(ls("wb_std","")!==dayKey()){st={};lset("wb_st",st);lset("wb_std",dayKey())}}
@@ -788,7 +814,7 @@ var TR={
 "T2":["Mon","月"],"T3":["Tue","火"],"T4":["Wed","水"],"T5":["Thu","木"],"T6":["Fri","金"],"T7":["Sat","土"],"CN":["Sun","日"],
 "Cháy rồi":["On fire","緊急"],"Làm gì giờ?":["What now?","今なにする？"],"Cơ thể":["Body","からだ"],"Vừa đứng dậy":["Just stood up","立ったよ"],
 "Mốc sắp tới":["Milestones","マイルストーン"],"Thả ý tưởng":["Drop an idea","アイデアメモ"],"Gõ ý tưởng, Enter là xong":["Type an idea, press Enter","アイデアを入力してEnter"],
-"Sắp tới hạn":["Due soon","もうすぐ期限"],"Tuần này":["This week","今週"],"Sau đó":["Later","その後"],"Hôm nay · ngày mai":["Today · tomorrow","今日・明日"],"Nhập mã":["Enter code","コード入力"],"Lịch":["Calendar","予定"],"Ngày mai":["Tomorrow","明日"],"Cả ngày":["All day","終日"],"Hôm nay không có lịch.":["Nothing on the calendar today.","今日の予定はありません。"],"Mở Calendar ↗":["Open Calendar ↗","カレンダーを開く ↗"],"Chưa lấy được lịch.":["Couldn't load the calendar.","予定を取得できません。"],"(dữ liệu cũ)":["(stale data)","(古いデータ)"],"đang lưu…":["saving…","保存中…"],"Thêm":["Add","追加"],"Nhà mình cần gấp":["Home: urgent","家の急ぎ"],"Nhà mình yên ổn.":["All calm at home.","家は平穏です。"],"Ghi chú chung":["Shared notes","共有メモ"],"Thêm ghi chú…":["Add a note…","メモを追加…"],"Vợ":["Wife","妻"],"Chồng":["Husband","夫"],"Xoá":["Delete","削除"],"Đang đồng bộ…":["Syncing…","同期中…"],"Đang lưu…":["Saving…","保存中…"],"Chưa lưu được":["Not saved","保存できません"],"sẽ thử lại":["will retry","再試行します"],"Có dữ liệu mới ↻":["New data ↻","新しいデータ ↻"],"Đồng bộ ngay":["Sync now","今すぐ同期"],"Nhập mã truy cập":["Enter access code","アクセスコードを入力"],"Mở":["Open","開く"],"Huỷ":["Cancel","キャンセル"],"Thoát":["Sign out","終了"],"Mã không đúng":["Wrong code","コードが違います"],"Đang kiểm tra…":["Checking…","確認中…"],"Không kết nối được":["Couldn't connect","接続できません"],"Dán mã do Thành gửi":["Paste the code you were given","受け取ったコードを貼り付け"],"Dữ liệu thật ✓":["Live data ✓","実データ ✓"],"Gia đình ✓":["Family ✓","家族 ✓"],"Thoát chế độ dữ liệu thật?":["Leave live-data mode?","実データモードを終了しますか？"],"DỮ LIỆU THẬT":["LIVE DATA","実データ"],"Tick tự reset lúc 0:00":["Ticks reset at 0:00","チェックは0時にリセット"],
+"Sắp tới hạn":["Due soon","もうすぐ期限"],"Tuần này":["This week","今週"],"Sau đó":["Later","その後"],"Hôm nay · ngày mai":["Today · tomorrow","今日・明日"],"Nhập mã":["Enter code","コード入力"],"Cập nhật ngay":["Refresh now","今すぐ更新"],"Tự động":["Auto","自動"],"Tự động cập nhật 30 giây":["Auto-refresh every 30 s","30秒ごとに自動更新"],"Tạm dừng vì không thao tác. Chạm để tiếp tục.":["Paused (idle). Tap to resume.","操作がないため一時停止中。タップで再開。"],"Lịch":["Calendar","予定"],"Ngày mai":["Tomorrow","明日"],"Cả ngày":["All day","終日"],"Hôm nay không có lịch.":["Nothing on the calendar today.","今日の予定はありません。"],"Mở Calendar ↗":["Open Calendar ↗","カレンダーを開く ↗"],"Chưa lấy được lịch.":["Couldn't load the calendar.","予定を取得できません。"],"(dữ liệu cũ)":["(stale data)","(古いデータ)"],"đang lưu…":["saving…","保存中…"],"Thêm":["Add","追加"],"Nhà mình cần gấp":["Home: urgent","家の急ぎ"],"Nhà mình yên ổn.":["All calm at home.","家は平穏です。"],"Ghi chú chung":["Shared notes","共有メモ"],"Thêm ghi chú…":["Add a note…","メモを追加…"],"Vợ":["Wife","妻"],"Chồng":["Husband","夫"],"Xoá":["Delete","削除"],"Đang đồng bộ…":["Syncing…","同期中…"],"Đang lưu…":["Saving…","保存中…"],"Chưa lưu được":["Not saved","保存できません"],"sẽ thử lại":["will retry","再試行します"],"Có dữ liệu mới ↻":["New data ↻","新しいデータ ↻"],"Đồng bộ ngay":["Sync now","今すぐ同期"],"Nhập mã truy cập":["Enter access code","アクセスコードを入力"],"Mở":["Open","開く"],"Huỷ":["Cancel","キャンセル"],"Thoát":["Sign out","終了"],"Mã không đúng":["Wrong code","コードが違います"],"Đang kiểm tra…":["Checking…","確認中…"],"Không kết nối được":["Couldn't connect","接続できません"],"Dán mã do Thành gửi":["Paste the code you were given","受け取ったコードを貼り付け"],"Dữ liệu thật ✓":["Live data ✓","実データ ✓"],"Gia đình ✓":["Family ✓","家族 ✓"],"Thoát chế độ dữ liệu thật?":["Leave live-data mode?","実データモードを終了しますか？"],"DỮ LIỆU THẬT":["LIVE DATA","実データ"],"Tick tự reset lúc 0:00":["Ticks reset at 0:00","チェックは0時にリセット"],
 "Thu gọn":["Collapse","閉じる"],"Tuần":["Week","週"],"Cần cập nhật":["Needs update","要更新"],"Yên bình. Đáng ngờ.":["All quiet. Suspicious.","静か。怪しい。"],
 "Sáng":["Morning","朝"],"Tàu":["Train","電車"],"Khuya":["Late night","深夜"],"Tất cả":["All","すべて"],"Chưa có việc":["Nothing yet","タスクなし"],
 "Xong hết. Uống nước đi.":["All done. Drink some water.","全部完了。水を飲もう。"],"Nghỉ đi.":["Take a break.","休もう。"],
@@ -866,7 +892,7 @@ load().then(function(d){
   if(d.__ticks){st={};d.__ticks.forEach(function(id){st[id]=true});lset("wb_st",st);lset("wb_std",dayKey())}
   if(d.__live&&d.pain){var pm0=ls("wb_pain",{});d.pain.forEach(function(x){var kk=String(x.date).replace(/-0(\d)/g,"-$1");if(x.p!==""&&x.p!=null)pm0[kk]=+x.p});lset("wb_pain",pm0)}
   if(d.__ideas){lset("wb_qn",d.__ideas.map(function(x){return{id:x.id,t:x.text}}))}
-  SIG=d.__sig||"";
+  SIG=d.__sig||"";SSIG=d.__ssig||"";
   used=+ls("wb_ai",40);f=slotNow();if(d.__role==="family")FAM=true;if(FAM)document.body.classList.add("fam");if(FAM&&!(d.tasks||[]).length)document.body.classList.add("fam0");
   hot.home=!FAM&&(d.urgent||[]).length>0;
   TABS=FAM?[["home","Hôm nay"],["brain","Brain"],["life","Tổ ấm"]]:[["home","Hôm nay"],["brain","AI Family"],["work","Kiếm cơm"],["life","Tổ ấm"],["learn","Rèn"]];
