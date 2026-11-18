@@ -514,7 +514,7 @@ function renderHome(){
   if(dl.length){var gh=function(n){return n<=1?"Hôm nay · ngày mai":(n<=7?"Tuần này":"Sau đó")},lg="",k=0,hh="";
     dl.forEach(function(x){var g=gh(x.n),xc=k>=4?" x":"";if(g!==lg){hh+='<h2 class="lab mono dg'+xc+'">'+g+'</h2>';lg=g}hh+='<div class="dl'+(x.n<=1?' hot':(x.n<=7?' wk':' far'))+xc+'"><span>'+dotH(x.a)+esc(x.t)+'</span><b class="mono">'+(x.n===0?"hôm nay":(x.n===1?"ngày mai":x.n+" ngày"))+'</b></div>';k++});
     pd+='<div id="dlc"><h2 class="lab mono">Sắp tới hạn</h2><div class="dlw" id="dlw">'+hh+(dl.length>4?'<button class="more mono" id="more" data-n="'+(dl.length-4)+'">Xem thêm +'+(dl.length-4)+'</button>':'')+'</div></div>'}
-  document.getElementById("home").innerHTML=hd+'<div class="g"><div class="c1">'+pwx+pst+pf+pmo+pnc+pid+'</div><div class="c2">'+ug+p2+p2b+'</div><div class="c3"><div id="slot"></div>'+pd+(FAM||!calSrc()?"":'<div class="ml cl" id="cl"></div><div class="ml" id="ml"></div>')+p3+'</div></div>';
+  document.getElementById("home").innerHTML=hd+'<div class="g"><div class="c1">'+pst+pf+pwx+pmo+pnc+pid+'</div><div class="c2">'+ug+p2+p2b+'</div><div class="c3"><div id="slot"></div>'+pd+(FAM||!calSrc()?"":'<div class="ml cl" id="cl"></div><div class="ml" id="ml"></div>')+p3+'</div></div>';
   colInit();
   var tb=document.querySelector("#home .top b");if(tb&&!FAM){tb.textContent+=" · AI "+used+"%";tb.style.cursor="pointer";tb.onclick=function(){go("ai")}}
   var mo=document.getElementById("more");if(mo)mo.onclick=function(){var w=document.getElementById("dlw");w.classList.toggle("open");this.textContent=w.classList.contains("open")?"Thu gọn":"Xem thêm +"+this.dataset.n};
