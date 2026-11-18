@@ -199,6 +199,10 @@ nav button{padding:4px 5px}
 #nin{width:100%;font:inherit;font-size:15px;padding:10px 0;border:0;border-bottom:1.5px solid var(--fg);background:none;color:var(--fg);outline:none;border-radius:0;margin-bottom:4px}
 .nc .row{padding:11px 0}.nc .row .t{font-weight:500}.nc .row .d{display:block;margin-top:2px}.nc .qx{flex:none}
 body.fam0 .c2>.next,body.fam0 .c2>.seg,body.fam0 #tasks{display:none}
+#nf,#qf{display:flex;gap:8px;align-items:center;margin-bottom:4px}
+#nf #nin,#qf #qn{flex:1;min-width:0;margin-bottom:0}
+.nsub{flex:none;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--fg);background:none;color:var(--fg);font:inherit;font-size:22px;line-height:1;cursor:pointer;padding:0;transition:background .15s,color .15s}
+.nsub:hover,.nsub:active{background:var(--fg);color:var(--bg)}
 /* trạng thái đồng bộ */
 .sd{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;background:var(--mute);vertical-align:middle;transform:translateY(-1px)}
 .sd.ok{background:#3ecf6e}.sd.sy{background:#f5a623;animation:blink 1s ease-in-out infinite}.sd.er{background:var(--acc)}
@@ -377,7 +381,7 @@ function tickSync(id){LASTTOG=Date.now();if(DATA&&DATA.__live)apiPost({action:"s
 function padDay(){var d=new Date(),p=function(n){return String(n).padStart(2,"0")};return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())}
 function sameTicks(s,arr){var a=Object.keys(s).filter(function(k){return s[k]}).sort().join(","),b=arr.slice().sort().join(",");return a===b}
 function synSet(state){
-  if(state)SYN=state; var el=document.getElementById("syn");if(!el)return;
+  if(state){SYN=state;if(document.getElementById("nc"))ncDraw()} var el=document.getElementById("syn");if(!el)return;
   if(!(DATA&&DATA.__live)){el.innerHTML="Tick tự reset lúc 0:00";return}
   var rs=document.body.classList.contains("fam0")?"":' · <span>Tick tự reset lúc 0:00</span>';
   var t=new Date(),hm=String(t.getHours()).padStart(2,"0")+":"+String(t.getMinutes()).padStart(2,"0");
@@ -445,7 +449,7 @@ function renderHome(){
   p1+='<div class="wx" id="wx"></div>';
   p2+=ug+(DATA.__live?'<div class="nc" id="nc"></div>':"")+(FAM||!(DATA.mail&&DATA.mail.url)?"":'<div class="ml" id="ml"></div>')+'<div class="next"><span class="lab mono">Làm gì giờ?</span><div class="t" id="nx"></div><div class="s mono" id="ns"></div>'+dayStrip()+'</div>'+(FAM?"":sitHtml());
   p2b+=segHtml()+arHtml()+'<div id="tasks"></div><div class="nt" id="syn">Tick tự reset lúc 0:00</div>';
-  if(!FAM)p1+='<div class="wide" id="ideas"><h2 class="lab mono">Thả ý tưởng</h2><input id="qn" class="qn mono" placeholder="Gõ ý tưởng, Enter là xong" autocomplete="off"><div id="qnl"></div></div>';
+  if(!FAM)p1+='<div class="wide" id="ideas"><h2 class="lab mono">Thả ý tưởng</h2><form id="qf"><input id="qn" class="qn mono" placeholder="Gõ ý tưởng, Enter là xong" autocomplete="off" enterkeyhint="send"><button type="submit" class="nsub" aria-label="Thêm" title="Thêm">+</button></form><div id="qnl"></div></div>';
   if(!FAM&&DATA.week)p3+='<h2 class="lab mono">Tuần</h2><div class="week" id="week"></div>';
   var dl=(DATA.deadlines||[]).filter(vis).filter(function(x){return !x.hide}).map(function(x){return{t:x.t,n:days(x),a:x.a}}).filter(function(x){return x.n>=0}).sort(function(a,b){return a.n-b.n});
   if(dl.length){var gh=function(n){return n<=1?"Hôm nay · ngày mai":(n<=7?"Tuần này":"Sau đó")},lg="",k=0,hh="";
@@ -465,14 +469,14 @@ window.mPlay=mOn;
     document.getElementById("week").innerHTML=w}
   var qn=document.getElementById("qn");
   if(qn){QS=(ls("wb_qn",[])||[]).map(function(x){return typeof x==="string"?{id:null,t:x}:x});qr();
-    qn.onkeydown=function(e){if(e.key==="Enter"&&this.value.trim()){var o={id:null,t:this.value.trim()};
+    document.getElementById("qf").onsubmit=function(e){e.preventDefault();if(qn.value.trim()){var o={id:null,t:qn.value.trim()};
       if(DATA.__live&&DATA.__role==="owner"){o.id="tmp"+Date.now();LASTIDEA=Date.now();apiPost({action:"add_idea",noi_dung:o.t},false,function(j){if(j&&j.id){o.id=j.id;lset("wb_qn",QS);if(o.del)apiPost({action:"delete_idea",id:j.id})}})}
-      QS.unshift(o);lset("wb_qn",QS);this.value="";qr()}};
+      QS.unshift(o);lset("wb_qn",QS);qn.value="";qr()}};
     document.getElementById("qnl").onclick=function(e){var b=e.target.closest(".qx");if(!b)return;var o=QS.splice(+b.dataset.i,1)[0];lset("wb_qn",QS);qr();
       if(o&&DATA.__live&&DATA.__role==="owner"){LASTIDEA=Date.now();if(/^tmp/.test(String(o.id)))o.del=true;else if(o.id)apiPost({action:"delete_idea",id:o.id})}}}
   var nc=document.getElementById("nc");
   if(nc){NOTES=(DATA.notes||[]).map(function(x){return{id:x.id,time:x.time,by:x.by,text:x.text,status:x.status}});ncDraw();
-    nc.onkeydown=function(e){if(e.target.id==="nin"&&e.key==="Enter"&&e.target.value.trim())noteAdd(e.target.value.trim())};
+    nc.addEventListener("submit",function(e){e.preventDefault();var i=document.getElementById("nin");if(i&&i.value.trim())noteAdd(i.value.trim())});
     nc.onclick=function(e){var r=e.target.closest(".row");if(!r)return;var id=r.dataset.nid;if(e.target.closest(".qx"))noteDel(id);else if(e.target.closest(".c"))noteTog(id)}}
   var seg=document.getElementById("seg");
   seg.onclick=function(e){var b=e.target.closest("button");if(!b)return;[].forEach.call(seg.children,function(x){x.classList.remove("on")});b.classList.add("on");f=b.dataset.c;draw()};
@@ -494,8 +498,9 @@ function ncDraw(){
   var cur=document.getElementById("nin"),val=cur?cur.value:"",foc=!!cur&&document.activeElement===cur;
   var op=NOTES.filter(function(n){return n.status!=="xong"}),dn=NOTES.filter(function(n){return n.status==="xong"});
   var rows=op.concat(dn).slice(0,14).map(function(n){var who=n.by==="vo"?"Vợ":(n.by==="thanh"?"Chồng":esc(n.by||""));
-    return'<div class="row'+(n.status==="xong"?' done':'')+'" data-nid="'+esc(n.id)+'"><button class="c">'+(n.status==="xong"?'✓':'')+'</button><div class="t">'+esc(n.text)+'<span class="d mono">'+who+' · '+ncTime(n.time)+'</span></div><button class="qx" title="Xoá" aria-label="Xoá">×</button></div>'}).join("");
-  el.innerHTML='<div class="nh"><span class="lab mono">Ghi chú chung</span><b class="mono">'+op.length+'</b></div><input id="nin" placeholder="Thêm ghi chú…" autocomplete="off">'+rows;
+    return'<div class="row'+(n.status==="xong"?' done':'')+'" data-nid="'+esc(n.id)+'"><button class="c">'+(n.status==="xong"?'✓':'')+'</button><div class="t">'+esc(n.text)+'<span class="d mono">'+who+' · '+ncTime(n.time)+(/^tmp/.test(String(n.id))?' · <em>đang lưu…</em>':'')+'</span></div><button class="qx" title="Xoá" aria-label="Xoá">×</button></div>'}).join("");
+  var sc=SYN==="err"?"er":(SYN==="save"||SYN==="sy"?"sy":"ok");
+  el.innerHTML='<div class="nh"><span class="lab mono"><i class="sd '+sc+'"></i>Ghi chú chung</span><b class="mono">'+op.length+'</b></div><form id="nf"><input id="nin" placeholder="Thêm ghi chú…" autocomplete="off" enterkeyhint="send"><button type="submit" class="nsub" aria-label="Thêm" title="Thêm">+</button></form>'+rows;
   var inp=document.getElementById("nin");inp.value=val;if(foc)inp.focus()}
 function noteAdd(t){var n=new Date(),p=function(x){return String(x).padStart(2,"0")};
   var o={id:"tmp"+Date.now(),time:n.getFullYear()+"-"+p(n.getMonth()+1)+"-"+p(n.getDate())+" "+p(n.getHours())+":"+p(n.getMinutes()),by:DATA.__role==="family"?"vo":"thanh",text:t,status:"mo"};
@@ -751,7 +756,7 @@ var TR={
 "T2":["Mon","月"],"T3":["Tue","火"],"T4":["Wed","水"],"T5":["Thu","木"],"T6":["Fri","金"],"T7":["Sat","土"],"CN":["Sun","日"],
 "Cháy rồi":["On fire","緊急"],"Làm gì giờ?":["What now?","今なにする？"],"Cơ thể":["Body","からだ"],"Vừa đứng dậy":["Just stood up","立ったよ"],
 "Mốc sắp tới":["Milestones","マイルストーン"],"Thả ý tưởng":["Drop an idea","アイデアメモ"],"Gõ ý tưởng, Enter là xong":["Type an idea, press Enter","アイデアを入力してEnter"],
-"Sắp tới hạn":["Due soon","もうすぐ期限"],"Tuần này":["This week","今週"],"Sau đó":["Later","その後"],"Hôm nay · ngày mai":["Today · tomorrow","今日・明日"],"Nhập mã":["Enter code","コード入力"],"Nhà mình cần gấp":["Home: urgent","家の急ぎ"],"Nhà mình yên ổn.":["All calm at home.","家は平穏です。"],"Ghi chú chung":["Shared notes","共有メモ"],"Thêm ghi chú…":["Add a note…","メモを追加…"],"Vợ":["Wife","妻"],"Chồng":["Husband","夫"],"Xoá":["Delete","削除"],"Đang đồng bộ…":["Syncing…","同期中…"],"Đang lưu…":["Saving…","保存中…"],"Chưa lưu được":["Not saved","保存できません"],"sẽ thử lại":["will retry","再試行します"],"Có dữ liệu mới ↻":["New data ↻","新しいデータ ↻"],"Đồng bộ ngay":["Sync now","今すぐ同期"],"Nhập mã truy cập":["Enter access code","アクセスコードを入力"],"Mở":["Open","開く"],"Huỷ":["Cancel","キャンセル"],"Thoát":["Sign out","終了"],"Mã không đúng":["Wrong code","コードが違います"],"Đang kiểm tra…":["Checking…","確認中…"],"Không kết nối được":["Couldn't connect","接続できません"],"Dán mã do Thành gửi":["Paste the code you were given","受け取ったコードを貼り付け"],"Dữ liệu thật ✓":["Live data ✓","実データ ✓"],"Gia đình ✓":["Family ✓","家族 ✓"],"Thoát chế độ dữ liệu thật?":["Leave live-data mode?","実データモードを終了しますか？"],"DỮ LIỆU THẬT":["LIVE DATA","実データ"],"Tick tự reset lúc 0:00":["Ticks reset at 0:00","チェックは0時にリセット"],
+"Sắp tới hạn":["Due soon","もうすぐ期限"],"Tuần này":["This week","今週"],"Sau đó":["Later","その後"],"Hôm nay · ngày mai":["Today · tomorrow","今日・明日"],"Nhập mã":["Enter code","コード入力"],"đang lưu…":["saving…","保存中…"],"Thêm":["Add","追加"],"Nhà mình cần gấp":["Home: urgent","家の急ぎ"],"Nhà mình yên ổn.":["All calm at home.","家は平穏です。"],"Ghi chú chung":["Shared notes","共有メモ"],"Thêm ghi chú…":["Add a note…","メモを追加…"],"Vợ":["Wife","妻"],"Chồng":["Husband","夫"],"Xoá":["Delete","削除"],"Đang đồng bộ…":["Syncing…","同期中…"],"Đang lưu…":["Saving…","保存中…"],"Chưa lưu được":["Not saved","保存できません"],"sẽ thử lại":["will retry","再試行します"],"Có dữ liệu mới ↻":["New data ↻","新しいデータ ↻"],"Đồng bộ ngay":["Sync now","今すぐ同期"],"Nhập mã truy cập":["Enter access code","アクセスコードを入力"],"Mở":["Open","開く"],"Huỷ":["Cancel","キャンセル"],"Thoát":["Sign out","終了"],"Mã không đúng":["Wrong code","コードが違います"],"Đang kiểm tra…":["Checking…","確認中…"],"Không kết nối được":["Couldn't connect","接続できません"],"Dán mã do Thành gửi":["Paste the code you were given","受け取ったコードを貼り付け"],"Dữ liệu thật ✓":["Live data ✓","実データ ✓"],"Gia đình ✓":["Family ✓","家族 ✓"],"Thoát chế độ dữ liệu thật?":["Leave live-data mode?","実データモードを終了しますか？"],"DỮ LIỆU THẬT":["LIVE DATA","実データ"],"Tick tự reset lúc 0:00":["Ticks reset at 0:00","チェックは0時にリセット"],
 "Thu gọn":["Collapse","閉じる"],"Tuần":["Week","週"],"Cần cập nhật":["Needs update","要更新"],"Yên bình. Đáng ngờ.":["All quiet. Suspicious.","静か。怪しい。"],
 "Sáng":["Morning","朝"],"Tàu":["Train","電車"],"Khuya":["Late night","深夜"],"Tất cả":["All","すべて"],"Chưa có việc":["Nothing yet","タスクなし"],
 "Xong hết. Uống nước đi.":["All done. Drink some water.","全部完了。水を飲もう。"],"Nghỉ đi.":["Take a break.","休もう。"],
