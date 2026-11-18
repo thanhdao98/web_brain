@@ -175,8 +175,8 @@ nav button{padding:4px 5px}
  #home .c1,#home .c2,#home .c3{display:contents}
  #home .c1>*{order:9}#home .c2>*{order:5}#home .c3>*{order:13}
  #home .c1>.prof{order:0}#home .c1>.stale{order:0}
- #home .c2>.urg{order:1}#home .c2>.ml{order:2}#home .c2>.next{order:3}#home .c2>.sit{order:4}
- #home .c2>.seg{order:5}#home .c2>#tasks{order:6}#home .c2>#syn{order:7}
+ #home .c2>.urg{order:1}#home .c2>.nc{order:2}#home .c2>.ml{order:3}#home .c2>.next{order:4}#home .c2>.sit{order:5}
+ #home .c2>.seg{order:6}#home .c2>#tasks{order:7}#home .c2>#syn{order:8}
  #home .c1>.wx{order:8}
  #home .c1>#ideas{order:9;display:block}
  #home .c1>.wide.mo{order:10;display:block}
@@ -193,6 +193,12 @@ nav button{padding:4px 5px}
  #home .prof{margin-top:6px}
  .wxg div{padding:8px 0}
 }
+/* ghi chú chung (bạn và vợ cùng dùng) */
+.nc{margin:14px 0 0;padding:12px 16px 6px;border:1px solid var(--line);border-radius:16px}
+.nc .nh{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px}.nc .nh b{font-size:12px;color:var(--mute);font-weight:400}
+#nin{width:100%;font:inherit;font-size:15px;padding:10px 0;border:0;border-bottom:1.5px solid var(--fg);background:none;color:var(--fg);outline:none;border-radius:0;margin-bottom:4px}
+.nc .row{padding:11px 0}.nc .row .t{font-weight:500}.nc .row .d{display:block;margin-top:2px}.nc .qx{flex:none}
+body.fam0 .c2>.next,body.fam0 .c2>.seg,body.fam0 #tasks{display:none}
 /* trạng thái đồng bộ */
 .sd{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;background:var(--mute);vertical-align:middle;transform:translateY(-1px)}
 .sd.ok{background:#3ecf6e}.sd.sy{background:#f5a623;animation:blink 1s ease-in-out infinite}.sd.er{background:var(--acc)}
@@ -367,19 +373,20 @@ function load(){
 function apiPost(b,retry,cb){if(!(DATA&&DATA.__live&&APIKEY))return;b.k=APIKEY;if(!retry)synSet("save");
   fetch(APIURL,{method:"POST",body:JSON.stringify(b)}).then(function(r){return r.json()}).then(function(j){if(j&&j.error&&j.error!=="forbidden")throw 0;synSet("ok");if(cb)cb(j)})
     .catch(function(){if(!retry){synSet("err");setTimeout(function(){apiPost(b,true,cb)},3000)}else synSet("err")})}
-function tickSync(id){LASTTOG=Date.now();if(DATA&&DATA.__role==="owner")apiPost({action:"set_tick",id:id,done:!!st[id]})}
+function tickSync(id){LASTTOG=Date.now();if(DATA&&DATA.__live)apiPost({action:"set_tick",id:id,done:!!st[id]})}
 function padDay(){var d=new Date(),p=function(n){return String(n).padStart(2,"0")};return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())}
 function sameTicks(s,arr){var a=Object.keys(s).filter(function(k){return s[k]}).sort().join(","),b=arr.slice().sort().join(",");return a===b}
 function synSet(state){
   if(state)SYN=state; var el=document.getElementById("syn");if(!el)return;
-  if(!(DATA&&DATA.__live&&DATA.__role==="owner")){el.innerHTML="Tick tự reset lúc 0:00";return}
+  if(!(DATA&&DATA.__live)){el.innerHTML="Tick tự reset lúc 0:00";return}
+  var rs=document.body.classList.contains("fam0")?"":' · <span>Tick tự reset lúc 0:00</span>';
   var t=new Date(),hm=String(t.getHours()).padStart(2,"0")+":"+String(t.getMinutes()).padStart(2,"0");
-  var s={ok:'<i class="sd ok"></i><span>Đã đồng bộ '+hm+'</span> · <span>Tick tự reset lúc 0:00</span><button id="synb" title="Đồng bộ ngay" aria-label="Đồng bộ ngay">↻</button>',
+  var s={ok:'<i class="sd ok"></i><span>Đã đồng bộ '+hm+'</span>'+rs+'<button id="synb" title="Đồng bộ ngay" aria-label="Đồng bộ ngay">↻</button>',
          sy:'<i class="sd sy"></i><span>Đang đồng bộ…</span>',save:'<i class="sd sy"></i><span>Đang lưu…</span>',
          err:'<i class="sd er"></i><span>Chưa lưu được</span> · <span>sẽ thử lại</span><button id="synb" title="Thử lại" aria-label="Thử lại">↻</button>'}[SYN||"ok"];
   el.innerHTML=s}
 function syncPull(force){
-  if(!(DATA&&DATA.__live&&DATA.__role==="owner"&&APIKEY))return;
+  if(!(DATA&&DATA.__live&&APIKEY))return;
   var n=Date.now();if(!force&&n-TPULL<12000)return;TPULL=n;synSet("sy");
   getJ(APIURL+"?k="+encodeURIComponent(APIKEY)+"&a=sync",9000).then(function(j){
     if(!j||!j.ticks){synSet("ok");return}
@@ -387,7 +394,8 @@ function syncPull(force){
     if(late){dayRoll();if(!sameTicks(st,j.ticks)){var old=Object.keys(st).filter(function(k){return st[k]}),ns={};j.ticks.forEach(function(id){ns[id]=true});
       FLASH=j.ticks.filter(function(id){return old.indexOf(id)<0}).concat(old.filter(function(id){return !ns[id]}));
       st=ns;lset("wb_st",st);draw();renderOthers();setTimeout(function(){FLASH=[]},1700)}}
-    if(j.ideas&&Date.now()-LASTIDEA>=8000&&!QS.some(function(x){return /^tmp/.test(String(x.id))})){
+    if(j.notes&&Date.now()-LASTNOTE>=8000&&!NOTES.some(function(x){return /^tmp/.test(String(x.id))})){var nn=j.notes.map(function(x){return{id:x.id,time:x.time,by:x.by,text:x.text,status:x.status}});if(JSON.stringify(nn)!==JSON.stringify(NOTES)){NOTES=nn;ncDraw()}}
+    if(DATA.__role==="owner"&&j.ideas&&Date.now()-LASTIDEA>=8000&&!QS.some(function(x){return /^tmp/.test(String(x.id))})){
       var nq=j.ideas.map(function(x){return{id:x.id,t:x.text}});if(JSON.stringify(nq)!==JSON.stringify(QS)){QS=nq;lset("wb_qn",QS);qr()}}
     if(j.pain&&j.pain.length){var pm=ls("wb_pain",{}),ch=false;j.pain.forEach(function(x){var kk=String(x.date).replace(/-0(\d)/g,"-$1");if(x.p!==""&&x.p!=null&&pm[kk]!==+x.p){pm[kk]=+x.p;ch=true}});if(ch){lset("wb_pain",pm);renderOthers();sitTick()}}
     synSet("ok")}).catch(function(){synSet("err")})}
@@ -428,16 +436,14 @@ function renderHome(){
   var hd=head(today()),p1="",p2="",p2b="",p3="";
   var pr=DATA.profile;
   if(pr){p1+='<div class="prof">'+(pr.avatar?'<div class="ban" style="background-image:url('+esc(pr.avatar)+')"></div>':'<div class="ban ph mono">WB</div>')+'<div class="tg">'+esc(pr.tagline||"")+'</div><div class="tags mono">'+(pr.tags||[]).map(esc).join(" · ")+'</div></div>'}
-  var u=(DATA.urgent||[]),ug="";
-  if(!FAM){
-    ug=u.length?'<div class="urg"><div class="n mono">'+u.length+'</div><div><span class="lab mono">Cháy rồi</span><ul>'+u.map(function(x){return'<li>'+esc(x.t||x)+(x.when?'<span class="w mono">'+esc(x.when)+'</span>':'')+'</li>'}).join("")+'</ul></div></div>'
-      :'<div class="urg"><div class="n mono" style="color:var(--mute)">0</div><div><span class="lab mono">Cháy rồi</span><ul><li>Yên bình. Đáng ngờ.</li></ul></div></div>';
-  }
+  var u=(DATA.urgent||[]),ug="",ut=FAM?"Nhà mình cần gấp":"Cháy rồi";
+  ug=u.length?'<div class="urg"><div class="n mono">'+u.length+'</div><div><span class="lab mono">'+ut+'</span><ul>'+u.map(function(x){return'<li>'+esc(x.t||x)+(x.when?'<span class="w mono">'+esc(x.when)+'</span>':'')+'</li>'}).join("")+'</ul></div></div>'
+    :'<div class="urg"><div class="n mono" style="color:var(--mute)">0</div><div><span class="lab mono">'+ut+'</span><ul><li>'+(FAM?"Nhà mình yên ổn.":"Yên bình. Đáng ngờ.")+'</li></ul></div></div>';
   if(!FAM&&DATA.updated){var ag=Math.floor((new Date()-new Date(DATA.updated))/864e5);if(ag>=2)p1+='<div class="stale"><h2 class="lab mono">Cần cập nhật</h2><div class="mr"><span>'+ag+' ngày rồi chưa kể tao nghe lịch. Tao sắp quên mày.</span></div></div>'}
   var tl=(DATA.timeline||[]).filter(vis).slice(0,2);
   if(tl.length)p1+='<div class="wide mo"><h2 class="lab mono">Mốc sắp tới</h2>'+tl.map(function(x){return'<div class="mr"><span>'+esc(x.what)+'</span><b class="mono">'+esc(x.when)+'</b></div>'}).join("")+'</div>';
   p1+='<div class="wx" id="wx"></div>';
-  p2+=ug+(FAM||!(DATA.mail&&DATA.mail.url)?"":'<div class="ml" id="ml"></div>')+'<div class="next"><span class="lab mono">Làm gì giờ?</span><div class="t" id="nx"></div><div class="s mono" id="ns"></div>'+dayStrip()+'</div>'+(FAM?"":sitHtml());
+  p2+=ug+(DATA.__live?'<div class="nc" id="nc"></div>':"")+(FAM||!(DATA.mail&&DATA.mail.url)?"":'<div class="ml" id="ml"></div>')+'<div class="next"><span class="lab mono">Làm gì giờ?</span><div class="t" id="nx"></div><div class="s mono" id="ns"></div>'+dayStrip()+'</div>'+(FAM?"":sitHtml());
   p2b+=segHtml()+arHtml()+'<div id="tasks"></div><div class="nt" id="syn">Tick tự reset lúc 0:00</div>';
   if(!FAM)p1+='<div class="wide" id="ideas"><h2 class="lab mono">Thả ý tưởng</h2><input id="qn" class="qn mono" placeholder="Gõ ý tưởng, Enter là xong" autocomplete="off"><div id="qnl"></div></div>';
   if(!FAM&&DATA.week)p3+='<h2 class="lab mono">Tuần</h2><div class="week" id="week"></div>';
@@ -464,6 +470,10 @@ window.mPlay=mOn;
       QS.unshift(o);lset("wb_qn",QS);this.value="";qr()}};
     document.getElementById("qnl").onclick=function(e){var b=e.target.closest(".qx");if(!b)return;var o=QS.splice(+b.dataset.i,1)[0];lset("wb_qn",QS);qr();
       if(o&&DATA.__live&&DATA.__role==="owner"){LASTIDEA=Date.now();if(/^tmp/.test(String(o.id)))o.del=true;else if(o.id)apiPost({action:"delete_idea",id:o.id})}}}
+  var nc=document.getElementById("nc");
+  if(nc){NOTES=(DATA.notes||[]).map(function(x){return{id:x.id,time:x.time,by:x.by,text:x.text,status:x.status}});ncDraw();
+    nc.onkeydown=function(e){if(e.target.id==="nin"&&e.key==="Enter"&&e.target.value.trim())noteAdd(e.target.value.trim())};
+    nc.onclick=function(e){var r=e.target.closest(".row");if(!r)return;var id=r.dataset.nid;if(e.target.closest(".qx"))noteDel(id);else if(e.target.closest(".c"))noteTog(id)}}
   var seg=document.getElementById("seg");
   seg.onclick=function(e){var b=e.target.closest("button");if(!b)return;[].forEach.call(seg.children,function(x){x.classList.remove("on")});b.classList.add("on");f=b.dataset.c;draw()};
   var sga=document.getElementById("segA");
@@ -477,6 +487,24 @@ window.mPlay=mOn;
 function dayRoll(){if(ls("wb_std","")!==dayKey()){st={};lset("wb_st",st);lset("wb_std",dayKey())}}
 function midnight(){var n=new Date(),ms=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1,0,0,2)-n;setTimeout(function(){dayRoll();draw();renderOthers();midnight()},ms)}
 function qr(){var el=document.getElementById("qnl");if(!el)return;el.innerHTML=QS.map(function(o,i){return'<div class="mr"><span>'+esc(o.t)+'</span><button class="qx" data-i="'+i+'">×</button></div>'}).join("")}
+var NOTES=[],LASTNOTE=0;
+function ncTime(s){var m=/^(\d{4})-(\d\d)-(\d\d) (\d\d):(\d\d)/.exec(String(s||""));if(!m)return"";var d=new Date();return(+m[1]===d.getFullYear()&&+m[2]===d.getMonth()+1&&+m[3]===d.getDate())?m[4]+":"+m[5]:(+m[3])+"."+(+m[2])}
+function ncDraw(){
+  var el=document.getElementById("nc");if(!el)return;
+  var cur=document.getElementById("nin"),val=cur?cur.value:"",foc=!!cur&&document.activeElement===cur;
+  var op=NOTES.filter(function(n){return n.status!=="xong"}),dn=NOTES.filter(function(n){return n.status==="xong"});
+  var rows=op.concat(dn).slice(0,14).map(function(n){var who=n.by==="vo"?"Vợ":(n.by==="thanh"?"Chồng":esc(n.by||""));
+    return'<div class="row'+(n.status==="xong"?' done':'')+'" data-nid="'+esc(n.id)+'"><button class="c">'+(n.status==="xong"?'✓':'')+'</button><div class="t">'+esc(n.text)+'<span class="d mono">'+who+' · '+ncTime(n.time)+'</span></div><button class="qx" title="Xoá" aria-label="Xoá">×</button></div>'}).join("");
+  el.innerHTML='<div class="nh"><span class="lab mono">Ghi chú chung</span><b class="mono">'+op.length+'</b></div><input id="nin" placeholder="Thêm ghi chú…" autocomplete="off">'+rows;
+  var inp=document.getElementById("nin");inp.value=val;if(foc)inp.focus()}
+function noteAdd(t){var n=new Date(),p=function(x){return String(x).padStart(2,"0")};
+  var o={id:"tmp"+Date.now(),time:n.getFullYear()+"-"+p(n.getMonth()+1)+"-"+p(n.getDate())+" "+p(n.getHours())+":"+p(n.getMinutes()),by:DATA.__role==="family"?"vo":"thanh",text:t,status:"mo"};
+  LASTNOTE=Date.now();NOTES.unshift(o);var i=document.getElementById("nin");if(i)i.value="";ncDraw();
+  apiPost({action:"add_note",noi_dung:t},false,function(j){if(j&&j.id){o.id=j.id;ncDraw();if(o.del)apiPost({action:"delete_note",id:j.id});else if(o.st)apiPost({action:"update_note",id:j.id,trang_thai:o.st})}})}
+function noteTog(id){var o=NOTES.filter(function(x){return x.id===id})[0];if(!o)return;o.status=o.status==="xong"?"mo":"xong";LASTNOTE=Date.now();ncDraw();
+  if(/^tmp/.test(id))o.st=o.status;else apiPost({action:"update_note",id:id,trang_thai:o.status})}
+function noteDel(id){var i=NOTES.findIndex(function(x){return x.id===id});if(i<0)return;var o=NOTES.splice(i,1)[0];LASTNOTE=Date.now();ncDraw();
+  if(/^tmp/.test(id))o.del=true;else apiPost({action:"delete_note",id:id})}
 function dayKey(){var d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
 function draw(){
   dayRoll();
@@ -646,6 +674,7 @@ function renderOthers(){
     var h=e.target.closest(".row[data-id]");
     if(h){dayRoll();st[h.dataset.id]=!st[h.dataset.id];lset("wb_st",st);tickSync(h.dataset.id);draw();renderOthers()}
   };
+  if(FAM){["work","learn"].forEach(function(id){var e=document.getElementById(id);if(e)e.innerHTML=""})}   // bản gia đình: không dựng tab riêng tư
   renderCompany();
 }
 function splash(){
@@ -722,7 +751,7 @@ var TR={
 "T2":["Mon","月"],"T3":["Tue","火"],"T4":["Wed","水"],"T5":["Thu","木"],"T6":["Fri","金"],"T7":["Sat","土"],"CN":["Sun","日"],
 "Cháy rồi":["On fire","緊急"],"Làm gì giờ?":["What now?","今なにする？"],"Cơ thể":["Body","からだ"],"Vừa đứng dậy":["Just stood up","立ったよ"],
 "Mốc sắp tới":["Milestones","マイルストーン"],"Thả ý tưởng":["Drop an idea","アイデアメモ"],"Gõ ý tưởng, Enter là xong":["Type an idea, press Enter","アイデアを入力してEnter"],
-"Sắp tới hạn":["Due soon","もうすぐ期限"],"Tuần này":["This week","今週"],"Sau đó":["Later","その後"],"Hôm nay · ngày mai":["Today · tomorrow","今日・明日"],"Nhập mã":["Enter code","コード入力"],"Đang đồng bộ…":["Syncing…","同期中…"],"Đang lưu…":["Saving…","保存中…"],"Chưa lưu được":["Not saved","保存できません"],"sẽ thử lại":["will retry","再試行します"],"Có dữ liệu mới ↻":["New data ↻","新しいデータ ↻"],"Đồng bộ ngay":["Sync now","今すぐ同期"],"Nhập mã truy cập":["Enter access code","アクセスコードを入力"],"Mở":["Open","開く"],"Huỷ":["Cancel","キャンセル"],"Thoát":["Sign out","終了"],"Mã không đúng":["Wrong code","コードが違います"],"Đang kiểm tra…":["Checking…","確認中…"],"Không kết nối được":["Couldn't connect","接続できません"],"Dán mã do Thành gửi":["Paste the code you were given","受け取ったコードを貼り付け"],"Dữ liệu thật ✓":["Live data ✓","実データ ✓"],"Gia đình ✓":["Family ✓","家族 ✓"],"Thoát chế độ dữ liệu thật?":["Leave live-data mode?","実データモードを終了しますか？"],"DỮ LIỆU THẬT":["LIVE DATA","実データ"],"Tick tự reset lúc 0:00":["Ticks reset at 0:00","チェックは0時にリセット"],
+"Sắp tới hạn":["Due soon","もうすぐ期限"],"Tuần này":["This week","今週"],"Sau đó":["Later","その後"],"Hôm nay · ngày mai":["Today · tomorrow","今日・明日"],"Nhập mã":["Enter code","コード入力"],"Nhà mình cần gấp":["Home: urgent","家の急ぎ"],"Nhà mình yên ổn.":["All calm at home.","家は平穏です。"],"Ghi chú chung":["Shared notes","共有メモ"],"Thêm ghi chú…":["Add a note…","メモを追加…"],"Vợ":["Wife","妻"],"Chồng":["Husband","夫"],"Xoá":["Delete","削除"],"Đang đồng bộ…":["Syncing…","同期中…"],"Đang lưu…":["Saving…","保存中…"],"Chưa lưu được":["Not saved","保存できません"],"sẽ thử lại":["will retry","再試行します"],"Có dữ liệu mới ↻":["New data ↻","新しいデータ ↻"],"Đồng bộ ngay":["Sync now","今すぐ同期"],"Nhập mã truy cập":["Enter access code","アクセスコードを入力"],"Mở":["Open","開く"],"Huỷ":["Cancel","キャンセル"],"Thoát":["Sign out","終了"],"Mã không đúng":["Wrong code","コードが違います"],"Đang kiểm tra…":["Checking…","確認中…"],"Không kết nối được":["Couldn't connect","接続できません"],"Dán mã do Thành gửi":["Paste the code you were given","受け取ったコードを貼り付け"],"Dữ liệu thật ✓":["Live data ✓","実データ ✓"],"Gia đình ✓":["Family ✓","家族 ✓"],"Thoát chế độ dữ liệu thật?":["Leave live-data mode?","実データモードを終了しますか？"],"DỮ LIỆU THẬT":["LIVE DATA","実データ"],"Tick tự reset lúc 0:00":["Ticks reset at 0:00","チェックは0時にリセット"],
 "Thu gọn":["Collapse","閉じる"],"Tuần":["Week","週"],"Cần cập nhật":["Needs update","要更新"],"Yên bình. Đáng ngờ.":["All quiet. Suspicious.","静か。怪しい。"],
 "Sáng":["Morning","朝"],"Tàu":["Train","電車"],"Khuya":["Late night","深夜"],"Tất cả":["All","すべて"],"Chưa có việc":["Nothing yet","タスクなし"],
 "Xong hết. Uống nước đi.":["All done. Drink some water.","全部完了。水を飲もう。"],"Nghỉ đi.":["Take a break.","休もう。"],
@@ -800,7 +829,7 @@ load().then(function(d){
   if(d.__live&&d.pain){var pm0=ls("wb_pain",{});d.pain.forEach(function(x){var kk=String(x.date).replace(/-0(\d)/g,"-$1");if(x.p!==""&&x.p!=null)pm0[kk]=+x.p});lset("wb_pain",pm0)}
   if(d.__ideas){lset("wb_qn",d.__ideas.map(function(x){return{id:x.id,t:x.text}}))}
   SIG=d.__sig||"";
-  used=+ls("wb_ai",40);f=slotNow();if(d.__role==="family")FAM=true;if(FAM)document.body.classList.add("fam");
+  used=+ls("wb_ai",40);f=slotNow();if(d.__role==="family")FAM=true;if(FAM)document.body.classList.add("fam");if(FAM&&!(d.tasks||[]).length)document.body.classList.add("fam0");
   hot.home=!FAM&&(d.urgent||[]).length>0;
   TABS=FAM?[["home","Hôm nay"],["brain","Brain"],["life","Tổ ấm"]]:[["home","Hôm nay"],["brain","AI Family"],["work","Kiếm cơm"],["life","Tổ ấm"],["learn","Rèn"]];
   document.getElementById("nav").innerHTML=TABS.map(function(t,i){return'<button'+(i===0?' class="on"':'')+' data-t="'+t[0]+'">'+t[1]+'</button>'}).join("");
