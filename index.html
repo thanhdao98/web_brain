@@ -175,7 +175,7 @@ nav button{padding:4px 5px}
  #home .c1,#home .c2,#home .c3{display:contents}
  #home .c1>*{order:9}#home .c2>*{order:5}#home .c3>*{order:13}
  #home .c1>.prof{order:0}#home .c1>.stale{order:0}
- #home .c2>.urg{order:1}#home .c2>.nc{order:2}#home .c2>.ml{order:3}#home .c2>.next{order:4}#home .c2>.sit{order:5}
+ #home .c2>.urg{order:1}#home .c2>.nc{order:2}#home .c2>.ml{order:3}#home .c2>.cl{order:3}#home .c2>.next{order:4}#home .c2>.sit{order:5}
  #home .c2>.seg{order:6}#home .c2>#tasks{order:7}#home .c2>#syn{order:8}
  #home .c1>.wx{order:8}
  #home .c1>#ideas{order:9;display:block}
@@ -193,6 +193,13 @@ nav button{padding:4px 5px}
  #home .prof{margin-top:6px}
  .wxg div{padding:8px 0}
 }
+/* lịch Google Calendar (chỉ bạn) */
+.cl .dh{font-size:11px;color:var(--mute);margin:12px 0 2px;text-transform:uppercase;letter-spacing:.06em}
+.cl .ce{display:flex;gap:12px;padding:9px 0;border-top:1px solid var(--line);align-items:baseline}
+.cl .ct{flex:none;width:56px;font-size:12px;color:var(--mute)}
+.cl .cn{font-weight:600;line-height:1.25}.cl .cd{display:block;font-size:11px;color:var(--mute);margin-top:2px}
+.cl .ce.pst{opacity:.45}.cl .ce.now .ct{color:var(--acc);font-weight:700}
+.cl .go{font-size:12px;color:var(--mute);text-decoration:none;margin-left:8px}.cl .go:hover{color:var(--fg)}
 /* ghi chú chung (bạn và vợ cùng dùng) */
 .nc{margin:14px 0 0;padding:12px 16px 6px;border:1px solid var(--line);border-radius:16px}
 .nc .nh{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px}.nc .nh b{font-size:12px;color:var(--mute);font-weight:400}
@@ -354,7 +361,7 @@ function mergeApi(b,j){var d=JSON.parse(JSON.stringify(b));
   ["deadlines","tasks","urgent","timeline","docs","workweek","goals","notes","pain"].forEach(function(k){if(j[k]!==undefined)d[k]=j[k]});
   d.learn=d.learn||{};if(j.learn&&j.learn.week)d.learn.week=j.learn.week;
   if(j.updated)d.updated=String(j.updated).replace(" ","T");
-  var c=j.config||{};["profile","company","health","loc","music","workdl"].forEach(function(k){if(c[k]!==undefined)d[k]=c[k]});
+  var c=j.config||{};["profile","company","health","loc","music","workdl","digest"].forEach(function(k){if(c[k]!==undefined)d[k]=c[k]});
   if(c.i18n)d.i18n=c.i18n;if(c.learn_next!==undefined){d.learn=d.learn||{};d.learn.next=c.learn_next}
   delete d.week;delete d.work;   // biểu đồ tuần và mục 'work' là dữ liệu mẫu, không có trong Sheet
   if(j.role==="family"){delete d.health;delete d.company}
@@ -411,10 +418,10 @@ function dataCheck(force){
     if(!j||j.error||!SIG||dataSig(j)===SIG)return;
     var b=document.createElement("button");b.id="upd";b.textContent="Có dữ liệu mới ↻";b.onclick=function(){location.reload()};document.body.appendChild(b)}).catch(function(){})}
 function startSync(){
-  document.addEventListener("visibilitychange",function(){if(!document.hidden){syncPull();dataCheck()}});
+  document.addEventListener("visibilitychange",function(){if(!document.hidden){syncPull();dataCheck();calInit()}});
   document.addEventListener("click",function(e){if(e.target.closest&&e.target.closest("#synb"))syncPull(true)});
   setInterval(function(){if(!document.hidden)syncPull()},30000);
-  setInterval(function(){if(!document.hidden)dataCheck()},60000)}
+  setInterval(function(){if(!document.hidden)dataCheck()},60000);setInterval(function(){if(!document.hidden)calInit()},300000)}
 function kbHtml(){if(!APIURL)return"";return DATA&&DATA.__live?'<button class="kb on" id="kb" title="Thoát">'+(DATA.__role==="family"?"Gia đình ✓":"Dữ liệu thật ✓")+'</button>':'<button class="kb" id="kb">Nhập mã</button>'}
 function keyDlg(live){
   var o=document.createElement("div");o.id="kd";
@@ -447,7 +454,7 @@ function renderHome(){
   var tl=(DATA.timeline||[]).filter(vis).slice(0,2);
   if(tl.length)p1+='<div class="wide mo"><h2 class="lab mono">Mốc sắp tới</h2>'+tl.map(function(x){return'<div class="mr"><span>'+esc(x.what)+'</span><b class="mono">'+esc(x.when)+'</b></div>'}).join("")+'</div>';
   p1+='<div class="wx" id="wx"></div>';
-  p2+=ug+(DATA.__live?'<div class="nc" id="nc"></div>':"")+(FAM||!(DATA.mail&&DATA.mail.url)?"":'<div class="ml" id="ml"></div>')+'<div class="next"><span class="lab mono">Làm gì giờ?</span><div class="t" id="nx"></div><div class="s mono" id="ns"></div>'+dayStrip()+'</div>'+(FAM?"":sitHtml());
+  p2+=ug+(DATA.__live?'<div class="nc" id="nc"></div>':"")+(FAM||!calSrc()?"":'<div class="ml" id="ml"></div>')+(FAM||!calSrc()?"":'<div class="ml cl" id="cl"></div>')+'<div class="next"><span class="lab mono">Làm gì giờ?</span><div class="t" id="nx"></div><div class="s mono" id="ns"></div>'+dayStrip()+'</div>'+(FAM?"":sitHtml());
   p2b+=segHtml()+arHtml()+'<div id="tasks"></div><div class="nt" id="syn">Tick tự reset lúc 0:00</div>';
   if(!FAM)p1+='<div class="wide" id="ideas"><h2 class="lab mono">Thả ý tưởng</h2><form id="qf"><input id="qn" class="qn mono" placeholder="Gõ ý tưởng, Enter là xong" autocomplete="off" enterkeyhint="send"><button type="submit" class="nsub" aria-label="Thêm" title="Thêm">+</button></form><div id="qnl"></div></div>';
   if(!FAM&&DATA.week)p3+='<h2 class="lab mono">Tuần</h2><div class="week" id="week"></div>';
@@ -483,7 +490,7 @@ window.mPlay=mOn;
   var sga=document.getElementById("segA");
   sga.onclick=function(e){var b=e.target.closest("button");if(!b)return;[].forEach.call(sga.children,function(x){x.classList.remove("on")});b.classList.add("on");fa=b.dataset.a;draw()};
   document.getElementById("tasks").onclick=function(e){var r=e.target.closest(".row");if(!r)return;dayRoll();st[r.dataset.id]=!st[r.dataset.id];lset("wb_st",st);tickSync(r.dataset.id);draw()};
-  wxInit();mailInit();
+  wxInit();mailInit();calInit();
   var sitEl=document.getElementById("sit");
   if(sitEl){sitEl.onclick=function(e){if(e.target.closest("#sb")){lset("wb_sit",Date.now());sitTick()}else if(e.target.id==="sp")go("learn")};sitTick();setInterval(sitTick,30000)}
   var ar=document.getElementById("aiRow");if(ar)ar.onclick=function(){go("ai")};
@@ -585,6 +592,31 @@ function mhLoad(){var o=ls("wb_mhide",{}),n=Date.now(),ch=false;
   if(ch)lset("wb_mhide",o);return o}
 function mailRel(s){var p=String(s||"").split(/[-T:]/);if(p.length<5)return"";var d=new Date(+p[0],+p[1]-1,+p[2],+p[3],+p[4]),m=Math.round((Date.now()-d)/6e4);
   if(m<1)return"vừa xong";if(m<60)return m+" phút trước";var hh=Math.floor(m/60);if(hh<24)return hh+" giờ trước";var dd=Math.floor(hh/24);return dd===1?"hôm qua":dd+" ngày trước"}
+function calSrc(){var s=DATA&&((DATA.digest&&DATA.digest.url)?DATA.digest:(DATA.mail&&DATA.mail.url?DATA.mail:null));return(s&&s.key)?s:null}
+function calHead(n){return'<div class="mh"><svg class="mic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span class="lab mono">Lịch</span><b class="mono">'+(n==null?"":n)+'</b><a class="go mono" href="https://calendar.google.com/calendar/u/0/r" target="_blank" rel="noopener">Mở Calendar ↗</a><button class="mrf" id="clr" title="Làm mới" aria-label="Làm mới">↻</button></div>'}
+function calDraw(d,stale){
+  var el=document.getElementById("cl");if(!el||!d)return;
+  var ev=d.events||[],td=padDay(),nowT=td+"T"+String(new Date().getHours()).padStart(2,"0")+":"+String(new Date().getMinutes()).padStart(2,"0"),by={};
+  ev.forEach(function(x){var k=x.s.slice(0,10);if(x.all&&k<td&&x.e.slice(0,10)>td)k=td;(by[k]=by[k]||[]).push(x)});
+  var days=Object.keys(by).filter(function(k){return k>=td}).sort(),tm=new Date();tm.setDate(tm.getDate()+1);
+  var tmw=tm.getFullYear()+"-"+String(tm.getMonth()+1).padStart(2,"0")+"-"+String(tm.getDate()).padStart(2,"0");
+  var more=0,rows=0,html="",nToday=(by[td]||[]).length;
+  days.forEach(function(k){
+    var list=by[k];if(k!==td&&rows>=6){more+=list.length;return}
+    var lab=k===td?"Hôm nay":(k===tmw?"Ngày mai":WXD[new Date(k+"T00:00:00").getDay()]+" · "+(+k.slice(8))+"."+(+k.slice(5,7)));
+    html+='<div class="dh mono">'+lab+'</div>'+list.map(function(x){if(k!==td)rows++;
+      var past=k===td&&!x.all&&x.e.slice(0,16)<nowT,cur=k===td&&!x.all&&x.s.slice(0,16)<=nowT&&x.e.slice(0,16)>nowT;
+      return'<div class="ce'+(past?' pst':'')+(cur?' now':'')+'"><span class="ct mono">'+(x.all?"Cả ngày":x.s.slice(11,16))+'</span><div><span class="cn">'+esc(x.t)+'</span>'+(x.loc?'<span class="cd mono">'+esc(x.loc)+'</span>':'')+'</div></div>'}).join("")});
+  el.innerHTML=calHead(nToday)+(nToday?"":'<div class="nt">Hôm nay không có lịch.</div>')+html+(more?'<div class="nt">+'+more+' sự kiện nữa</div>':"")+(stale?'<div class="nt">(dữ liệu cũ)</div>':"");
+}
+function calInit(fresh){
+  var el=document.getElementById("cl"),s=calSrc();if(!el||!s)return;
+  if(!el.onclick)el.onclick=function(e){if(e.target.closest("#clr")){try{localStorage.removeItem("wb_cal")}catch(x){}calInit(true)}};
+  var c=ls("wb_cal",null);if(!fresh&&c&&Date.now()-c.t<3e5){calDraw(c.d);return}
+  el.innerHTML=calHead(null)+'<div class="nt">Đang tải…</div>';
+  getJ(s.url+(s.url.indexOf("?")<0?"?":"&")+"k="+encodeURIComponent(s.key)+"&a=cal"+(fresh?"&fresh=1":""),12000)
+    .then(function(j){if(j.error||!j.events)throw 0;lset("wb_cal",{t:Date.now(),d:j});calDraw(j)})
+    .catch(function(){if(c&&c.d)calDraw(c.d,true);else el.innerHTML=calHead(null)+'<div class="nt">Chưa lấy được lịch.</div>'})}
 function mailHead(n,note,spin){return '<div class="mh"><svg class="mic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span class="lab mono">Gmail · quan trọng</span><b class="mono">'+(n==null?"":n+'/3')+(note?' · '+note:'')+'</b><button class="mrf'+(spin?' spin':'')+'" id="mrf" title="Làm mới" aria-label="Làm mới">↻</button></div>'}
 function mailRow(x,i,anim,hid,base){
   var hu=MHUE[x.g],dot='<span class="md" style="background:'+(hu==null?'var(--mute)':'hsl('+hu+',70%,55%)')+'"></span>',lk=base+'#all/'+encodeURIComponent(x.id),id=esc(x.id);
@@ -593,7 +625,7 @@ function mailRow(x,i,anim,hid,base){
   return'<div class="mi'+(x.u?' nw':'')+'" data-id="'+id+'"'+st+'>'+dot+'<a class="mt" href="'+lk+'" target="_blank" rel="noopener">'+g+'</a><div class="act"><a class="go mono" href="'+lk+'" target="_blank" rel="noopener">Mở ↗</a><button class="mx" data-id="'+id+'" title="Ẩn" aria-label="Ẩn mail này">×</button></div></div>'}
 function mailDraw(d,stale,anim){
   var el=document.getElementById("ml");if(!el||!d)return;MD=d;MS=!!stale;
-  var H=mhLoad(),m=DATA.mail||{},base='https://mail.google.com/mail/'+(m.user?'?authuser='+encodeURIComponent(m.user):'u/0/');
+  var H=mhLoad(),m=DATA.mail||DATA.digest||{},base='https://mail.google.com/mail/'+(m.user?'?authuser='+encodeURIComponent(m.user):'u/0/');
   var all=d.items||[],vis=all.filter(function(x){return !H[x.id]}).slice(0,3),hidIn=all.filter(function(x){return H[x.id]}).length;
   var hids=Object.keys(H).filter(function(k){return H[k].x}).sort(function(a,b){return H[b].t-H[a].t}).map(function(k){return H[k].x});
   var more=d.n-vis.length-hidIn;
@@ -606,7 +638,7 @@ function mailDraw(d,stale,anim){
 function mailHide(id){var it=((MD&&MD.items)||[]).filter(function(x){return x.id===id})[0];if(!it)return;var H=mhLoad();H[id]={t:Date.now(),x:it};lset("wb_mhide",H);mailDraw(MD,MS,false)}
 function mailRestore(id){var H=mhLoad();delete H[id];lset("wb_mhide",H);mailDraw(MD,MS,false)}
 function mailInit(fresh){
-  var el=document.getElementById("ml"),m=DATA.mail;if(!el||!m||!m.url)return;
+  var el=document.getElementById("ml"),m=calSrc();if(!el||!m||!m.url)return;
   if(!el.onclick)el.onclick=function(e){
     var t;
     if(e.target.closest("#mrf")){try{localStorage.removeItem("wb_mail")}catch(x){}mailInit(true);return}
@@ -756,7 +788,7 @@ var TR={
 "T2":["Mon","月"],"T3":["Tue","火"],"T4":["Wed","水"],"T5":["Thu","木"],"T6":["Fri","金"],"T7":["Sat","土"],"CN":["Sun","日"],
 "Cháy rồi":["On fire","緊急"],"Làm gì giờ?":["What now?","今なにする？"],"Cơ thể":["Body","からだ"],"Vừa đứng dậy":["Just stood up","立ったよ"],
 "Mốc sắp tới":["Milestones","マイルストーン"],"Thả ý tưởng":["Drop an idea","アイデアメモ"],"Gõ ý tưởng, Enter là xong":["Type an idea, press Enter","アイデアを入力してEnter"],
-"Sắp tới hạn":["Due soon","もうすぐ期限"],"Tuần này":["This week","今週"],"Sau đó":["Later","その後"],"Hôm nay · ngày mai":["Today · tomorrow","今日・明日"],"Nhập mã":["Enter code","コード入力"],"đang lưu…":["saving…","保存中…"],"Thêm":["Add","追加"],"Nhà mình cần gấp":["Home: urgent","家の急ぎ"],"Nhà mình yên ổn.":["All calm at home.","家は平穏です。"],"Ghi chú chung":["Shared notes","共有メモ"],"Thêm ghi chú…":["Add a note…","メモを追加…"],"Vợ":["Wife","妻"],"Chồng":["Husband","夫"],"Xoá":["Delete","削除"],"Đang đồng bộ…":["Syncing…","同期中…"],"Đang lưu…":["Saving…","保存中…"],"Chưa lưu được":["Not saved","保存できません"],"sẽ thử lại":["will retry","再試行します"],"Có dữ liệu mới ↻":["New data ↻","新しいデータ ↻"],"Đồng bộ ngay":["Sync now","今すぐ同期"],"Nhập mã truy cập":["Enter access code","アクセスコードを入力"],"Mở":["Open","開く"],"Huỷ":["Cancel","キャンセル"],"Thoát":["Sign out","終了"],"Mã không đúng":["Wrong code","コードが違います"],"Đang kiểm tra…":["Checking…","確認中…"],"Không kết nối được":["Couldn't connect","接続できません"],"Dán mã do Thành gửi":["Paste the code you were given","受け取ったコードを貼り付け"],"Dữ liệu thật ✓":["Live data ✓","実データ ✓"],"Gia đình ✓":["Family ✓","家族 ✓"],"Thoát chế độ dữ liệu thật?":["Leave live-data mode?","実データモードを終了しますか？"],"DỮ LIỆU THẬT":["LIVE DATA","実データ"],"Tick tự reset lúc 0:00":["Ticks reset at 0:00","チェックは0時にリセット"],
+"Sắp tới hạn":["Due soon","もうすぐ期限"],"Tuần này":["This week","今週"],"Sau đó":["Later","その後"],"Hôm nay · ngày mai":["Today · tomorrow","今日・明日"],"Nhập mã":["Enter code","コード入力"],"Lịch":["Calendar","予定"],"Ngày mai":["Tomorrow","明日"],"Cả ngày":["All day","終日"],"Hôm nay không có lịch.":["Nothing on the calendar today.","今日の予定はありません。"],"Mở Calendar ↗":["Open Calendar ↗","カレンダーを開く ↗"],"Chưa lấy được lịch.":["Couldn't load the calendar.","予定を取得できません。"],"(dữ liệu cũ)":["(stale data)","(古いデータ)"],"đang lưu…":["saving…","保存中…"],"Thêm":["Add","追加"],"Nhà mình cần gấp":["Home: urgent","家の急ぎ"],"Nhà mình yên ổn.":["All calm at home.","家は平穏です。"],"Ghi chú chung":["Shared notes","共有メモ"],"Thêm ghi chú…":["Add a note…","メモを追加…"],"Vợ":["Wife","妻"],"Chồng":["Husband","夫"],"Xoá":["Delete","削除"],"Đang đồng bộ…":["Syncing…","同期中…"],"Đang lưu…":["Saving…","保存中…"],"Chưa lưu được":["Not saved","保存できません"],"sẽ thử lại":["will retry","再試行します"],"Có dữ liệu mới ↻":["New data ↻","新しいデータ ↻"],"Đồng bộ ngay":["Sync now","今すぐ同期"],"Nhập mã truy cập":["Enter access code","アクセスコードを入力"],"Mở":["Open","開く"],"Huỷ":["Cancel","キャンセル"],"Thoát":["Sign out","終了"],"Mã không đúng":["Wrong code","コードが違います"],"Đang kiểm tra…":["Checking…","確認中…"],"Không kết nối được":["Couldn't connect","接続できません"],"Dán mã do Thành gửi":["Paste the code you were given","受け取ったコードを貼り付け"],"Dữ liệu thật ✓":["Live data ✓","実データ ✓"],"Gia đình ✓":["Family ✓","家族 ✓"],"Thoát chế độ dữ liệu thật?":["Leave live-data mode?","実データモードを終了しますか？"],"DỮ LIỆU THẬT":["LIVE DATA","実データ"],"Tick tự reset lúc 0:00":["Ticks reset at 0:00","チェックは0時にリセット"],
 "Thu gọn":["Collapse","閉じる"],"Tuần":["Week","週"],"Cần cập nhật":["Needs update","要更新"],"Yên bình. Đáng ngờ.":["All quiet. Suspicious.","静か。怪しい。"],
 "Sáng":["Morning","朝"],"Tàu":["Train","電車"],"Khuya":["Late night","深夜"],"Tất cả":["All","すべて"],"Chưa có việc":["Nothing yet","タスクなし"],
 "Xong hết. Uống nước đi.":["All done. Drink some water.","全部完了。水を飲もう。"],"Nghỉ đi.":["Take a break.","休もう。"],
@@ -784,6 +816,7 @@ var TR={
 "Lỗi tải dữ liệu":["Failed to load data","データの読み込みに失敗"],"Hãy chạy ./serve.sh rồi mở http://localhost:8080":["Run ./serve.sh, then open http://localhost:8080","./serve.sh を実行して http://localhost:8080 を開いてください"]
 };
 var PT=[
+[/^\+(\d+) sự kiện nữa$/,"+$1 more events","他$1件"],
 [/^Đã đồng bộ (.+)$/,"Synced $1","同期済み $1"],
 [/^Ngồi (\d+) phút rồi\. Đứng dậy, giãn cổ vai gáy 1 phút\.$/,"Sitting $1 min. Stand up and stretch your neck and shoulders for a minute.","$1分座っています。立ち上がって首と肩を1分ほぐしましょう。"],
 [/^Ngồi (\d+) phút$/,"Sitting $1 min","$1分座っている"],[/^còn (\d+) phút$/,"$1 min left","あと$1分"],
