@@ -303,7 +303,7 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;
 function ls(k,d){try{var v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}}
 function lset(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 function vis(x){return !FAM||x.scope==="family"}
-var APIURL="";
+var APIURL="",APIKEY="",LASTTOG=0,TPULL=0;
 function getJ(u,ms){var c=new AbortController(),t=setTimeout(function(){c.abort()},ms||9000);
   return fetch(u,{cache:"no-store",signal:c.signal}).then(function(r){clearTimeout(t);if(!r.ok)throw 0;return r.json()},function(e){clearTimeout(t);throw e})}
 /* trộn dữ liệu cuộc sống từ Brain API lên bản nền (real.json trên máy, hoặc demo.json trên bản công khai) */
@@ -311,18 +311,33 @@ function mergeApi(b,j){var d=JSON.parse(JSON.stringify(b));
   ["deadlines","tasks","urgent","timeline","docs","workweek","goals","notes","pain"].forEach(function(k){if(j[k]!==undefined)d[k]=j[k]});
   d.learn=d.learn||{};if(j.learn&&j.learn.week)d.learn.week=j.learn.week;
   if(j.updated)d.updated=String(j.updated).replace(" ","T");
+  if(j.avatar){d.profile=d.profile||{};d.profile.avatar=j.avatar}
+  if(j.ticks)d.__ticks=j.ticks;
   d.label="Dữ liệu thật";d.__role=j.role;d.__live=true;return d}
 function load(){
   var base=null,key=ls("wb_key","");
   return getJ("data/real.json").then(function(r){base=r},function(){}).then(function(){return base?0:getJ("data/demo.json").then(function(r){base=r})})
     .then(function(){return getJ("data/config.json").catch(function(){return{}})})
     .then(function(cfg){
-      var ba=base.brain_api||{};APIURL=ba.url||cfg.api||"";key=key||ba.key||"";
+      var ba=base.brain_api||{};APIURL=ba.url||cfg.api||"";key=key||ba.key||"";APIKEY=key;
       if(!APIURL||!key)return base;
       return getJ(APIURL+"?k="+encodeURIComponent(key),12000).then(function(j){
         if(j.error){if(ls("wb_key","")){lset("wb_key","");lset("wb_api",null)}throw 0}
         lset("wb_api",{t:Date.now(),d:j});return mergeApi(base,j)
       }).catch(function(){var c=ls("wb_api",null);return(c&&c.d&&ls("wb_key",""))?mergeApi(base,c.d):base})})}
+function apiPost(b,retry){if(!(DATA&&DATA.__live&&APIKEY))return;b.k=APIKEY;
+  fetch(APIURL,{method:"POST",body:JSON.stringify(b)}).then(function(r){return r.json()}).then(function(j){if(j&&j.error&&j.error!=="forbidden")throw 0}).catch(function(){if(!retry)setTimeout(function(){apiPost(b,true)},3000)})}
+function tickSync(id){LASTTOG=Date.now();if(DATA&&DATA.__role==="owner")apiPost({action:"set_tick",id:id,done:!!st[id]})}
+function padDay(){var d=new Date(),p=function(n){return String(n).padStart(2,"0")};return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())}
+function sameTicks(s,arr){var a=Object.keys(s).filter(function(k){return s[k]}).sort().join(","),b=arr.slice().sort().join(",");return a===b}
+function tickPull(force){
+  if(!(DATA&&DATA.__live&&DATA.__role==="owner"&&APIKEY))return;
+  var n=Date.now();if(!force&&n-TPULL<15000)return;TPULL=n;
+  getJ(APIURL+"?k="+encodeURIComponent(APIKEY)+"&a=ticks",9000).then(function(j){
+    if(!j||!j.ticks||Date.now()-LASTTOG<8000)return;   // vừa tick xong thì không ghi đè bằng dữ liệu cũ
+    dayRoll();if(sameTicks(st,j.ticks))return;
+    st={};j.ticks.forEach(function(id){st[id]=true});lset("wb_st",st);draw();renderOthers()}).catch(function(){})}
+function startSync(){document.addEventListener("visibilitychange",function(){if(!document.hidden)tickPull()});setInterval(function(){if(!document.hidden)tickPull()},60000)}
 function kbHtml(){if(!APIURL)return"";return DATA&&DATA.__live?'<button class="kb on" id="kb" title="Thoát">'+(DATA.__role==="family"?"Gia đình ✓":"Dữ liệu thật ✓")+'</button>':'<button class="kb" id="kb">Nhập mã</button>'}
 function keyDlg(live){
   var o=document.createElement("div");o.id="kd";
@@ -385,7 +400,7 @@ window.mPlay=mOn;
   seg.onclick=function(e){var b=e.target.closest("button");if(!b)return;[].forEach.call(seg.children,function(x){x.classList.remove("on")});b.classList.add("on");f=b.dataset.c;draw()};
   var sga=document.getElementById("segA");
   sga.onclick=function(e){var b=e.target.closest("button");if(!b)return;[].forEach.call(sga.children,function(x){x.classList.remove("on")});b.classList.add("on");fa=b.dataset.a;draw()};
-  document.getElementById("tasks").onclick=function(e){var r=e.target.closest(".row");if(!r)return;dayRoll();st[r.dataset.id]=!st[r.dataset.id];lset("wb_st",st);draw()};
+  document.getElementById("tasks").onclick=function(e){var r=e.target.closest(".row");if(!r)return;dayRoll();st[r.dataset.id]=!st[r.dataset.id];lset("wb_st",st);tickSync(r.dataset.id);draw()};
   wxInit();mailInit();
   var sitEl=document.getElementById("sit");
   if(sitEl){sitEl.onclick=function(e){if(e.target.closest("#sb")){lset("wb_sit",Date.now());sitTick()}else if(e.target.id==="sp")go("learn")};sitTick();setInterval(sitTick,30000)}
@@ -556,11 +571,11 @@ function renderOthers(){
   document.getElementById("learn").innerHTML=head("Rèn")+'<div class="pg"><div>'+healthHtml()+'</div><div><h2 class="lab mono">'+dotH("learn")+'Học · tuần này · '+ld+'/'+LW.length+' buổi</h2>'+lr+(DATA.learn&&DATA.learn.next?'<div class="mr"><span>'+esc(DATA.learn.next)+'</span></div>':'')+'<h2 class="lab mono">Mục tiêu 6 tháng</h2>'+gl+'</div></div>';
   document.getElementById("learn").onclick=function(e){
     var pb=e.target.closest(".pn button");
-    if(pb){var pm=ls("wb_pain",{});pm[dayKey()]=+pb.dataset.p;lset("wb_pain",pm);renderOthers();sitTick();return}
+    if(pb){var pm=ls("wb_pain",{});pm[dayKey()]=+pb.dataset.p;lset("wb_pain",pm);if(DATA.__role==="owner")apiPost({action:"log_pain",ngay:padDay(),muc_dau:+pb.dataset.p});renderOthers();sitTick();return}
     var r=e.target.closest(".row[data-ln]");
     if(r){var i=r.dataset.ln;ln[i]=!ln[i];lset("wb_ln",ln);renderOthers();return}
     var h=e.target.closest(".row[data-id]");
-    if(h){dayRoll();st[h.dataset.id]=!st[h.dataset.id];lset("wb_st",st);draw();renderOthers()}
+    if(h){dayRoll();st[h.dataset.id]=!st[h.dataset.id];lset("wb_st",st);tickSync(h.dataset.id);draw();renderOthers()}
   };
   renderCompany();
 }
@@ -710,13 +725,16 @@ function langInit(){
   document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest(".lg button");if(!b)return;
     LANG=b.dataset.l;lset("wb_lang",LANG);LUSED=true;langApply()})}
 load().then(function(d){
-  DATA=d;if(d.i18n)Object.keys(d.i18n).forEach(function(k){TR[k]=d.i18n[k]});st=ls("wb_st",{});used=+ls("wb_ai",40);f=slotNow();if(d.__role==="family")FAM=true;if(FAM)document.body.classList.add("fam");
+  DATA=d;if(d.i18n)Object.keys(d.i18n).forEach(function(k){TR[k]=d.i18n[k]});st=ls("wb_st",{});
+  if(d.__ticks){st={};d.__ticks.forEach(function(id){st[id]=true});lset("wb_st",st);lset("wb_std",dayKey())}
+  if(d.__live&&d.pain){var pm0=ls("wb_pain",{});d.pain.forEach(function(x){var kk=String(x.date).replace(/-0(\d)/g,"-$1");if(x.p!==""&&x.p!=null)pm0[kk]=+x.p});lset("wb_pain",pm0)}
+  used=+ls("wb_ai",40);f=slotNow();if(d.__role==="family")FAM=true;if(FAM)document.body.classList.add("fam");
   hot.home=!FAM&&(d.urgent||[]).length>0;
   TABS=FAM?[["home","Hôm nay"],["brain","Brain"],["life","Tổ ấm"]]:[["home","Hôm nay"],["brain","AI Family"],["work","Kiếm cơm"],["life","Tổ ấm"],["learn","Rèn"]];
   document.getElementById("nav").innerHTML=TABS.map(function(t,i){return'<button'+(i===0?' class="on"':'')+' data-t="'+t[0]+'">'+t[1]+'</button>'}).join("");
   document.getElementById("nav").onclick=function(e){var b=e.target.closest("button");if(b)go(b.dataset.t)};
   document.getElementById("foot").textContent=(d.label||"").toUpperCase()+(FAM?" · BẢN GIA ĐÌNH":"");
-  renderHome();draw();renderOthers();aiDraw();place();frame();splash();langInit();midnight();var mq=matchMedia("(min-width:900px)");if(mq.addEventListener)mq.addEventListener("change",place);else mq.addListener(place);
+  renderHome();draw();renderOthers();aiDraw();place();frame();splash();langInit();midnight();startSync();var mq=matchMedia("(min-width:900px)");if(mq.addEventListener)mq.addEventListener("change",place);else mq.addListener(place);
 }).catch(function(e){document.getElementById("home").innerHTML='<div class="top mono"><span class="lab">Lỗi tải dữ liệu</span></div><p class="mono">Hãy chạy ./serve.sh rồi mở http://localhost:8080</p>'});
 </script>
 </body>
