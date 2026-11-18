@@ -156,6 +156,24 @@ nav button{padding:4px 5px}
 .seg.ar{flex-wrap:wrap;margin-top:8px}.seg.ar button{font-size:11px;padding:5px 10px}
 @media (max-width:899px){nav button{font-size:10px;letter-spacing:.03em;padding:4px 3px}}
 .top .rt{display:flex;align-items:center;gap:12px}
+@media (max-width:899px){
+ #home .prof{margin:2px 0 14px}#home .ban{height:72px}#home .tg{margin-top:8px;font-size:15px}#home .tags{display:none}
+ #home .urg{padding:12px 14px 4px}#home .urg .n{font-size:40px}#home .urg ul{font-size:15px;margin-top:2px}#home .urg li{margin-bottom:8px}
+ #home .nc,#home .ml{margin-top:8px;padding:10px 14px 4px}#home .ml .mi{padding:8px 0}
+ #home .next{padding:14px 0}#home .next .t{font-size:24px}
+}
+.cd>.mh,.cd>.nh,.cd>h2.lab{cursor:pointer;-webkit-user-select:none;user-select:none}
+.cd>.mh::after,.cd>.nh::after,.cd>h2.lab::after{content:"\25BE";margin-left:8px;color:var(--mute);font-size:11px;transition:transform .2s}
+.cd.c>.mh::after,.cd.c>.nh::after,.cd.c>h2.lab::after{transform:rotate(-90deg)}
+.cd>h2.lab{margin-bottom:6px}
+.cd.c.ml .mi~.mi,.cd.c.ml .mi~.nt,.cd.c.ml .mht,.cd.c.ml .mi.hid{display:none}
+.cd.c.cl .dh,.cd.c.cl .ce.pst,.cd.c.cl .ce:not(.pst)~.ce,.cd.c.cl .ce~.nt{display:none}
+.cd.c.nc #nf,.cd.c.nc .row~.row{display:none}
+.cd.c.wx .wxg,.cd.c.wx .wxn~.wxn{display:none}
+.cd.c#ideas #qf,.cd.c#ideas #qnl{display:none}
+.cd.c#moc .mr~.mr{display:none}
+.cd.c#dlc #dlw h2.dg,.cd.c#dlc #dlw .dl~.dl,.cd.c#dlc .more{display:none}
+.xab{font:inherit;font-size:14px;line-height:1;border:0;background:none;color:var(--mute);cursor:pointer;padding:3px 5px;border-radius:999px}.xab:hover{color:var(--fg)}
 .rfb,.aub{font:inherit;font-size:11px;letter-spacing:.06em;border:0;background:none;color:var(--mute);cursor:pointer;padding:3px 7px;border-radius:999px;transition:color .15s,background .15s}.rfb:hover,.aub:hover{color:var(--fg)}
 .rfb{font-size:14px;line-height:1;padding:3px 5px}.rfb.spin{animation:rot .8s linear infinite;color:var(--fg)}
 .aub .sd{margin-right:5px;background:var(--mute)}.aub.on .sd{background:#3ecf6e}.aub.on.pz .sd{background:#f5a623}.aub.on{color:var(--fg)}
@@ -469,6 +487,17 @@ function slotNow(){var d=new Date(),m=d.getHours()*60+d.getMinutes();return m>=3
 function dayStrip(){var d=new Date(),m=d.getHours()*60+d.getMinutes(),r=(m-360)/1200;if(m<360)r=m<120?(m+1080)/1200:0;r=Math.max(0,Math.min(1,r));var s=slotNow();return '<div class="day"><span style="flex:27.5" class="'+(s==="morning"?"on":"")+'"></span><span style="flex:47.5" class="'+(s==="train"?"on":"")+'"></span><span style="flex:25" class="'+(s==="night"?"on":"")+'"></span><i style="left:'+(r*100)+'%"></i></div><div class="dayl mono"><span style="flex:27.5">Sáng</span><span style="flex:47.5">Tàu</span><span style="flex:25">Khuya</span></div>'}
 function segHtml(){var T=(DATA.tasks||[]).filter(vis),s=slotNow(),L=[["all","Tất cả"],["morning","Sáng"],["train","Tàu"],["night","Khuya"]];return '<div class="seg mono" id="seg">'+L.map(function(a){var n=a[0]==="all"?T.length:T.filter(function(x){return x.c===a[0]}).length,c=(a[0]===f?"on ":"")+(a[0]===s?"now":"");return '<button'+(c.trim()?' class="'+c.trim()+'"':'')+' data-c="'+a[0]+'">'+a[1]+'<em>'+n+'</em></button>'}).join("")+'<span class="dn mono" id="sd">0/'+T.length+'</span></div>'}
 function arHtml(){var T=(DATA.tasks||[]).filter(vis),L=[["all","Tất cả"]].concat(Object.keys(GR).map(function(k){return[k,GR[k][0]]}));return '<div class="seg ar mono" id="segA">'+L.map(function(a){var n=a[0]==="all"?T.length:T.filter(function(x){return inG(a[0],x.a)}).length;return n||a[0]==="all"?'<button'+(a[0]===fa?' class="on"':'')+' data-a="'+a[0]+'">'+(a[0]==="all"?"":GR[a[0]][1].map(dotH).join(""))+a[1]+'<em>'+n+'</em></button>':""}).join("")+'</div>'}
+/* thẻ gấp được: mặc định đóng (chỉ thấy tiêu đề + 1 dòng đầu), chạm tiêu đề để mở; nhớ theo máy */
+var COLIDS=["nc","ml","cl","wx","ideas","moc","dlc"],COL=ls("wb_col",{});
+function colInit(){
+  COLIDS.forEach(function(id){var el=document.getElementById(id);if(!el)return;el.classList.add("cd");el.classList.toggle("c",COL[id]!==0)});
+  var rt=document.querySelector("#home .top .rt");
+  if(rt&&!rt.querySelector(".xab")){var b=document.createElement("button");b.className="xab";b.title="Mở/đóng tất cả";b.setAttribute("aria-label","Mở/đóng tất cả");b.textContent="\u21D5";rt.insertBefore(b,rt.firstChild)}}
+function colToggle(id,on){var el=document.getElementById(id);if(!el)return;var c=on==null?!el.classList.contains("c"):on;el.classList.toggle("c",c);COL[id]=c?1:0;lset("wb_col",COL)}
+document.addEventListener("click",function(e){var t=e.target;if(!t.closest)return;
+  if(t.closest(".xab")){var cs=COLIDS.map(function(i){return document.getElementById(i)}).filter(Boolean),anyC=cs.some(function(c){return c.classList.contains("c")});cs.forEach(function(c){colToggle(c.id,!anyC)});return}
+  var h=t.closest(".cd>.mh,.cd>.nh,.cd>h2.lab,.cd>.mh *,.cd>.nh *");if(!h||!t.closest("#home"))return;
+  if(t.closest("a,button,input,form"))return;var card=t.closest(".cd");if(card)colToggle(card.id)});
 function renderHome(){
   var hd=head(today()),p1="",p2="",p2b="",p3="";
   var pr=DATA.profile;
@@ -478,7 +507,7 @@ function renderHome(){
     :'<div class="urg"><div class="n mono" style="color:var(--mute)">0</div><div><span class="lab mono">'+ut+'</span><ul><li>'+(FAM?"Nhà mình yên ổn.":"Yên bình. Đáng ngờ.")+'</li></ul></div></div>';
   if(!FAM&&DATA.updated){var ag=Math.floor((new Date()-new Date(DATA.updated))/864e5);if(ag>=2)p1+='<div class="stale"><h2 class="lab mono">Cần cập nhật</h2><div class="mr"><span>'+ag+' ngày rồi chưa kể tao nghe lịch. Tao sắp quên mày.</span></div></div>'}
   var tl=(DATA.timeline||[]).filter(vis).slice(0,2);
-  if(tl.length)p1+='<div class="wide mo"><h2 class="lab mono">Mốc sắp tới</h2>'+tl.map(function(x){return'<div class="mr"><span>'+esc(x.what)+'</span><b class="mono">'+esc(x.when)+'</b></div>'}).join("")+'</div>';
+  if(tl.length)p1+='<div class="wide mo" id="moc"><h2 class="lab mono">Mốc sắp tới</h2>'+tl.map(function(x){return'<div class="mr"><span>'+esc(x.what)+'</span><b class="mono">'+esc(x.when)+'</b></div>'}).join("")+'</div>';
   p1+='<div class="wx" id="wx"></div>';
   p2+=ug+(DATA.__live?'<div class="nc" id="nc"></div>':"")+(FAM||!calSrc()?"":'<div class="ml" id="ml"></div>')+(FAM||!calSrc()?"":'<div class="ml cl" id="cl"></div>')+'<div class="next"><span class="lab mono">Làm gì giờ?</span><div class="t" id="nx"></div><div class="s mono" id="ns"></div>'+dayStrip()+'</div>'+(FAM?"":sitHtml());
   p2b+=segHtml()+arHtml()+'<div id="tasks"></div><div class="nt" id="syn">Tick tự reset lúc 0:00</div>';
@@ -487,8 +516,9 @@ function renderHome(){
   var dl=(DATA.deadlines||[]).filter(vis).filter(function(x){return !x.hide}).map(function(x){return{t:x.t,n:days(x),a:x.a}}).filter(function(x){return x.n>=0}).sort(function(a,b){return a.n-b.n});
   if(dl.length){var gh=function(n){return n<=1?"Hôm nay · ngày mai":(n<=7?"Tuần này":"Sau đó")},lg="",k=0,hh="";
     dl.forEach(function(x){var g=gh(x.n),xc=k>=5?" x":"";if(g!==lg){hh+='<h2 class="lab mono dg'+xc+'">'+g+'</h2>';lg=g}hh+='<div class="dl'+(x.n<=1?' hot':(x.n<=7?' wk':' far'))+xc+'"><span>'+dotH(x.a)+esc(x.t)+'</span><b class="mono">'+(x.n===0?"hôm nay":(x.n===1?"ngày mai":x.n+" ngày"))+'</b></div>';k++});
-    p3+='<h2 class="lab mono">Sắp tới hạn</h2><div class="dlw" id="dlw">'+hh+(dl.length>5?'<button class="more mono" id="more" data-n="'+(dl.length-5)+'">Xem thêm +'+(dl.length-5)+'</button>':'')+'</div>'}
+    p3+='<div id="dlc"><h2 class="lab mono">Sắp tới hạn</h2><div class="dlw" id="dlw">'+hh+(dl.length>5?'<button class="more mono" id="more" data-n="'+(dl.length-5)+'">Xem thêm +'+(dl.length-5)+'</button>':'')+'</div></div>'}
   document.getElementById("home").innerHTML=hd+'<div class="g"><div class="c1">'+p1+'</div><div class="c2">'+p2+p2b+'</div><div class="c3"><div id="slot"></div>'+p3+'</div></div>';
+  colInit();
   var tb=document.querySelector("#home .top b");if(tb&&!FAM){tb.textContent+=" · AI "+used+"%";tb.style.cursor="pointer";tb.onclick=function(){go("ai")}}
   var mo=document.getElementById("more");if(mo)mo.onclick=function(){var w=document.getElementById("dlw");w.classList.toggle("open");this.textContent=w.classList.contains("open")?"Thu gọn":"Xem thêm +"+this.dataset.n};
   if(DATA.music&&DATA.music.url){var mm=/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/.exec(DATA.music.url);if(mm){var tp=document.querySelector("#home .top"),mb=document.createElement("button");mb.id="mu";mb.className="mono";mb.textContent="\u266a";tp.insertBefore(mb,tp.lastElementChild);var bx=document.createElement("div");bx.id="mubox";tp.parentNode.insertBefore(bx,tp.nextSibling);var ifr=function(){return '<iframe src="https://www.youtube.com/embed/'+mm[1]+'?autoplay=1&loop=1&playlist='+mm[1]+'&playsinline=1&start='+(DATA.music.start||0)+'" allow="autoplay; encrypted-media" allowfullscreen></iframe>'};
@@ -814,7 +844,7 @@ var TR={
 "T2":["Mon","月"],"T3":["Tue","火"],"T4":["Wed","水"],"T5":["Thu","木"],"T6":["Fri","金"],"T7":["Sat","土"],"CN":["Sun","日"],
 "Cháy rồi":["On fire","緊急"],"Làm gì giờ?":["What now?","今なにする？"],"Cơ thể":["Body","からだ"],"Vừa đứng dậy":["Just stood up","立ったよ"],
 "Mốc sắp tới":["Milestones","マイルストーン"],"Thả ý tưởng":["Drop an idea","アイデアメモ"],"Gõ ý tưởng, Enter là xong":["Type an idea, press Enter","アイデアを入力してEnter"],
-"Sắp tới hạn":["Due soon","もうすぐ期限"],"Tuần này":["This week","今週"],"Sau đó":["Later","その後"],"Hôm nay · ngày mai":["Today · tomorrow","今日・明日"],"Nhập mã":["Enter code","コード入力"],"Cập nhật ngay":["Refresh now","今すぐ更新"],"Tự động":["Auto","自動"],"Tự động cập nhật 30 giây":["Auto-refresh every 30 s","30秒ごとに自動更新"],"Tạm dừng vì không thao tác. Chạm để tiếp tục.":["Paused (idle). Tap to resume.","操作がないため一時停止中。タップで再開。"],"Lịch":["Calendar","予定"],"Ngày mai":["Tomorrow","明日"],"Cả ngày":["All day","終日"],"Hôm nay không có lịch.":["Nothing on the calendar today.","今日の予定はありません。"],"Mở Calendar ↗":["Open Calendar ↗","カレンダーを開く ↗"],"Chưa lấy được lịch.":["Couldn't load the calendar.","予定を取得できません。"],"(dữ liệu cũ)":["(stale data)","(古いデータ)"],"đang lưu…":["saving…","保存中…"],"Thêm":["Add","追加"],"Nhà mình cần gấp":["Home: urgent","家の急ぎ"],"Nhà mình yên ổn.":["All calm at home.","家は平穏です。"],"Ghi chú chung":["Shared notes","共有メモ"],"Thêm ghi chú…":["Add a note…","メモを追加…"],"Vợ":["Wife","妻"],"Chồng":["Husband","夫"],"Xoá":["Delete","削除"],"Đang đồng bộ…":["Syncing…","同期中…"],"Đang lưu…":["Saving…","保存中…"],"Chưa lưu được":["Not saved","保存できません"],"sẽ thử lại":["will retry","再試行します"],"Có dữ liệu mới ↻":["New data ↻","新しいデータ ↻"],"Đồng bộ ngay":["Sync now","今すぐ同期"],"Nhập mã truy cập":["Enter access code","アクセスコードを入力"],"Mở":["Open","開く"],"Huỷ":["Cancel","キャンセル"],"Thoát":["Sign out","終了"],"Mã không đúng":["Wrong code","コードが違います"],"Đang kiểm tra…":["Checking…","確認中…"],"Không kết nối được":["Couldn't connect","接続できません"],"Dán mã do Thành gửi":["Paste the code you were given","受け取ったコードを貼り付け"],"Dữ liệu thật ✓":["Live data ✓","実データ ✓"],"Gia đình ✓":["Family ✓","家族 ✓"],"Thoát chế độ dữ liệu thật?":["Leave live-data mode?","実データモードを終了しますか？"],"DỮ LIỆU THẬT":["LIVE DATA","実データ"],"Tick tự reset lúc 0:00":["Ticks reset at 0:00","チェックは0時にリセット"],
+"Sắp tới hạn":["Due soon","もうすぐ期限"],"Tuần này":["This week","今週"],"Sau đó":["Later","その後"],"Hôm nay · ngày mai":["Today · tomorrow","今日・明日"],"Nhập mã":["Enter code","コード入力"],"Cập nhật ngay":["Refresh now","今すぐ更新"],"Mở/đóng tất cả":["Expand/collapse all","すべて開閉"],"Tự động":["Auto","自動"],"Tự động cập nhật 30 giây":["Auto-refresh every 30 s","30秒ごとに自動更新"],"Tạm dừng vì không thao tác. Chạm để tiếp tục.":["Paused (idle). Tap to resume.","操作がないため一時停止中。タップで再開。"],"Lịch":["Calendar","予定"],"Ngày mai":["Tomorrow","明日"],"Cả ngày":["All day","終日"],"Hôm nay không có lịch.":["Nothing on the calendar today.","今日の予定はありません。"],"Mở Calendar ↗":["Open Calendar ↗","カレンダーを開く ↗"],"Chưa lấy được lịch.":["Couldn't load the calendar.","予定を取得できません。"],"(dữ liệu cũ)":["(stale data)","(古いデータ)"],"đang lưu…":["saving…","保存中…"],"Thêm":["Add","追加"],"Nhà mình cần gấp":["Home: urgent","家の急ぎ"],"Nhà mình yên ổn.":["All calm at home.","家は平穏です。"],"Ghi chú chung":["Shared notes","共有メモ"],"Thêm ghi chú…":["Add a note…","メモを追加…"],"Vợ":["Wife","妻"],"Chồng":["Husband","夫"],"Xoá":["Delete","削除"],"Đang đồng bộ…":["Syncing…","同期中…"],"Đang lưu…":["Saving…","保存中…"],"Chưa lưu được":["Not saved","保存できません"],"sẽ thử lại":["will retry","再試行します"],"Có dữ liệu mới ↻":["New data ↻","新しいデータ ↻"],"Đồng bộ ngay":["Sync now","今すぐ同期"],"Nhập mã truy cập":["Enter access code","アクセスコードを入力"],"Mở":["Open","開く"],"Huỷ":["Cancel","キャンセル"],"Thoát":["Sign out","終了"],"Mã không đúng":["Wrong code","コードが違います"],"Đang kiểm tra…":["Checking…","確認中…"],"Không kết nối được":["Couldn't connect","接続できません"],"Dán mã do Thành gửi":["Paste the code you were given","受け取ったコードを貼り付け"],"Dữ liệu thật ✓":["Live data ✓","実データ ✓"],"Gia đình ✓":["Family ✓","家族 ✓"],"Thoát chế độ dữ liệu thật?":["Leave live-data mode?","実データモードを終了しますか？"],"DỮ LIỆU THẬT":["LIVE DATA","実データ"],"Tick tự reset lúc 0:00":["Ticks reset at 0:00","チェックは0時にリセット"],
 "Thu gọn":["Collapse","閉じる"],"Tuần":["Week","週"],"Cần cập nhật":["Needs update","要更新"],"Yên bình. Đáng ngờ.":["All quiet. Suspicious.","静か。怪しい。"],
 "Sáng":["Morning","朝"],"Tàu":["Train","電車"],"Khuya":["Late night","深夜"],"Tất cả":["All","すべて"],"Chưa có việc":["Nothing yet","タスクなし"],
 "Xong hết. Uống nước đi.":["All done. Drink some water.","全部完了。水を飲もう。"],"Nghỉ đi.":["Take a break.","休もう。"],
