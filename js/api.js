@@ -15,16 +15,16 @@ function mergeApiData(b,j){var d=JSON.parse(JSON.stringify(b));
   d.__sig=dataFingerprint(j);d.__ssig=j.sig||"";
   d.label="Dữ liệu thật";d.__role=j.role;d.__live=true;return d}
 function loadData(){
-  var base=null,key=readStorage("wb_key","");
+  var base=null,key=getAccessKey();
   return fetchJson("data/real.json").then(function(r){base=r},function(){}).then(function(){return base?0:fetchJson("data/demo.json").then(function(r){base=r})})
     .then(function(){return fetchJson("data/config.json").catch(function(){return{}})})
     .then(function(cfg){
       baseData=base;var ba=base.brain_api||{};API_URL=ba.url||cfg.api||"";key=key||ba.key||"";API_KEY=key;
       if(!API_URL||!key)return base;
       return fetchJson(API_URL+"?k="+encodeURIComponent(key),12000).then(function(j){
-        if(j.error){if(readStorage("wb_key","")){writeStorage("wb_key","");writeStorage("wb_api",null)}throw 0}
-        writeStorage("wb_api",{t:Date.now(),d:j});return mergeApiData(base,j)
-      }).catch(function(){var c=readStorage("wb_api",null);return(c&&c.d&&readStorage("wb_key",""))?mergeApiData(base,c.d):base})})}
+        if(j.error){if(j.error==="no")clearAccessKey();throw 0}   // chỉ xoá mã khi máy chủ báo mã sai; lỗi mạng/lỗi tạm thì giữ mã
+        if(keyIsRemembered())writeStorage("wb_api",{t:Date.now(),d:j});return mergeApiData(base,j)   // không tick "ghi nhớ" thì không lưu dữ liệu thật vào máy
+      }).catch(function(){var c=readStorage("wb_api",null);return(c&&c.d&&getAccessKey())?mergeApiData(base,c.d):base})})}
 function sendToApi(b,retry,cb){if(!(DATA&&DATA.__live&&API_KEY))return;b.k=API_KEY;if(!retry)setSyncStatus("save");
   fetch(API_URL,{method:"POST",body:JSON.stringify(b)}).then(function(r){return r.json()}).then(function(j){if(j&&j.error&&j.error!=="forbidden")throw 0;setSyncStatus("ok");if(cb)cb(j)})
     .catch(function(){if(!retry){setSyncStatus("err");setTimeout(function(){sendToApi(b,true,cb)},3000)}else setSyncStatus("err")})}

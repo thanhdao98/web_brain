@@ -6,6 +6,9 @@
 .kc{background:var(--bg);color:var(--fg);border-radius:16px;padding:22px;max-width:380px;width:100%}
 .kt{font-weight:700;font-size:18px;margin-bottom:12px}
 #kin{width:100%;font:inherit;padding:12px;border:1.5px solid var(--fg);border-radius:10px;background:none;color:var(--fg)}
+.ks{font-size:13px;color:var(--mute);margin-bottom:4px}
+.kr{display:flex;gap:8px;align-items:center;margin-top:10px;font-size:13px;color:var(--mute);cursor:pointer}
+.kr input{width:auto}
 .kmsg{min-height:20px;margin-top:8px;font-size:13px;color:var(--acc)}
 .ka{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
 .kbtn{font:inherit;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:none;color:var(--fg);cursor:pointer}
