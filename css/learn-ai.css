@@ -1,0 +1,7 @@
+/* learn-ai.css — Trang AI Family: nhịp học AI, học được gì, sổ ma sát. */
+#aif{margin-top:22px}
+#aif .lf{display:flex;gap:8px;margin-bottom:4px}
+#aif .lf .qn{flex:1;min-width:0}
+#aif .lr{flex-direction:column;align-items:flex-start;gap:3px}
+#aif .lr b{white-space:normal;text-align:left;color:var(--mute)}
+#aif .mr.now span{font-weight:700}

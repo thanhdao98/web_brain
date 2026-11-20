@@ -54,4 +54,5 @@ window.mPlay=playMusic;
 }
 function resetTicksOnNewDay(){if(readStorage("wb_std","")!==dayKey()){st={};writeStorage("wb_st",st);writeStorage("wb_std",dayKey())}}
 function scheduleMidnightReset(){var n=new Date(),ms=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1,0,0,2)-n;setTimeout(function(){resetTicksOnNewDay();drawTaskList();renderOtherTabs();scheduleMidnightReset()},ms)}
-function drawIdeaList(){var el=document.getElementById("qnl");if(!el)return;el.innerHTML=ideaList.map(function(o,i){return'<div class="mr"><span>'+escapeHtml(o.t)+'</span><button class="qx" data-i="'+i+'">×</button></div>'}).join("")}
+function drawIdeaList(){if(typeof drawLearnAi==="function")drawLearnAi();var el=document.getElementById("qnl");if(!el)return;   // dòng ms:/hoc: thuộc trang AI Family, ẩn khỏi danh sách này (giữ chỉ số i gốc để xoá đúng)
+  el.innerHTML=ideaList.map(function(o,i){return isLearnEntry(o)?"":'<div class="mr"><span>'+escapeHtml(o.t)+'</span><button class="qx" data-i="'+i+'">×</button></div>'}).join("")}
