@@ -4,7 +4,7 @@
    TR: giao diện (ở đây) + nội dung riêng của Thành (data.i18n trong real.json, không lên GitHub). */
 var LANG=(function(){var m=/[?&]lang=(vi|en|ja)/.exec(location.search),l=m?m[1]:readStorage("wb_lang","vi");if(m)writeStorage("wb_lang",l);return /^(vi|en|ja)$/.test(l)?l:"vi"})();
 var TR={
-"Bán hàng":["Sales","販売"],"Đã chốt":["Closed","締め済み"],"Chưa chốt":["Not closed","未締め"],"Số mẫu – chỉ để xem giao diện":["Sample numbers – for layout only","サンプル数値（レイアウト確認用）"],
+"Bán hàng":["Sales","販売"],"Số mẫu":["Sample","サンプル"],"Chưa có dữ liệu bán hàng. Số sẽ hiện sau khi chốt tháng.":["No sales data yet. Numbers appear after the month is closed.","販売データはまだありません。月の締め後に表示されます。"],"Đã chốt":["Closed","締め済み"],"Chưa chốt":["Not closed","未締め"],"Số mẫu – chỉ để xem giao diện":["Sample numbers – for layout only","サンプル数値（レイアウト確認用）"],
 "Còn phải chuyển cho VA":["Still to transfer to VA","VAへの未送金額"],"Lãi thực (đã nhận tiền)":["Actual profit (money received)","実利益（入金済み）"],"Lãi dự kiến (thu hết)":["Expected profit (all collected)","見込み利益（全額回収時）"],
 "Đã thu hết":["All collected","全額回収済み"],"Thu":["Revenue","売上"],"Số đơn":["Orders","注文数"],"Quảng cáo":["Ads","広告費"],"Tỷ giá đã chốt":["Locked exchange rate","確定レート"],
 "Lãi thực theo tháng":["Actual profit by month","月別の実利益"],"Xem các tháng cũ":["Show older months","過去の月を見る"],"Ẩn các tháng cũ":["Hide older months","過去の月を隠す"],
@@ -44,6 +44,11 @@ var TR={
 "Lỗi tải dữ liệu":["Failed to load data","データの読み込みに失敗"],"Hãy chạy ./serve.sh rồi mở http://localhost:8080":["Run ./serve.sh, then open http://localhost:8080","./serve.sh を実行して http://localhost:8080 を開いてください"]
 };
 var PT=[
+[/^VA ứng (.+) · thẻ VA (.+) · đã chuyển đủ$/,"VA advanced $1 · VA card $2 · transferred in full","VA立替 $1 · VAカード $2 · 送金済み"],
+[/^VA ứng (.+) · thẻ VA (.+)$/,"VA advanced $1 · VA card $2","VA立替 $1 · VAカード $2"],
+[/^([+−][\d,]+%) so T(\d+) · tỷ lệ (.+)$/,"$1 vs month $2 · margin $3","$2月比 $1 · 利益率 $3"],
+[/^Dự kiến (.+) · còn (\d+) đơn chưa CK$/,"Expected $1 · $2 order(s) not yet paid","見込み $1 · 未入金$2件"],
+[/^Dự kiến (.+) · đã thu hết$/,"Expected $1 · all collected","見込み $1 · 全額回収済み"],
 [/^VA ứng (.+) – thẻ VA đã nhận (.+) · chưa chuyển$/,"VA advanced $1 – VA card received $2 · not yet transferred","VA立替 $1 – VAカード受取 $2 · 未送金"],
 [/^VA ứng (.+) – thẻ VA đã nhận (.+) · đã chuyển đủ$/,"VA advanced $1 – VA card received $2 · transferred in full","VA立替 $1 – VAカード受取 $2 · 送金済み"],
 [/^Tăng (.+) so với tháng (\d+) \((.+)\) · tỷ lệ (.+)$/,"Up $1 vs month $2 ($3) · margin $4","$2月比 $1増（$3）· 利益率 $4"],

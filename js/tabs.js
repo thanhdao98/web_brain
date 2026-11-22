@@ -12,14 +12,19 @@ function renderOtherTabs(){
   /* Tay trái */
   var bt=(DATA.tasks||[]).filter(function(x){return x.a==="biz"&&isVisible(x)}).map(function(x){return'<div class="row'+(st[x.id]?' done':'')+'"><button class="c">'+(st[x.id]?'✓':'')+'</button><div class="t">'+escapeHtml(x.t)+'</div><span class="d mono">'+escapeHtml(x.d||"")+'</span></div>'}).join("");
   var bd=byA("biz").concat([{t:"Cuối tháng: file hàng, tính tiền",n:en,a:"biz"}]).filter(function(x,i,s){return s.findIndex(function(y){return y.t===x.t})===i}).sort(function(a,b){return a.n-b.n}).map(deadlineRowHtml).join("");
-  /* Kiếm cơm = Việc chính (trái) + Tay trái (phải) */
-  document.getElementById("work").innerHTML=pageHeaderHtml("Kiếm cơm")+salesCardHtml()+'<div class="pg"><div><h2 class="lab mono">'+dotHtml("work")+'Việc chính · tuần này ở đâu?</h2>'+wk+'<h2 class="lab mono">'+dotHtml("work")+'Việc chính · hạn</h2>'+wd+'</div><div><h2 class="lab mono">'+dotHtml("biz")+'Tay trái · bán hàng hôm nay</h2><div class="tk">'+tk+'</div>'+bt+'<h2 class="lab mono">'+dotHtml("biz")+'Tay trái · hạn</h2>'+bd+'</div></div>';
+  /* Kiếm cơm = 2 nút: Việc chính (mặc định) | Bán hàng. Nhớ nút đã chọn theo trình duyệt. */
+  var sub=readStorage("wb_work_sub","job")==="sales"?"sales":"job";
+  var subBar='<div class="wsubs mono" role="tablist"><button type="button" data-ws="job"'+(sub==="job"?' class="on"':'')+'>Việc chính</button>'
+    +'<button type="button" data-ws="sales"'+(sub==="sales"?' class="on"':'')+'>Bán hàng'+(salesOweOpen()?'<i class="wdot" aria-hidden="true"></i>':'')+'</button></div>';
+  var jobView='<div class="pg"><div><h2 class="lab mono">'+dotHtml("work")+'Việc chính · tuần này ở đâu?</h2>'+wk+'</div><div><h2 class="lab mono">'+dotHtml("work")+'Việc chính · hạn</h2>'+wd+'</div></div>';
+  var salesView='<div class="pg"><div>'+salesCardHtml()+'</div><div><h2 class="lab mono">'+dotHtml("biz")+'Tay trái · bán hàng hôm nay</h2><div class="tk">'+tk+'</div>'+bt+'<h2 class="lab mono">'+dotHtml("biz")+'Tay trái · hạn</h2>'+bd+'</div></div>';
+  document.getElementById("work").innerHTML=pageHeaderHtml("Kiếm cơm")+subBar+(sub==="sales"?salesView:jobView);
   /* Sống */
   var fam=(DATA.deadlines||[]).filter(function(x){return x.scope==="family"}).map(function(x){return{t:x.t,n:daysUntil(x)}}).filter(function(x){return x.n>=0&&x.n<=7}).sort(function(a,b){return a.n-b.n});
   var fh=fam.map(deadlineRowHtml).join("")||'<div class="mr"><span>Tuần này yên ắng. Tận hưởng đi.</span></div>';
   var dc=(DATA.docs||[]).filter(isVisible).map(function(x){var k=!/chưa/i.test(x.when||"");return'<div class="dl'+(k?' wk':' far')+'"><span>'+escapeHtml(x.t)+'</span><b class="mono">'+escapeHtml(x.when||"")+'</b></div>'}).join("");
   var tl=(DATA.timeline||[]).filter(isVisible);
-  document.getElementById("life").innerHTML=pageHeaderHtml("Tổ ấm")+'<div class="pg"><div><h2 class="lab mono">Tuần này của nhà</h2>'+fh+(dc?'<h2 class="lab mono">Giấy tờ</h2>'+dc:'')+'</div><div><h2 class="lab mono">Đường dài</h2><div class="tl">'+tl.map(function(x){return'<div'+(x.now?' class="now"':'')+'><span class="lab mono">'+escapeHtml(x.when)+'</span><div class="w">'+escapeHtml(x.what)+'</div></div>'}).join("")+'</div></div></div>';
+  document.getElementById("life").innerHTML=pageHeaderHtml("Tổ ấm")+(FAM?salesCardHtml():"")+'<div class="pg"><div><h2 class="lab mono">Tuần này của nhà</h2>'+fh+(dc?'<h2 class="lab mono">Giấy tờ</h2>'+dc:'')+'</div><div><h2 class="lab mono">Đường dài</h2><div class="tl">'+tl.map(function(x){return'<div'+(x.now?' class="now"':'')+'><span class="lab mono">'+escapeHtml(x.when)+'</span><div class="w">'+escapeHtml(x.what)+'</div></div>'}).join("")+'</div></div></div>';
   /* Học */
   var ln=readStorage("wb_ln",{}),LW=(DATA.learn&&DATA.learn.week)||[],ld=LW.filter(function(_,i){return ln[i]}).length;
   var lr=LW.map(function(x,i){return'<div class="row'+(ln[i]?' done':'')+'" data-ln="'+i+'"><button class="c">'+(ln[i]?'✓':'')+'</button><div class="t">'+escapeHtml(x.t)+'</div><span class="d mono">'+escapeHtml(x.d||"")+'</span></div>'}).join("");

@@ -7,7 +7,8 @@ function mergeApiData(b,j){var d=JSON.parse(JSON.stringify(b));
   if(j.updated)d.updated=String(j.updated).replace(" ","T");
   var c=j.config||{};["profile","company","health","loc","music","workdl","digest"].forEach(function(k){if(c[k]!==undefined)d[k]=c[k]});
   if(c.i18n)d.i18n=c.i18n;if(c.learn_next!==undefined){d.learn=d.learn||{};d.learn.next=c.learn_next}
-  delete d.week;delete d.work;   // biểu đồ tuần và mục 'work' là dữ liệu mẫu, không có trong Sheet
+  delete d.week;delete d.work;delete d.sales;   // biểu đồ tuần, mục 'work' và số bán hàng là dữ liệu mẫu, không có trong Sheet
+  if(j.sales)d.sales=j.sales;   // số thật (tab ban_hang) do Brain API trả khi có
   if(j.role==="family"){delete d.health;delete d.company}
   if(j.avatar){d.profile=d.profile||{};d.profile.avatar=j.avatar}
   if(j.ticks)d.__ticks=j.ticks;
