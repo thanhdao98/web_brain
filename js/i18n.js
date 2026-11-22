@@ -12,7 +12,8 @@ function applyLanguage(){
   if(LANG==="vi"&&!languageUsed)return;
   languageBusy=true;document.documentElement.lang=LANG;
   var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null),n,L=[];
-  while((n=w.nextNode())){var pn=n.parentNode&&n.parentNode.nodeName;if(pn==="SCRIPT"||pn==="STYLE"||pn==="CANVAS"||pn==="TEXTAREA")continue;L.push(n)}
+  /* bỏ qua chữ nằm trong vùng đánh dấu data-nt (không dịch) */
+  while((n=w.nextNode())){var pn=n.parentNode&&n.parentNode.nodeName;if(pn==="SCRIPT"||pn==="STYLE"||pn==="CANVAS"||pn==="TEXTAREA")continue;if(n.parentNode.closest&&n.parentNode.closest("[data-nt]"))continue;L.push(n)}
   L.forEach(function(n){var cur=n.nodeValue,src=(n.__t!==undefined&&cur===n.__t)?n.__vi:cur;n.__vi=src;
     var core=src.trim();if(!core){n.__t=cur;return}
     var out=src.replace(core,translateText(core));n.__t=out;if(out!==cur)n.nodeValue=out});

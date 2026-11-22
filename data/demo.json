@@ -169,6 +169,21 @@
       "scope": "private"
     }
   ],
+  "sales": {
+    "sample": true,
+    "month": "10/2026",
+    "closed": true,
+    "note": "Dưới mỗi cột là chênh lệch so tháng trước. Tháng 5 và 6 gộp chung một đợt. Tháng 11 chưa chốt (chốt ngày 29/11).",
+    "fx": {"v": 23.7, "pair": "CNY → JPY"},
+    "months": [
+      {"k": "T4", "profit": 18000, "expected": 18000, "rev": 80000, "orders": 8, "owe": 0},
+      {"k": "T5+T6", "merged": true, "profit": 165000, "expected": 165000, "rev": 600000, "orders": 52, "owe": 0},
+      {"k": "T7", "profit": 120000, "expected": 120000, "rev": 450000, "orders": 38, "owe": 0},
+      {"k": "T8", "profit": 78000, "expected": 78000, "rev": 300000, "orders": 26, "owe": 0},
+      {"k": "T9", "profit": 70000, "expected": 70000, "rev": 270000, "orders": 24, "owe": 0},
+      {"k": "T10", "profit": 72000, "expected": 80000, "rev": 300000, "orders": 28, "owe": 70000, "advance": 220000, "card": 150000, "pend": 1, "pendAmt": 8000, "ads": 40000}
+    ]
+  },
   "goals": [
     {
       "g": "Mục tiêu 1",
@@ -206,6 +221,7 @@
     "start": 0
   },
   "i18n": {
+    "Dưới mỗi cột là chênh lệch so tháng trước. Tháng 5 và 6 gộp chung một đợt. Tháng 11 chưa chốt (chốt ngày 29/11).": ["Under each bar: change vs the previous month. May and June are one combined period. November is not closed yet (closing on 29/11).", "各棒の下は前月比。5月と6月は1つの期間にまとめています。11月は未締め（29日に締め）。"],
       "10 phút": [
           "10 min",
           "10分"

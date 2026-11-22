@@ -1,0 +1,50 @@
+/* card-sales.css — Thẻ Bán hàng (tab Kiếm cơm). Đen–trắng + 1 màu nhấn (--acc) chỉ cho "còn phải chuyển". */
+.sal{--bar:#b4b4b6;margin:0 0 34px;padding-bottom:6px}
+@media (prefers-color-scheme:dark){.sal{--bar:#4a4a4f}}
+.sal .ssub{font-size:14px;color:var(--mute);line-height:1.35;margin-top:6px}
+.sal .sh1{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-bottom:12px;border-bottom:1px solid var(--fg);margin-bottom:22px}
+.sal .s3{display:grid;grid-template-columns:1fr;gap:26px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.sal .sbig{font-size:56px;font-weight:700;letter-spacing:-.04em;line-height:1.05;margin-top:8px}
+.sal .sbig.acc{color:var(--acc)}.sal .sbig.mute{color:var(--mute)}
+.sal .s4{display:grid;grid-template-columns:1fr 1fr;gap:18px 20px;padding:20px 0;border-bottom:1px solid var(--line)}
+.sal .sn{display:block;font-size:26px;font-weight:700;letter-spacing:-.02em;margin-top:6px}
+.sal .sch{padding-top:20px}
+.sal .sh2{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.sal .sy{font-size:14px}
+.sal .sbars{display:flex;gap:10px;margin-top:14px}
+.sal .sbc{flex:1;min-width:0;text-align:center}
+.sal .sbt{height:170px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;border-bottom:1px solid var(--fg)}
+.sal .sbt b{font-size:12px;margin-bottom:5px;font-weight:700}
+.sal .sv1{display:none}
+.sal .sbb{display:block;width:62%;max-width:80px;background:var(--bar)}
+.sal .sbb.now{background:var(--fg)}
+.sal .sbl{padding-top:8px}
+.sal .sbl b{display:block;font-size:12px}
+.sal .sbl span{display:block;font-size:12px;color:var(--mute);margin-top:2px;white-space:nowrap}
+.sal .snote{margin-top:12px}
+.sal .sbl em{font-style:normal}.sal .mg1{display:none}
+.sal .sn1{display:none}
+.sal .sx{margin-top:16px;width:100%;background:none;border:1px solid var(--fg);color:var(--fg);padding:13px 16px;font-size:14px;cursor:pointer}
+.sal .sold{display:none;margin-top:6px}.sal .sold.on{display:block}
+.sal .sr{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.sal .sr.sh{display:none}
+.sal .sc{display:block;min-width:0}
+.sal .sc i{display:block;font-style:normal;font-size:11px}
+.sal .sc b{font-size:15px;font-weight:700}
+.sal .sc.sk{grid-column:1/-1}.sal .sc.sk b{font-size:17px}
+@media (min-width:900px){
+  .sal .s3{grid-template-columns:repeat(3,1fr);gap:36px}
+  .sal .sbig{font-size:clamp(44px,4.4vw,64px)}
+  .sal .s4{grid-template-columns:repeat(4,1fr);gap:20px}
+  .sal .sbt{height:230px}
+  .sal .sbt b{font-size:13px}
+  .sal .sv1{display:block}.sal .sv2{display:none}
+  .sal .mg1{display:inline}.sal .mg2{display:none}
+  .sal .sbl b,.sal .sbl span{font-size:13px}
+  .sal .sn1{display:block}.sal .sn2{display:none}
+  .sal .sx{width:auto}
+  .sal .sr{grid-template-columns:.7fr 1fr 1fr 1fr .6fr 1fr;align-items:baseline}
+  .sal .sr.sh{display:grid;padding:10px 0}
+  .sal .sc i{display:none}
+  .sal .sc.sk{grid-column:auto}.sal .sc.sk b{font-size:15px}
+}

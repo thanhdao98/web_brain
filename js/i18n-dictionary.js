@@ -4,6 +4,12 @@
    TR: giao diện (ở đây) + nội dung riêng của Thành (data.i18n trong real.json, không lên GitHub). */
 var LANG=(function(){var m=/[?&]lang=(vi|en|ja)/.exec(location.search),l=m?m[1]:readStorage("wb_lang","vi");if(m)writeStorage("wb_lang",l);return /^(vi|en|ja)$/.test(l)?l:"vi"})();
 var TR={
+"Bán hàng":["Sales","販売"],"Đã chốt":["Closed","締め済み"],"Chưa chốt":["Not closed","未締め"],"Số mẫu – chỉ để xem giao diện":["Sample numbers – for layout only","サンプル数値（レイアウト確認用）"],
+"Còn phải chuyển cho VA":["Still to transfer to VA","VAへの未送金額"],"Lãi thực (đã nhận tiền)":["Actual profit (money received)","実利益（入金済み）"],"Lãi dự kiến (thu hết)":["Expected profit (all collected)","見込み利益（全額回収時）"],
+"Đã thu hết":["All collected","全額回収済み"],"Thu":["Revenue","売上"],"Số đơn":["Orders","注文数"],"Quảng cáo":["Ads","広告費"],"Tỷ giá đã chốt":["Locked exchange rate","確定レート"],
+"Lãi thực theo tháng":["Actual profit by month","月別の実利益"],"Xem các tháng cũ":["Show older months","過去の月を見る"],"Ẩn các tháng cũ":["Hide older months","過去の月を隠す"],
+"Tháng":["Month","月"],"Lãi thực":["Actual profit","実利益"],"Lãi dự kiến":["Expected profit","見込み利益"],"Đơn":["Orders","注文"],"Còn nợ VA":["Owed to VA","VAへの未払い"],"gộp 2 tháng":["2 months combined","2か月分"],"gộp":["merged","合算"],
+"Số trên cột tính bằng nghìn ¥. Dưới cột là chênh lệch so với tháng trước.":["Numbers on the bars are in thousands of ¥. Below each bar: change vs the previous month.","棒の数字は千円単位。棒の下は前月比。"],
 "Hôm nay":["Today","今日"],"Kiếm cơm":["Earn","稼ぎ"],"Tổ ấm":["Home","わが家"],"Rèn":["Grow","自分磨き"],
 "HÔM NAY":["TODAY","今日"],"KIẾM CƠM":["EARN","稼ぎ"],"TỔ ẤM":["HOME","わが家"],"RÈN":["GROW","自分磨き"],
 "Việc chính":["Main job","本業"],"Tay trái":["Side hustle","副業"],"Học":["Study","学習"],"Khoẻ":["Health","健康"],"Brain":["Brain","Brain"],
@@ -38,6 +44,17 @@ var TR={
 "Lỗi tải dữ liệu":["Failed to load data","データの読み込みに失敗"],"Hãy chạy ./serve.sh rồi mở http://localhost:8080":["Run ./serve.sh, then open http://localhost:8080","./serve.sh を実行して http://localhost:8080 を開いてください"]
 };
 var PT=[
+[/^VA ứng (.+) – thẻ VA đã nhận (.+) · chưa chuyển$/,"VA advanced $1 – VA card received $2 · not yet transferred","VA立替 $1 – VAカード受取 $2 · 未送金"],
+[/^VA ứng (.+) – thẻ VA đã nhận (.+) · đã chuyển đủ$/,"VA advanced $1 – VA card received $2 · transferred in full","VA立替 $1 – VAカード受取 $2 · 送金済み"],
+[/^Tăng (.+) so với tháng (\d+) \((.+)\) · tỷ lệ (.+)$/,"Up $1 vs month $2 ($3) · margin $4","$2月比 $1増（$3）· 利益率 $4"],
+[/^Giảm (.+) so với tháng (\d+) \((.+)\) · tỷ lệ (.+)$/,"Down $1 vs month $2 ($3) · margin $4","$2月比 $1減（$3）· 利益率 $4"],
+[/^tỷ lệ (.+)$/,"margin $1","利益率 $1"],
+[/^Còn (\d+) đơn chưa CK, chờ về (.+)$/,"$1 order(s) not yet paid, $2 incoming","未入金$1件、入金予定 $2"],
+[/^([+−].+%) so với (.+)$/,"$1 vs $2","$2比 $1"],
+[/^(.+): (\d+) đơn$/,"$1: $2 orders","$1：$2件"],
+[/^(\d+)% thu$/,"$1% of revenue","売上の$1%"],
+[/^Cả năm (.+)$/,"Full year $1","通年 $1"],
+[/^Tháng (\d+)\/(\d+)$/,"Month $1/$2","$2年$1月"],
 [/^\+(\d+) sự kiện nữa$/,"+$1 more events","他$1件"],
 [/^Đã đồng bộ (.+)$/,"Synced $1","同期済み $1"],
 [/^Ngồi (\d+) phút rồi\. Đứng dậy, giãn cổ vai gáy 1 phút\.$/,"Sitting $1 min. Stand up and stretch your neck and shoulders for a minute.","$1分座っています。立ち上がって首と肩を1分ほぐしましょう。"],

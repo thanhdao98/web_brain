@@ -14,7 +14,7 @@ web_brain/
 ├─ design/archive/     Mockup cũ (chỉ ở máy cá nhân, không đưa lên GitHub)
 └─ serve.sh            Chạy local
 ```
-**Thứ tự nạp js/** (file sau dùng được hàm của file trước): `core` → `api` → `auto-refresh` → `access-key` → `home-header` → `card-collapse` → `home` → `card-notes` → `home-tasks` → `tab-work` → `card-weather` → `card-mail` → `card-calendar` → `card-health` → `tabs` → `navigation` → `tab-ai` → `tab-ai-learning` → `orb` → `i18n-dictionary` → `i18n` → `main`.
+**Thứ tự nạp js/** (file sau dùng được hàm của file trước): `core` → `api` → `auto-refresh` → `access-key` → `home-header` → `card-collapse` → `home` → `card-notes` → `home-tasks` → `tab-work` → `card-weather` → `card-mail` → `card-calendar` → `card-health` → `card-sales` → `tabs` → `navigation` → `tab-ai` → `tab-ai-learning` → `orb` → `i18n-dictionary` → `i18n` → `main`.
 
 **Quy ước đặt tên**
 - File/thư mục: tiếng Anh, chữ thường, gạch nối (`card-mail.js`). Thẻ trên trang bắt đầu bằng `card-`, tab bằng `tab-`.
