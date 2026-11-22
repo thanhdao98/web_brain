@@ -74,9 +74,9 @@ function salesCardHtml(){
   var smallOrders=prev?prev.k+": "+Math.round(+prev.orders||0)+" đơn":"";
   var adsPct=cur.rev?Math.round(cur.ads/cur.rev*100):0;
   return '<div class="sal">'
-    +'<div class="sh1 lab mono"><span>Bán hàng · Tháng '+escapeHtml(S.month||"")+(S.closed===false?' · Chưa chốt':' · Đã chốt')+'</span>'+(S.sample?'<span>Số mẫu</span>':'')+'</div>'
+    +'<div class="sh1 lab mono"><span>Bán hàng · Tháng '+escapeHtml(S.month||"")+(S.closed===false?' · Chưa chốt':' · Đã chốt'+(owe>0?'':' · Đã thanh toán đủ'))+'</span>'+(S.sample?'<span>Số mẫu</span>':'')+'</div>'
     +'<div class="s3">'
-      +'<div><div class="lab mono">Còn phải chuyển cho VA</div><div class="sbig acc">'+formatYen(owe)+'</div><div class="ssub">'+s1+'</div></div>'
+      +'<div><div class="lab mono">Còn phải chuyển cho VA</div><div class="sbig'+(owe>0?' acc':'')+'">'+formatYen(owe)+'</div><div class="ssub">'+s1+'</div></div>'
       +'<div><div class="lab mono">Lãi thực</div><div class="sbig">'+formatYen(cur.profit)+'</div><div class="ssub">'+s2+'</div><div class="ssub">'+s3+'</div></div>'
     +'</div>'
     +'<div class="s4">'
@@ -90,7 +90,7 @@ function salesCardHtml(){
       +'<div class="snote ssub sn2">Số trên cột tính bằng nghìn ¥. Dưới cột là chênh lệch so với tháng trước.</div>'
     +'</div>'
     +salesOldMonthsHtml(M,open,S.fx)
-    +(S.open?'<div class="ssub sopen">'+escapeHtml(S.open)+' chưa chốt</div>':'')
+    +(S.open?'<div class="ssub sopen">'+escapeHtml(S.open)+' chưa chốt · cuối tháng chốt file hàng và thanh toán VA</div>':'')
   +'</div>';
 }
 
