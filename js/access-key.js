@@ -14,7 +14,7 @@ function saveAccessKey(k,remember){
   writeStorage("wb_key",k);writeStorage("wb_kt",Date.now());writeSession("wb_key_s",null)}
 function clearAccessKey(){   // xoá mã + bản lưu tạm dữ liệu thật trong máy
   ["wb_key","wb_kt","wb_api","wb_mail","wb_mhide","wb_pain","wb_qn"].forEach(dropStorage);writeSession("wb_key_s",null)}
-function accessKeyButtonHtml(){if(!API_URL)return"";return DATA&&DATA.__live?'<button class="kb on" id="kb" title="Thoát">'+(DATA.__role==="family"?"Gia đình ✓":"Dữ liệu thật ✓")+'</button>':'<button class="kb" id="kb">Nhập mã</button>'}
+function accessKeyButtonHtml(){if(!API_URL)return"";return DATA&&DATA.__live?'<button class="kb on" id="kb" title="Thoát">'+(DATA.__role==="family"?"Gia đình ✓":"Chủ ✓")+'</button>':'<button class="kb" id="kb">Nhập mã</button>'}
 function askAccessKeyOnOpen(){   // mỗi lần mở (phiên mới) mà chưa có mã: hỏi 1 lần; chọn "Xem bản mẫu" thì không hỏi lại trong phiên này
   if(!API_URL||(DATA&&DATA.__live)||readSession("wb_ask"))return;writeSession("wb_ask","1");openAccessKeyDialog(false,true)}
 function openAccessKeyDialog(live,ask){

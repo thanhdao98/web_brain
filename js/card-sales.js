@@ -90,6 +90,7 @@ function salesCardHtml(){
       +'<div class="snote ssub sn2">Số trên cột tính bằng nghìn ¥. Dưới cột là chênh lệch so với tháng trước.</div>'
     +'</div>'
     +salesOldMonthsHtml(M,open,S.fx)
+    +(S.open?'<div class="ssub sopen">'+escapeHtml(S.open)+' chưa chốt</div>':'')
   +'</div>';
 }
 

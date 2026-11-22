@@ -14,10 +14,10 @@ function mergeApiData(b,j){var d=JSON.parse(JSON.stringify(b));
   if(j.ticks)d.__ticks=j.ticks;
   if(j.ideas)d.__ideas=j.ideas;
   d.__sig=dataFingerprint(j);d.__ssig=j.sig||"";
-  d.label="Dữ liệu thật";d.__role=j.role;d.__live=true;return d}
+  delete d.__demo;d.label="Dữ liệu thật";d.__role=j.role;d.__live=true;return d}
 function loadData(){
   var base=null,key=getAccessKey();
-  return fetchJson("data/real.json").then(function(r){base=r},function(){}).then(function(){return base?0:fetchJson("data/demo.json").then(function(r){base=r})})
+  return fetchJson("data/real.json").then(function(r){base=r},function(){}).then(function(){return base?0:fetchJson("data/demo.json").then(function(r){base=r;base.__demo=true})})
     .then(function(){return fetchJson("data/config.json").catch(function(){return{}})})
     .then(function(cfg){
       baseData=base;var ba=base.brain_api||{};API_URL=ba.url||cfg.api||"";key=key||ba.key||"";API_KEY=key;

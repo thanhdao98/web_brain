@@ -56,3 +56,5 @@
 .wsubs button+button{border-left:1px solid var(--fg)}
 .wsubs button.on{background:var(--fg);color:var(--bg)}
 .wsubs .wdot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--acc)}
+.sal .sopen{margin-top:18px}
+.sal .lockmsg,.lockmsg{padding:6px 0}
