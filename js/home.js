@@ -4,7 +4,7 @@ function renderTodayTab(){
   var pr=DATA.profile;
   if(pr){pf+='<div class="prof">'+(pr.avatar?'<div class="ban" style="background-image:url('+escapeHtml(pr.avatar)+')"></div>':'<div class="ban ph mono">WB</div>')+'<div class="tg">'+escapeHtml(pr.tagline||"")+'</div><div class="tags mono">'+(pr.tags||[]).map(escapeHtml).join(" · ")+'</div></div>'}
   var u=(DATA.urgent||[]),ug="",ut=FAM?"Nhà mình cần gấp":"Cháy rồi";
-  ug=u.length?'<div class="urg"><div class="n mono">'+u.length+'</div><div><span class="lab mono">'+ut+'</span><ul>'+u.map(function(x){return'<li>'+escapeHtml(x.t||x)+(x.when?'<span class="w mono">'+escapeHtml(x.when)+'</span>':'')+'</li>'}).join("")+'</ul></div></div>'
+  ug=u.length?'<div class="urg"><div class="n mono" data-count="'+u.length+'" data-ck="urg">'+u.length+'</div><div><span class="lab mono">'+ut+'</span><ul>'+u.map(function(x){return'<li>'+escapeHtml(x.t||x)+(x.when?'<span class="w mono">'+escapeHtml(x.when)+'</span>':'')+'</li>'}).join("")+'</ul></div></div>'
     :'<div class="urg"><div class="n mono" style="color:var(--mute)">0</div><div><span class="lab mono">'+ut+'</span><ul><li>'+(FAM?"Nhà mình yên ổn.":"Yên bình. Đáng ngờ.")+'</li></ul></div></div>';
   if(!FAM&&DATA.updated){var ag=Math.floor((new Date()-new Date(DATA.updated))/864e5);if(ag>=2)pst+='<div class="stale"><h2 class="lab mono">Cần cập nhật</h2><div class="mr"><span>'+ag+' ngày rồi chưa kể tao nghe lịch. Tao sắp quên mày.</span></div></div>'}
   var tl=(DATA.timeline||[]).filter(isVisible).slice(0,2);
@@ -46,7 +46,7 @@ window.mPlay=playMusic;
   seg.onclick=function(e){var b=e.target.closest("button");if(!b)return;[].forEach.call(seg.children,function(x){x.classList.remove("on")});b.classList.add("on");f=b.dataset.c;drawTaskList()};
   var sga=document.getElementById("segA");
   sga.onclick=function(e){var b=e.target.closest("button");if(!b)return;[].forEach.call(sga.children,function(x){x.classList.remove("on")});b.classList.add("on");fa=b.dataset.a;drawTaskList()};
-  document.getElementById("tasks").onclick=function(e){var r=e.target.closest(".row");if(!r)return;resetTicksOnNewDay();st[r.dataset.id]=!st[r.dataset.id];writeStorage("wb_st",st);saveTick(r.dataset.id);drawTaskList()};
+  document.getElementById("tasks").onclick=function(e){var r=e.target.closest(".row");if(!r)return;resetTicksOnNewDay();st[r.dataset.id]=!st[r.dataset.id];tickJust=st[r.dataset.id]?r.dataset.id:"";writeStorage("wb_st",st);saveTick(r.dataset.id);drawTaskList();tickJust=""};
   loadWeather();loadMail();loadCalendar();
   var sitEl=document.getElementById("sit");
   if(sitEl){sitEl.onclick=function(e){if(e.target.closest("#sb")){writeStorage("wb_sit",Date.now());tickSitReminder()}else if(e.target.id==="sp")goToTab("learn")};tickSitReminder();if(!window.__sit){window.__sit=1;setInterval(tickSitReminder,30000)}}

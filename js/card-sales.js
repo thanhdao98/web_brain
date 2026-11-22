@@ -76,13 +76,13 @@ function salesCardHtml(){
   return '<div class="sal">'
     +'<div class="sh1 lab mono"><span>Bán hàng · Tháng '+escapeHtml(S.month||"")+(S.closed===false?' · Chưa chốt':' · Đã chốt'+(owe>0?'':' · Đã thanh toán đủ'))+'</span>'+(S.sample?'<span>Số mẫu</span>':'')+'</div>'
     +'<div class="s3">'
-      +'<div><div class="lab mono">Còn phải chuyển cho VA</div><div class="sbig'+(owe>0?' acc':'')+'">'+formatYen(owe)+'</div><div class="ssub">'+s1+'</div></div>'
-      +'<div><div class="lab mono">Lãi thực</div><div class="sbig">'+formatYen(cur.profit)+'</div><div class="ssub">'+s2+'</div><div class="ssub">'+s3+'</div></div>'
+      +'<div><div class="lab mono">Còn phải chuyển cho VA</div><div class="sbig'+(owe>0?' acc':'')+'" data-count="'+owe+'" data-yen="1" data-ck="s-owe">'+formatYen(owe)+'</div><div class="ssub">'+s1+'</div></div>'
+      +'<div><div class="lab mono">Lãi thực</div><div class="sbig" data-count="'+Math.round(+cur.profit||0)+'" data-yen="1" data-ck="s-profit">'+formatYen(cur.profit)+'</div><div class="ssub">'+s2+'</div><div class="ssub">'+s3+'</div></div>'
     +'</div>'
     +'<div class="s4">'
-      +'<div><div class="lab mono">Thu</div><b class="sn">'+formatYen(cur.rev)+'</b><div class="ssub">'+smallRev+'</div></div>'
-      +'<div><div class="lab mono">Số đơn</div><b class="sn">'+Math.round(+cur.orders||0)+'</b><div class="ssub">'+smallOrders+'</div></div>'
-      +'<div><div class="lab mono">Quảng cáo</div><b class="sn">'+formatYen(cur.ads)+'</b><div class="ssub">'+adsPct+'% thu</div></div>'
+      +'<div><div class="lab mono">Thu</div><b class="sn" data-count="'+Math.round(+cur.rev||0)+'" data-yen="1" data-ck="s-rev">'+formatYen(cur.rev)+'</b><div class="ssub">'+smallRev+'</div></div>'
+      +'<div><div class="lab mono">Số đơn</div><b class="sn" data-count="'+Math.round(+cur.orders||0)+'" data-ck="s-orders">'+Math.round(+cur.orders||0)+'</b><div class="ssub">'+smallOrders+'</div></div>'
+      +'<div><div class="lab mono">Quảng cáo</div><b class="sn" data-count="'+Math.round(+cur.ads||0)+'" data-yen="1" data-ck="s-ads">'+formatYen(cur.ads)+'</b><div class="ssub">'+adsPct+'% thu</div></div>'
     +'</div>'
     +'<div class="sch"><div class="sh2"><span class="lab mono">Lãi thực theo tháng'+(year?' · '+escapeHtml(year):'')+'</span><b class="sy">Cả năm '+formatYen(yearTotal)+'</b></div>'
       +salesChartHtml(M)
@@ -107,5 +107,5 @@ document.addEventListener("click",function(e){
   var b=e.target.closest&&e.target.closest(".wsubs button");
   if(!b)return;
   writeStorage("wb_work_sub",b.dataset.ws==="sales"?"sales":"job");
-  renderOtherTabs();
+  renderOtherTabs();if(typeof playTabMotion==="function")playTabMotion("work");
 });

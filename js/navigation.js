@@ -11,4 +11,5 @@ function goToTab(t){
   [].forEach.call(document.getElementById("nav").children,function(x){x.classList.toggle("on",x.dataset.t===t)});
   document.querySelectorAll("section").forEach(function(c){c.classList.toggle("on",c.id===t)});
   window.scrollTo(0,0);if(t==="brain")fitOrbCanvas();
+  if(typeof moveNavIndicator==="function")moveNavIndicator();if(typeof playTabMotion==="function")playTabMotion(t);
 }
