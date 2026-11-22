@@ -41,6 +41,6 @@ function renderOtherTabs(){
     var h=e.target.closest(".row[data-id]");
     if(h){resetTicksOnNewDay();st[h.dataset.id]=!st[h.dataset.id];writeStorage("wb_st",st);saveTick(h.dataset.id);drawTaskList();renderOtherTabs()}
   };
-  if(FAM){["work","learn"].forEach(function(id){var e=document.getElementById(id);if(e)e.innerHTML=""})}   // bản gia đình: không dựng tab riêng tư
+  if(FAM){["learn"].forEach(function(id){var e=document.getElementById(id);if(e)e.innerHTML=""})}   // bản gia đình: không dựng tab riêng tư (Kiếm cơm vẫn dựng nhưng Việc chính bị khoá, chỉ có Bán hàng)
   renderWorkCompany();
 }
