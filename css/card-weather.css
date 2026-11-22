@@ -19,3 +19,8 @@
 @keyframes wxflash{0%,70%,100%{opacity:1}78%{opacity:.15}86%{opacity:1}92%{opacity:.2}}
 @media (prefers-reduced-motion:reduce){.wxg *{animation:none!important}}
 .wxn{font-size:13px;padding:9px 0;border-bottom:1px solid var(--line)}
+/* nhiệt độ: cao nhất đậm, thấp nhất xám nhỏ */
+.wxg .t{display:block;margin-top:2px;font-size:12px;line-height:1.25}
+.wxg .t b{display:block;font-weight:700;color:var(--fg)}
+.wxg .t em{display:block;font-style:normal;font-size:11px;color:var(--mute)}
+.wxg .wet .t b{color:var(--acc)}

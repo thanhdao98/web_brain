@@ -22,12 +22,16 @@ function loadWeather(){
   var el=document.getElementById("wx");if(!el)return;
   var loc=(DATA.loc&&DATA.loc.la!=null)?DATA.loc:readStorage("wb_loc",null);if(!loc){askLocation(el,"");return}
   var c=readStorage("wb_wx",null);
-  if(c&&c.la===loc.la&&c.lo===loc.lo&&Date.now()-c.t<108e5){drawWeather(c.d);return}
-  fetch("https://api.open-meteo.com/v1/forecast?latitude="+loc.la+"&longitude="+loc.lo+"&daily=weather_code,precipitation_probability_max&timezone=auto&forecast_days=7")
+  if(c&&c.d&&c.d.hi&&c.la===loc.la&&c.lo===loc.lo&&Date.now()-c.t<108e5){drawWeather(c.d);return}
+  fetch("https://api.open-meteo.com/v1/forecast?latitude="+loc.la+"&longitude="+loc.lo+"&daily=weather_code,precipitation_probability_max,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=7")
     .then(function(r){if(!r.ok)throw 0;return r.json()})
-    .then(function(j){var d={time:j.daily.time,c:j.daily.weather_code,p:j.daily.precipitation_probability_max};writeStorage("wb_wx",{t:Date.now(),la:loc.la,lo:loc.lo,d:d});drawWeather(d)})
+    .then(function(j){var d={time:j.daily.time,c:j.daily.weather_code,p:j.daily.precipitation_probability_max,hi:j.daily.temperature_2m_max,lo:j.daily.temperature_2m_min};writeStorage("wb_wx",{t:Date.now(),la:loc.la,lo:loc.lo,d:d});drawWeather(d)})
     .catch(function(){if(c&&c.d)drawWeather(c.d);else{el.innerHTML='<h2 class="lab mono">Thời tiết 7 ngày</h2><div class="nt">Chưa lấy được dự báo.</div><button class="more mono" id="wxr">Thử lại</button>';document.getElementById("wxr").onclick=function(){loadWeather()}}});
 }
+/* nhiệt độ cao nhất / thấp nhất trong ngày, làm tròn độ C: "28°" trên, "19°" dưới (xám) */
+function weatherTempHtml(d,i){
+  var hi=d.hi&&d.hi[i],lo=d.lo&&d.lo[i];if(hi==null||lo==null)return"";
+  return '<span class="t mono"><b>'+Math.round(hi)+'°</b><em>'+Math.round(lo)+'°</em></span>'}
 function weatherAdvice(d){
   var L=[],wet=function(k){return k>=0&&k<d.time.length&&(d.p[k]||0)>=60},dn=function(k){return WEEKDAY_SHORT[new Date(d.time[k]+"T00:00:00").getDay()]};
   (DATA.deadlines||[]).filter(isVisible).forEach(function(x){var k=daysUntil(x);if(!wet(k)||k>6)return;
@@ -42,6 +46,6 @@ function weatherAdvice(d){
 function drawWeather(d){
   var el=document.getElementById("wx");if(!el||!d||!d.time)return;
   var g=d.time.map(function(t,i){var p=d.p[i]||0,cl=(i===0?"today":"")+(p>=60?" wet":"");
-    return '<div class="'+cl.trim()+'" title="'+weatherName(d.c[i])+(p?' · mưa '+p+'%':'')+'" aria-label="'+weatherName(d.c[i])+(p?', mưa '+p+'%':'')+'">'+weatherIconSvg(d.c[i])+WEEKDAY_SHORT[new Date(t+"T00:00:00").getDay()]+'<span class="p mono">'+(p>=30?p+"%":"")+'</span></div>'}).join("");
+    return '<div class="'+cl.trim()+'" title="'+weatherName(d.c[i])+(p?' · mưa '+p+'%':'')+'" aria-label="'+weatherName(d.c[i])+(p?', mưa '+p+'%':'')+'">'+weatherIconSvg(d.c[i])+WEEKDAY_SHORT[new Date(t+"T00:00:00").getDay()]+weatherTempHtml(d,i)+'<span class="p mono">'+(p>=30?p+"%":"")+'</span></div>'}).join("");
   el.innerHTML='<h2 class="lab mono">Thời tiết 7 ngày</h2><div class="wxg">'+g+'</div>'+weatherAdvice(d).map(function(s){return'<div class="wxn">'+s+'</div>'}).join("");
 }
