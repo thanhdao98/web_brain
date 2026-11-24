@@ -18,3 +18,4 @@
 #kfw{margin-top:4px}
 #pv{display:flex;align-items:center;justify-content:center;gap:12px;padding:5px 12px;background:var(--acc);color:#fff;font-size:12px;letter-spacing:.03em}
 #pv button{font:inherit;font-size:12px;color:#fff;background:none;border:1px solid rgba(255,255,255,.7);border-radius:999px;padding:2px 10px;cursor:pointer}
+.klink{font:inherit;font-size:13px;color:var(--mute);background:none;border:0;padding:4px 0;text-decoration:underline;cursor:pointer}

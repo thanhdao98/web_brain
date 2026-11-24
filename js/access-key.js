@@ -37,18 +37,21 @@ function openSwitchDialog(){   // chỉ máy Chủ: đổi qua lại bản Chủ
       writeStorage("wb_fk",k);writeSession("wb_view","family");switchView(true)},function(){$("kmsg").textContent="Không kết nối được"})};
   $("kfgo").onclick=tryFam;$("kin").onkeydown=function(e){if(e.key==="Enter")tryFam()};
   $("kout").onclick=function(){if(!this.sure){this.sure=1;this.textContent="Bấm lần nữa để thoát";return}clearAccessKey();writeSession("wb_ask","1");location.reload()}}
-function openAccessKeyDialog(live,ask){
+function openAccessKeyDialog(live,ask,wantOwner){   // wantOwner: máy đang dùng mã gia đình, nhập thêm mã Chủ → máy thành máy Chủ, mã gia đình cũ giữ lại để xem thử
   if(live&&isOwnerDevice()){openSwitchDialog();return}
   var o=document.createElement("div");o.id="kd";
-  o.innerHTML='<div class="kc">'+(live?'<div class="kt">Thoát chế độ dữ liệu thật?</div><div class="ka"><button class="kbtn" id="kno">Huỷ</button><button class="kbtn kp" id="kout">Thoát</button></div>'
+  o.innerHTML='<div class="kc">'+(live?'<div class="kt">Thoát chế độ dữ liệu thật?</div>'+(DATA&&DATA.__role==="family"?'<button class="klink" id="kown">Tôi là Chủ: nhập mã Chủ</button>':'')+'<div class="ka"><button class="kbtn" id="kno">Huỷ</button><button class="kbtn kp" id="kout">Thoát</button></div>'
     :ask?'<div class="kt">Dùng dữ liệu thật?</div><div class="ks">Nhập mã để mở dữ liệu của bạn. Bỏ qua thì xem bản mẫu.</div><div class="ka"><button class="kbtn" id="kno">Xem bản mẫu</button><button class="kbtn kp" id="kyes">Có, nhập mã</button></div>'
-    :'<div class="kt">Nhập mã truy cập</div><input id="kin" type="password" autocomplete="off" placeholder="Dán mã do Thành gửi"><label class="kr"><input type="checkbox" id="krm" checked><span>Ghi nhớ trên thiết bị này (30 ngày)</span></label><div class="kmsg" id="kmsg"></div><div class="ka"><button class="kbtn" id="kno">Huỷ</button><button class="kbtn kp" id="kgo">Mở</button></div>')+'</div>';
+    :'<div class="kt">'+(wantOwner?'Nhập mã Chủ':'Nhập mã truy cập')+'</div><input id="kin" type="password" autocomplete="off" placeholder="Dán mã do Thành gửi"><label class="kr"><input type="checkbox" id="krm" checked><span>Ghi nhớ trên thiết bị này (30 ngày)</span></label><div class="kmsg" id="kmsg"></div><div class="ka"><button class="kbtn" id="kno">Huỷ</button><button class="kbtn kp" id="kgo">Mở</button></div>')+'</div>';
   document.body.appendChild(o);var $=function(i){return document.getElementById(i)};
   $("kno").onclick=function(){o.remove()};o.onclick=function(e){if(e.target===o)o.remove()};
   if(ask){$("kyes").onclick=function(){o.remove();openAccessKeyDialog(false)};return}
-  if(live){$("kout").onclick=function(){clearAccessKey();writeSession("wb_ask","1");location.reload()};return}
+  if(live){var ko=$("kown");if(ko)ko.onclick=function(){o.remove();openAccessKeyDialog(false,false,true)};$("kout").onclick=function(){clearAccessKey();writeSession("wb_ask","1");location.reload()};return}
   var submitKey=function(){var k=$("kin").value.trim();if(!k)return;$("kmsg").textContent="Đang kiểm tra…";
-    fetchJson(API_URL+"?k="+encodeURIComponent(k),12000).then(function(j){if(j.error){$("kmsg").textContent="Mã không đúng";return}saveAccessKey(k,$("krm").checked,j.role);location.reload()},function(){$("kmsg").textContent="Không kết nối được"})};
+    var prev=(DATA&&DATA.__live&&DATA.__role==="family"&&!inPreview())?getAccessKey():"";   // mã gia đình đang dùng, giữ lại làm mã xem thử
+    fetchJson(API_URL+"?k="+encodeURIComponent(k),12000).then(function(j){if(j.error){$("kmsg").textContent="Mã không đúng";return}
+      if(wantOwner&&j.role!=="owner"){$("kmsg").textContent="Đây không phải mã Chủ";return}
+      saveAccessKey(k,$("krm").checked,j.role);if(prev&&j.role==="owner"&&prev!==k){writeStorage("wb_fk",prev);CACHE_KEYS.forEach(dropStorage)}location.reload()},function(){$("kmsg").textContent="Không kết nối được"})};
   $("kgo").onclick=submitKey;$("kin").onkeydown=function(e){if(e.key==="Enter")submitKey()};setTimeout(function(){$("kin").focus()},50)}
 document.addEventListener("click",function(e){if(e.target.closest&&e.target.closest("#kb"))openAccessKeyDialog(!!(DATA&&DATA.__live))});
 (function(){if(!inPreview())return;   // dải báo "đang xem thử" ở đầu trang, để khỏi nhầm đang xem bản nào
