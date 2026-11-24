@@ -13,3 +13,8 @@
 .ka{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
 .kbtn{font:inherit;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:none;color:var(--fg);cursor:pointer}
 .kbtn.kp{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+/* đổi bản xem Chủ ↔ Gia đình (chỉ máy Chủ) */
+.kv{display:flex;gap:10px;margin:12px 0}.kv .kbtn{flex:1}
+#kfw{margin-top:4px}
+#pv{display:flex;align-items:center;justify-content:center;gap:12px;padding:5px 12px;background:var(--acc);color:#fff;font-size:12px;letter-spacing:.03em}
+#pv button{font:inherit;font-size:12px;color:#fff;background:none;border:1px solid rgba(255,255,255,.7);border-radius:999px;padding:2px 10px;cursor:pointer}
